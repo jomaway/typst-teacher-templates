@@ -19,6 +19,8 @@ For the moment you need to Download this repo and pack it into a local package `
 ### Create an exam
 
 ```typst
+#import templates.exam: *
+
 #show: exam.with(
     title: "1. Schulaufgabe",
     date: datetime(year: 2024, month: 02, day: 01), 
