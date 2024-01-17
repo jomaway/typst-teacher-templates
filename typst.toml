@@ -1,0 +1,11 @@
+[package]
+name = "schulzeug"
+version = "0.1.0"
+entrypoint = "schulzeug.typ"
+authors = ["Jomaway <https://github.com/jomaway>"]
+license = "MIT"
+description = "A collection of tools to make a teachers life easier (german)." 
+repository = ""
+keywords = "schulzeug, assignments, exam, template, techer tools"
+compiler = "0.10.0"
+exclude = ["examples/*",]
