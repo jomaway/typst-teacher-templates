@@ -18,15 +18,15 @@
 - Added **point-counter** to calculate the total points.
 
 
-**Helpers:** 
+**Utils:** 
 
-- Added helper function `caro`
-- Added helper function `lines`
-- Added helper function `tag`
-- Added helper function `checkmark`
-- Added helper function `field`
-- Added helper variable `cc_by-sa-eu`
-- Added helper function `intro-block`
+- Added function `caro`
+- Added function `lines`
+- Added function `tag`
+- Added function `checkmark`
+- Added function `field`
+- Added variable `cc_by-sa-eu`
+- Added function `intro-block`
 
 **Cover Page:**
 
