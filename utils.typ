@@ -35,18 +35,32 @@
 
 
 // Tag 
-#let tag(value, fill: orange.lighten(35%)) = {
+#let tag(value, fill: orange.lighten(45%)) = {
   box(
-    inset: 4pt,
-    radius: 0.2em,
-    height: 1.1em,
+    inset: (x: 3pt, y: 0pt),
+    outset: (y: 3pt),
+    radius: 2pt,
     fill: fill
-  )[
-    #align(center + horizon)[
-      #value
-    ]
-  ]
+  )[#value]
 }
+
+// side-by-side
+#let side-by-side(columns: none, gutter: 1em, ..cols) = {
+  
+  let cols = cols.pos()
+  let columns = if columns ==  none { (1fr,) * cols.len() } else { columns }
+
+  assert(
+    columns.len() == cols.len(),
+    message: "number of columns must match number of cols"
+  )
+  
+  grid(columns: columns, gutter: gutter, ..cols)
+  
+}
+
+// CC image
+#let cc_by-sa-nc = box(height: 1em, image("assets/by-nc-sa.eu.svg"))
 
 // Intro block
 #let intro-block(content, tools) = {
@@ -62,5 +76,3 @@
     *Hilfsmittel:* #if tools == none [keine] else [#tools]
   ]
 }
-
-#let cc_by-sa-nc = box(height: 1em, image("assets/by-nc-sa.eu.svg"))

@@ -2,9 +2,11 @@
 
 ## v0.1.0 (upcomming)
 
-**Exams:**
+**Templates:**
 
+- Added option to import templates with `#import templates.TEMPLATE_NAME`.
 - Added `exam` template.
+- Added `worksheet` template.
 
 **Assignments:**
 
@@ -29,6 +31,7 @@
 - Added function `tag`
 - Added function `checkmark`
 - Added function `field`
+- Added function `side-by-side`
 - Added variable `cc_by-sa-eu`
 - Added function `intro-block`
 

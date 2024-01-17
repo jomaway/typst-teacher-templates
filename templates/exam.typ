@@ -1,4 +1,4 @@
-#import "assignment.typ": __show_solution, schulzeug-assignments as assignments
+#import "../assignment.typ": __show_solution, schulzeug-assignments as assignments
 
 // Header block
 #let exam-header-block(
@@ -110,7 +110,7 @@
       // Erfolg
       h(1fr)
       text(10pt, weight: "semibold", font: "Atma")[
-          Viel Erfolg #box(height: 1em, image("assets/four-leaf-clover.svg"))
+          Viel Erfolg #box(height: 1em, image("../assets/four-leaf-clover.svg"))
       ]
       h(1fr)
       // Page Counter

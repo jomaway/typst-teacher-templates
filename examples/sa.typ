@@ -1,5 +1,7 @@
 #import "@local/schulzeug:0.1.0": *
 
+#import templates.exam: *
+
 #set text(size: 12pt, font: "Source Sans Pro")
 
 #let logo = box(height: 2cm, image("logo.jpg", fit: "contain")) 
