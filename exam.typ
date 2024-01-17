@@ -1,4 +1,4 @@
-#import "assignment.typ": __show_solution
+#import "assignment.typ": __show_solution, schulzeug-assignments as assignments
 
 // Header block
 #let exam-header-block(
@@ -118,9 +118,9 @@
       counter(page).display("1 / 1", both: true)
     }
   )
-  // Update global state show solution
-  __show_solution.update(show_solutions)
-  
+
+  show: assignments.with(show_solutions: show_solutions);
+
   // Include Header-Block
   exam-header-block(
     title,

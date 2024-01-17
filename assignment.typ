@@ -3,10 +3,10 @@
 #let __show_solution = state("s", false);
 #let total_points = state("t", 0);
 
-#let assignment_counter = counter("assignment-counter");
+#let __assignment_counter = counter("assignment-counter");
 
 /*  function for the numbering of the tasks and questions */
-#let assignment-numbering = (..args) => {
+#let __assignment_numbering = (..args) => {
   let nums = args.pos()
   if nums.len() == 1 {
     numbering("1. ", nums.last())
@@ -15,6 +15,24 @@
   }
 }
 
+// use for global config with show rule
+#let schulzeug-assignments(
+  show_solutions: false, 
+  reset_assignment_counter: false,
+  reset_point_counter: false,
+  body 
+) = {
+  __show_solution.update(show_solutions)
+  // check reset_assignment_counter
+  if reset_assignment_counter {
+    __assignment_counter.update(0)
+  }
+  // check reset_point_counter
+  if reset_point_counter {
+    total_points.update(0)
+  }
+  body
+}
 
 // draws a small gray box which indicates the amount of points for that assignment/question  
 // points: given points -> needs to be an integer
@@ -27,7 +45,7 @@
 
 // Show a box with the total_points
 #let point-sum-box = {
-  place(bottom + end)[
+  align(end)[
     #box(stroke: 1pt, inset: 0.8em, radius: 2pt)[
       #text(1.4em, sym.sum) :  \_\_\_\_ \/ #total_points.display() #smallcaps("PT")
     ]
@@ -53,15 +71,15 @@
   optional a point box can be displayed for a whole assignment.
 */
 #let assignment(desc, points: none, level: 1) = {
-  assignment_counter.step(level: level)
+  __assignment_counter.step(level: level)
   point-grid(
     {
       if (level == 1) {
         set text(size: 1.1em, weight: "semibold")
-        assignment_counter.display(assignment-numbering);
+        __assignment_counter.display(__assignment_numbering);
         desc
       } else {
-        assignment_counter.display(assignment-numbering);
+        __assignment_counter.display(__assignment_numbering);
         desc
       }
     },

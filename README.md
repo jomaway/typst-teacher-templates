@@ -28,14 +28,16 @@ For the moment you need to Download this repo and pack it into a local package `
     show_solutions: false,  // Print solutions in red color
 )
 // Add Assignments
-#assignment[Task number one]
+#assignment[Answer those questions.]
 #question(points: 2)[question a]  // question is basically a level 2 assignment
-#placeholer[#lines(2)]
+#placeholder[#lines(2)]
 #solution[The solution to this question is ...]
 #question(points: 4)[question b]
-#solution(placeholder: caro(4))[Solution is ...]
+#solution(alt: caro(4))[Solution is ...]
 #question(points: 3)[question c]
 #solution[Multiple solutions possible.]
+
+#assignment[Write some text about ...]
 ```
 
 # Changelog

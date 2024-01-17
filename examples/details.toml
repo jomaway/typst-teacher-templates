@@ -5,7 +5,7 @@ authors = "jomaway"
 [sa1]
 title = "1.Schulaufgabe"
 date = 2023-12-12
-show_solution = false
+show_solution = true
 
 [sa2]
 title = "2.Schulaufgabe"
