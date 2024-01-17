@@ -1,4 +1,4 @@
-# typst-teacher-tools (ttt)
+# typst-teacher-tools (Schulzeug)
 
 Collection of tools, which makes the teacher life easier.
 
