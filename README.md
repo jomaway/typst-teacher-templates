@@ -20,7 +20,7 @@ For the moment you need to Download this repo and pack it into a local package `
 
 ```typst
 #show: exam.with(
-    title: logo_title(logo,"1. Schulaufgabe"),
+    title: "1. Schulaufgabe",
     date: datetime(year: 2024, month: 02, day: 01), 
     class: "Klasse",
     subject: "BSA",

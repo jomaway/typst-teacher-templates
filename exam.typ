@@ -80,8 +80,7 @@
   title: "exam", // shoes the title of the exam -> 1. Schulaufgabe | Stegreifaufgabe | Kurzarbeit
   date: datetime.today(),     // date of the exam
   class: "",    
-  subject: "" , 
-  logo: none, // "images/logo.png", // displays the logo of the school.
+  subject: "" ,
   authors: "",
   show_solutions: false,
   body
@@ -94,7 +93,7 @@
   );
 
   // Set the document's basic properties.
-  set document(author: authors, title: "LNW -" + subject + class)
+  set document(author: authors, title: "exam-"+subject+"-"+class)
   set page(
     margin: (left: 20mm, right: 20mm, top: 10mm, bottom: 20mm),
     footer: {
