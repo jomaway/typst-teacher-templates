@@ -40,6 +40,10 @@ For the moment you need to Download this repo and pack it into a local package `
 #assignment[Write some text about ...]
 ```
 
+### Examples 
+
+For more check out the [examples](./examples/).
+
 # Changelog
 
 See [CHANGELOG.md](CHANGELOG.md)

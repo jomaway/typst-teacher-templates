@@ -11,6 +11,7 @@
   comment: none,
   total_points: 100,
   line-color: luma(70),
+  ..args
 ) = {
   // Header Box
   let header-box = {

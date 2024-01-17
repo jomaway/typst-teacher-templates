@@ -2,23 +2,11 @@
 
 #set text(size: 12pt, font: "Source Sans Pro")
 
-#let logo = box(height: 2cm, image("logo.jpg", fit: "contain"))
+#let logo = box(height: 2cm, image("logo.jpg", fit: "contain")) 
 #let details = toml("details.toml")
+#show: exam.with(..details.exam, title: logo_title(logo, details.exam.title))
 
-#show: exam.with(
-    //logo: "assets/rdf-logo.jpg",
-    title: logo_title(logo,details.sa1.title),  // Schulaufgabe | Stegreifaufgabe | Kurzarbeit
-    date: datetime(year: 2024, month: 02, day: 01), 
-    class: details.class,
-    subject: details.subject,
-    authors: details.authors,
-    show_solutions: details.sa1.show_solution,  // Print solutions in red color
-)
-
-
-#assignment[
-    Aufbau eines Mikrocontrollers
-]
+#assignment[Grundlagen LAN]
 
 Sie sollen im Rahmen eines Projektes das LAN im neuen Schulungsraum aufbauen. \
 Dazu müssen neue Netzwerkkompenenten bestellt und konfiguriert werden.
@@ -50,13 +38,13 @@ passiv #sym.arrow.r #solution(alt: lines(2))[ohne Stromverbindung z.B. Leitungen
 #pagebreak()
 #assignment(points: 5)[Kreuzen Sie die richtige Lösung an.]
 
-#question[Welche Adresse ist eine *Broadcast*-Adresse?]
+#question[Welche Adresse ist eine *Broadcast*-Adresse?
 #let addr = (`201.55.255.155/26`, `23.255.223.127/26`, `1.255.25.128/26`, `192.223.240.65/26`, `10.255.0.255/12`)
-#mct(choices:addr, answer:2)
+#mct(choices:addr, answer:2)]
 
-#question[Welche *Netz*-Adresse ist *ungültig*?]
+#question[Welche *Netz*-Adresse ist *ungültig*?
 #let addr = (`25.240.0.0/15`, `125.255.24.0/23`, `195.196.197.240/28`, `215.1.2.221/25`, `24.0.0.0/24`)
-#mct(choices:addr, answer:4)
+#mct(choices:addr, answer:4)]
 
 #question[Welche Adresse ist eine *gültige Host*-Adresse?] 
 #let addr = (`16.63.255.255/24`, `126.128.0.0/16`, `16.127.255.255/8`, `95.0.0.0/24`, `13.130.254.255/28`)
@@ -68,7 +56,7 @@ passiv #sym.arrow.r #solution(alt: lines(2))[ohne Stromverbindung z.B. Leitungen
 
 = Letzte Aufgabe
 
-#question(points: 55)[nothing]
+#question(points: 5)[Beschreiben Sie welche Probleme beim Routing auftreten können.]
 
 
 #point-sum-box

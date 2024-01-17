@@ -3,10 +3,10 @@
 #let details = toml("details.toml")
 
 #let meta = (
-    class: details.class,
-    subject: details.subject,
+    class: details.exam.class,
+    subject: details.exam.subject,
     dates: (
-        gehalten: details.sa1.date,
+        gehalten: details.exam.date,
         zurückgegeben: none, 
         eingetragen: none,
     ),
