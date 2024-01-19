@@ -2,7 +2,7 @@
 
 #import templates.exam: *
 
-#set text(size: 12pt, font: "Source Sans Pro")
+#set text(size: 12pt, font: ("Rubix","Source Sans Pro"), weight: 300)
 
 #let logo = box(height: 2cm, image("logo.jpg", fit: "contain")) 
 #let details = toml("details.toml")
