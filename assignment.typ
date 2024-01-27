@@ -1,9 +1,39 @@
 #import "utils.typ": tag, checkbox
+#import "lang_EN.typ": lang
+
 // Global state 
 #let __show_solution = state("s", false);
-#let total_points = state("t", 0);
 
 #let __assignment_counter = counter("assignment-counter");
+#let __point_list = state("l", (0, ))
+#let push_with_return(a_list, value) = {
+  a_list.push(value)
+  a_list
+}
+#let increase_last(a_list, value) = {
+  a_list.last() += value
+  a_list
+}
+#let point-table = {
+  __point_list.display(pl => {
+      let arr1 = ()
+      let arr2 = ()
+      for (assig, points) in pl.enumerate() {
+        if points != 0 {
+          arr1.push(assig)
+          arr2.push(points)
+        }
+      }
+      table(
+        align: center,
+        columns: arr1.len() + 2,
+        lang.assignment, ..arr1.map(str), lang.total,
+        lang.points, ..arr2.map(str), str(arr2.sum()),
+        lang.awarded,
+      )
+    }
+  )
+}
 
 /*  function for the numbering of the tasks and questions */
 #let __assignment_numbering = (..args) => {
@@ -29,7 +59,7 @@
   }
   // check reset_point_counter
   if reset_point_counter {
-    total_points.update(0)
+    __point_list.update((0,))
   }
   body
 }
@@ -39,15 +69,15 @@
 // plural: if true it displays an s if more than one point
 #let point-box(points, plural: false) = {
   assert.eq(type(points),int)
-  total_points.update(t => t + points)
-  tag(fill: gray.lighten(35%))[#points #smallcaps[pt#if points > 1 and plural [s]]]
+  __point_list.update(l => increase_last(l, points))
+  tag(fill: gray.lighten(35%))[#points #smallcaps[#if points==1 [#lang.pt] else [#lang.pts]]]
 }
 
 // Show a box with the total_points
 #let point-sum-box = {
   align(end)[
     #box(stroke: 1pt, inset: 0.8em, radius: 2pt)[
-      #text(1.4em, sym.sum) :  \_\_\_\_ \/ #total_points.display() #smallcaps("PT")
+      #text(1.4em, sym.sum) :  \_\_\_\_ \/ #__point_list.display(l=>l.sum()) #smallcaps(lang.pt)
     ]
   ]
 }
@@ -75,6 +105,8 @@
   point-grid(
     {
       if (level == 1) {
+        // on Assignments, add another item to the list of assignments
+        __point_list.update(l => push_with_return(l, 0))
         set text(size: 1.1em, weight: "semibold")
         __assignment_counter.display(__assignment_numbering);
         desc
