@@ -139,3 +139,106 @@
 
 
 
+// COVER PAGE
+#let cover-page(
+  class: none,
+  subject: none,
+  dates: (
+          gehalten: none, 
+          zurückgegeben: none, 
+          eingetragen: none,
+        ),
+  comment: none,
+  total_points: 100,
+  ..args
+) = {
+  import "../utils.typ": checkbox, lines, field
+  import "../grading.typ": calc_grade_distribution, grading_table
+  
+  return page(
+    margin: (left: 20mm, right: 20mm, top: 10mm, bottom: 20mm),
+    footer: none
+  )[
+    #set text(16pt)
+
+    // header - title
+    #box(
+      width: 100%, 
+      stroke: luma(70),
+      inset: 1em, 
+      radius: 3pt
+    )[
+      #align(center)[#text(22pt)[Deckblatt Leistungsnachweis]]
+    ]
+
+    // content
+    #grid(
+      columns: (auto, 4.7cm, auto, auto),
+      column-gutter: 1em,
+      row-gutter: 1em,
+      "Klasse: ", text(weight: "semibold", class),
+      "Schuljahr: ", 
+      { 
+        if type(dates.gehalten) == datetime {
+          let date = dates.gehalten;
+          if date.month() < 9 {str(date.year()-1) + "/" + str(date.year())} else { str(date.year()) + "/" + str(date.year()+1) }
+        } else { align(bottom,line(length: 3cm))}
+      },
+      "Fach: ", text(weight: "semibold", subject),
+      [#checkbox() SA #checkbox() KA],
+      [ #checkbox() \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_]
+    )
+    #v(0.5cm)
+    
+    // Missing student and student count
+    #table(
+      columns: (auto),
+      row-gutter: (1cm),
+      stroke: none,
+      inset: 0pt,
+      align: bottom,
+      [Fehlende SchülerInnen: #box(width: 1fr)[#align(end)[ Anzahl Teilnehmer: #box(width:1.5cm, stroke: (bottom: 0.5pt))]]],
+      lines(2)
+    )
+
+
+    // Dates
+    Datum: #h(1fr)
+    #field("gehalten", value: dates.gehalten.display("[day].[month].[year]")) #h(1fr) 
+    #field("zurückgegeben") #h(1fr) 
+    #field("eingetragen")
+    
+    #v(0.5cm)
+
+    // Grading table uses the ihk grading distribution
+    #grading_table(calc_grade_distribution(total_points));
+
+    // Comment
+    #grid(
+      columns: (auto),
+      row-gutter: 1cm,
+      smallcaps("Bemerkung:"),
+      if (comment != none) {comment} else {
+          lines(2)
+      },
+    )
+    
+    // Signature
+    #align(bottom, 
+      box(
+        stroke: (top: (thickness:1pt, paint:blue, dash: "dashed") ), 
+        width: 100%, 
+        inset: (top: 4pt)
+      )[
+        #text(12pt)[#smallcaps("Unterschrift:")]
+        
+        #h(1cm) #field("Lehrer") 
+        #h(1fr) #field("Fachbetreuer")
+      ]
+    )      
+
+  ] // end page
+
+}
+
+
