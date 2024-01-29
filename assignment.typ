@@ -8,7 +8,9 @@
 #let _get_str_for(key) = {
   locate(loc => {
     let selected_lang = __lang.at(loc)
-    return lang_dict.at(selected_lang).at(key)
+    if (not lang_dict.keys().contains(selected_lang)) {  selected_lang = "en" }
+    let string = lang_dict.at(selected_lang).at(key, default: none)
+    return string
   })
 }
 
@@ -26,8 +28,6 @@
   a_list.last() += value
   a_list
 }
-
-
 
 /*  function for the numbering of the tasks and questions */
 #let __assignment_numbering = (..args) => {
@@ -97,19 +97,19 @@
 // Show a table with point distribution
 #let point-table = {
   __point_list.display(pl => {
-      let arr1 = ()
-      let arr2 = ()
-      for (assig, points) in pl.enumerate() {
+      let list_of_assignments = ()
+      let list_of_points = ()
+      for (assignment, points) in pl.enumerate() {
         if points != 0 {
-          arr1.push(assig)
-          arr2.push(points)
+          list_of_assignments.push(assignment)
+          list_of_points.push(points)
         }
       }
       table(
-        align: center,
-        columns: arr1.len() + 2,
-        _get_str_for("assignment"), ..arr1.map(str), _get_str_for("total"),
-        _get_str_for("points"), ..arr2.map(str), str(arr2.sum()),
+        align: (col, _) => if (col == 0) { end} else {center},
+        columns: list_of_assignments.len() + 2,
+        _get_str_for("assignment"), ..list_of_assignments.map(str), _get_str_for("total"),
+        _get_str_for("points"), ..list_of_points.map(str), str(list_of_points.sum()),
         _get_str_for("awarded"),
       )
     }
