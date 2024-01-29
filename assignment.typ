@@ -1,9 +1,40 @@
 #import "utils.typ": tag, checkbox
-// Global state 
-#let __show_solution = state("s", false);
-#let total_points = state("t", 0);
 
+// Language settings
+#let lang_dict = toml("lang.toml");
+#let __lang = state("lang", "en");
+
+// Helpers for lang
+#let _get_str_for(key) = {
+  locate(loc => {
+    let selected_lang = __lang.at(loc)
+    if (not lang_dict.keys().contains(selected_lang)) {  selected_lang = "en" }
+    let string = lang_dict.at(selected_lang).at(key, default: none)
+    return string
+  })
+}
+
+// Global states
+#let __show_solution = state("s", false);
 #let __assignment_counter = counter("assignment-counter");
+#let __point_list = state("point-list", ())
+
+#let push_with_return(a_list, value) = {
+  a_list.push(value)
+  return a_list
+}
+
+#let increase_last(a_list, value) = {
+  a_list.last() += value
+  return a_list
+}
+
+#let get_total_points() = {
+  locate(loc => {
+    return __point_list.final(loc).sum()
+  })
+}
+
 
 /*  function for the numbering of the tasks and questions */
 #let __assignment_numbering = (..args) => {
@@ -17,11 +48,17 @@
 
 // use for global config with show rule
 #let schulzeug-assignments(
+  lang: "en",
   show_solutions: false, 
   reset_assignment_counter: false,
   reset_point_counter: false,
   body 
 ) = {
+  assert(
+    type(lang) == str, 
+    message: "The lang parameter needs to be of type string."
+  );
+  __lang.update(lang);
   __show_solution.update(show_solutions)
   // check reset_assignment_counter
   if reset_assignment_counter {
@@ -29,7 +66,7 @@
   }
   // check reset_point_counter
   if reset_point_counter {
-    total_points.update(0)
+    __point_list.update(())
   }
   body
 }
@@ -39,17 +76,8 @@
 // plural: if true it displays an s if more than one point
 #let point-box(points, plural: false) = {
   assert.eq(type(points),int)
-  total_points.update(t => t + points)
-  tag(fill: gray.lighten(35%))[#points #smallcaps[pt#if points > 1 and plural [s]]]
-}
-
-// Show a box with the total_points
-#let point-sum-box = {
-  align(end)[
-    #box(stroke: 1pt, inset: 0.8em, radius: 2pt)[
-      #text(1.4em, sym.sum) :  \_\_\_\_ \/ #total_points.display() #smallcaps("PT")
-    ]
-  ]
+  __point_list.update(l => increase_last(l, points))
+  tag(fill: gray.lighten(35%))[#points #smallcaps[#if points==1 [#_get_str_for("pt")] else [#_get_str_for("pts")]]]
 }
 
 /* template for a grid to display the point-box on the right side. */
@@ -64,6 +92,33 @@
   )
 }
 
+
+// Show a box with the total_points
+#let point-sum-box = {
+  align(end)[
+    #box(stroke: 1pt, inset: 0.8em, radius: 2pt)[
+      #text(1.4em, sym.sum) :  \_\_\_\_ \/ #get_total_points() #smallcaps(_get_str_for("pt"))
+    ]
+  ]
+}
+
+// Show a table with point distribution
+#let point-table = {
+  locate(loc => {
+
+  let pl = __point_list.final(loc)
+      
+  table(
+    align: (col, _) => if (col == 0) { end} else {center},
+    columns: pl.len() + 2,
+    _get_str_for("assignment"), ..pl.enumerate().map(((i,_)) => [#{i+1}]), _get_str_for("total"),
+    _get_str_for("points"), ..pl.map(str), get_total_points(),
+    _get_str_for("awarded"),
+  )
+
+  })
+}
+
 /*
   assignment indicates a new section of questions.
   It updates the assignment-counter on the first level.
@@ -75,6 +130,8 @@
   point-grid(
     {
       if (level == 1) {
+        // on Assignments, add another item to the list of assignments
+        __point_list.update(l => push_with_return(l, 0))
         set text(size: 1.1em, weight: "semibold")
         __assignment_counter.display(__assignment_numbering);
         desc
@@ -142,3 +199,4 @@
   stack(dir:dir, spacing: 1em, ..choices)
 }
 
+<
