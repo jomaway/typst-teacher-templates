@@ -1,39 +1,33 @@
 #import "utils.typ": tag, checkbox
-#import "lang_EN.typ": lang
 
-// Global state 
+// Language settings
+#let lang_dict = toml("lang.toml");
+#let __lang = state("lang", "en");
+
+// Helpers for lang
+#let _get_str_for(key) = {
+  locate(loc => {
+    let selected_lang = __lang.at(loc)
+    return lang_dict.at(selected_lang).at(key)
+  })
+}
+
+// Global states
 #let __show_solution = state("s", false);
-
 #let __assignment_counter = counter("assignment-counter");
 #let __point_list = state("l", (0, ))
+
 #let push_with_return(a_list, value) = {
   a_list.push(value)
   a_list
 }
+
 #let increase_last(a_list, value) = {
   a_list.last() += value
   a_list
 }
-#let point-table = {
-  __point_list.display(pl => {
-      let arr1 = ()
-      let arr2 = ()
-      for (assig, points) in pl.enumerate() {
-        if points != 0 {
-          arr1.push(assig)
-          arr2.push(points)
-        }
-      }
-      table(
-        align: center,
-        columns: arr1.len() + 2,
-        lang.assignment, ..arr1.map(str), lang.total,
-        lang.points, ..arr2.map(str), str(arr2.sum()),
-        lang.awarded,
-      )
-    }
-  )
-}
+
+
 
 /*  function for the numbering of the tasks and questions */
 #let __assignment_numbering = (..args) => {
@@ -47,11 +41,17 @@
 
 // use for global config with show rule
 #let schulzeug-assignments(
+  lang: "en",
   show_solutions: false, 
   reset_assignment_counter: false,
   reset_point_counter: false,
   body 
 ) = {
+  assert(
+    type(lang) == str, 
+    message: "The lang parameter needs to be of type string."
+  );
+  __lang.update(lang);
   __show_solution.update(show_solutions)
   // check reset_assignment_counter
   if reset_assignment_counter {
@@ -70,16 +70,7 @@
 #let point-box(points, plural: false) = {
   assert.eq(type(points),int)
   __point_list.update(l => increase_last(l, points))
-  tag(fill: gray.lighten(35%))[#points #smallcaps[#if points==1 [#lang.pt] else [#lang.pts]]]
-}
-
-// Show a box with the total_points
-#let point-sum-box = {
-  align(end)[
-    #box(stroke: 1pt, inset: 0.8em, radius: 2pt)[
-      #text(1.4em, sym.sum) :  \_\_\_\_ \/ #__point_list.display(l=>l.sum()) #smallcaps(lang.pt)
-    ]
-  ]
+  tag(fill: gray.lighten(35%))[#points #smallcaps[#if points==1 [#_get_str_for("pt")] else [#_get_str_for("pts")]]]
 }
 
 /* template for a grid to display the point-box on the right side. */
@@ -90,6 +81,37 @@
     body,
     if points != none {
       point-box(points)
+    }
+  )
+}
+
+// Show a box with the total_points
+#let point-sum-box = {
+  align(end)[
+    #box(stroke: 1pt, inset: 0.8em, radius: 2pt)[
+      #text(1.4em, sym.sum) :  \_\_\_\_ \/ #__point_list.display(l=>l.sum()) #smallcaps(_get_str_for("pt"))
+    ]
+  ]
+}
+
+// Show a table with point distribution
+#let point-table = {
+  __point_list.display(pl => {
+      let arr1 = ()
+      let arr2 = ()
+      for (assig, points) in pl.enumerate() {
+        if points != 0 {
+          arr1.push(assig)
+          arr2.push(points)
+        }
+      }
+      table(
+        align: center,
+        columns: arr1.len() + 2,
+        _get_str_for("assignment"), ..arr1.map(str), _get_str_for("total"),
+        _get_str_for("points"), ..arr2.map(str), str(arr2.sum()),
+        _get_str_for("awarded"),
+      )
     }
   )
 }
@@ -174,3 +196,4 @@
   stack(dir:dir, spacing: 1em, ..choices)
 }
 
+<

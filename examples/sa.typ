@@ -6,7 +6,8 @@
 
 #let logo = box(height: 2cm, image("logo.jpg", fit: "contain")) 
 #let details = toml("details.toml")
-#show: exam.with(..details.exam, title: logo_title(logo, details.exam.title))
+#show: exam.with(..details.exam, title: logo_title(logo, details.exam.title));
+#show: schulzeug-assignments.with(lang: "de");
 
 #assignment[Grundlagen LAN]
 
@@ -60,6 +61,7 @@ passiv #sym.arrow.r #solution(alt: lines(2))[ohne Stromverbindung z.B. Leitungen
 
 #question(points: 5)[Beschreiben Sie welche Probleme beim Routing auftreten können.]
 
+#assignment(points: 8)[Ende]
 
 #point-sum-box
-
+#point-table
