@@ -1,4 +1,4 @@
-#import "../assignment.typ": __show_solution, schulzeug-assignments as assignments
+#import "../assignment.typ": __show_solution, schulzeug-assignments as assignments, get_total_points, _get_str_for, __point_list
 
 // Header block
 #let exam-header-block(
@@ -73,6 +73,29 @@
 // stack for logo-title block
 #let logo_title(image, title, dir: ltr) = {
     stack(spacing: 0.5em, dir:dir, image, title)
+}
+
+// Show a box with the total_points
+#let point-sum-box = {
+  align(end)[
+    #box(stroke: 1pt, inset: 0.8em, radius: 2pt)[
+      #text(1.4em, sym.sum) :  \_\_\_\_ \/ #get_total_points() #smallcaps(_get_str_for("pt"))
+    ]
+  ]
+}
+
+// Show a table with point distribution
+#let point-table = {
+  locate(loc => {
+    let pl = __point_list.final(loc)
+    table(
+      align: (col, _) => if (col == 0) { end} else {center},
+      columns: pl.len() + 2,
+      _get_str_for("assignment"), ..pl.enumerate().map(((i,_)) => [#{i+1}]), _get_str_for("total"),
+      _get_str_for("points"), ..pl.map(str), get_total_points(),
+      _get_str_for("awarded"),
+    )
+  })
 }
 
 // The exam function defines how your document looks.
@@ -154,7 +177,7 @@
 ) = {
   import "../utils.typ": checkbox, lines, field
   import "../grading.typ": calc_grade_distribution, grading_table
-  
+
   return page(
     margin: (left: 20mm, right: 20mm, top: 10mm, bottom: 20mm),
     footer: none
@@ -240,5 +263,3 @@
   ] // end page
 
 }
-
-

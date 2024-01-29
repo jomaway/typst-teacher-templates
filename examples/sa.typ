@@ -2,12 +2,15 @@
 
 #import templates.exam: *
 
+
 #set text(size: 12pt, font: ("Rubix","Source Sans Pro"), weight: 300)
 
 #let logo = box(height: 2cm, image("logo.jpg", fit: "contain")) 
 #let details = toml("details.toml")
 #show: exam.with(..details.exam, title: logo_title(logo, details.exam.title));
 #show: schulzeug-assignments.with(lang: "de");
+
+#point-table
 
 #assignment[Grundlagen LAN]
 

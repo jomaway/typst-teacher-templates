@@ -93,38 +93,11 @@
 }
 
 
-// Show a box with the total_points
-#let point-sum-box = {
-  align(end)[
-    #box(stroke: 1pt, inset: 0.8em, radius: 2pt)[
-      #text(1.4em, sym.sum) :  \_\_\_\_ \/ #get_total_points() #smallcaps(_get_str_for("pt"))
-    ]
-  ]
-}
 
-// Show a table with point distribution
-#let point-table = {
-  locate(loc => {
-
-  let pl = __point_list.final(loc)
-      
-  table(
-    align: (col, _) => if (col == 0) { end} else {center},
-    columns: pl.len() + 2,
-    _get_str_for("assignment"), ..pl.enumerate().map(((i,_)) => [#{i+1}]), _get_str_for("total"),
-    _get_str_for("points"), ..pl.map(str), get_total_points(),
-    _get_str_for("awarded"),
-  )
-
-  })
-}
-
-/*
-  assignment indicates a new section of questions.
-  It updates the assignment-counter on the first level.
-  It displays the title of the new assignment and numbers it with digits.
-  optional a point box can be displayed for a whole assignment.
-*/
+// assignment indicates a new section of questions.
+// It updates the assignment-counter on the first level.
+// It displays the title of the new assignment and numbers it with digits.
+// optional a point box can be displayed for a whole assignment.
 #let assignment(desc, points: none, level: 1) = {
   __assignment_counter.step(level: level)
   point-grid(
@@ -198,5 +171,3 @@
 
   stack(dir:dir, spacing: 1em, ..choices)
 }
-
-<
