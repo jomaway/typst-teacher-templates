@@ -17,17 +17,24 @@
 // Global states
 #let __show_solution = state("s", false);
 #let __assignment_counter = counter("assignment-counter");
-#let __point_list = state("l", (0, ))
+#let __point_list = state("point-list", ())
 
 #let push_with_return(a_list, value) = {
   a_list.push(value)
-  a_list
+  return a_list
 }
 
 #let increase_last(a_list, value) = {
   a_list.last() += value
-  a_list
+  return a_list
 }
+
+#let get_total_points() = {
+  locate(loc => {
+    return __point_list.final(loc).sum()
+  })
+}
+
 
 /*  function for the numbering of the tasks and questions */
 #let __assignment_numbering = (..args) => {
@@ -59,7 +66,7 @@
   }
   // check reset_point_counter
   if reset_point_counter {
-    __point_list.update((0,))
+    __point_list.update(())
   }
   body
 }
@@ -85,35 +92,31 @@
   )
 }
 
+
 // Show a box with the total_points
 #let point-sum-box = {
   align(end)[
     #box(stroke: 1pt, inset: 0.8em, radius: 2pt)[
-      #text(1.4em, sym.sum) :  \_\_\_\_ \/ #__point_list.display(l=>l.sum()) #smallcaps(_get_str_for("pt"))
+      #text(1.4em, sym.sum) :  \_\_\_\_ \/ #get_total_points() #smallcaps(_get_str_for("pt"))
     ]
   ]
 }
 
 // Show a table with point distribution
 #let point-table = {
-  __point_list.display(pl => {
-      let list_of_assignments = ()
-      let list_of_points = ()
-      for (assignment, points) in pl.enumerate() {
-        if points != 0 {
-          list_of_assignments.push(assignment)
-          list_of_points.push(points)
-        }
-      }
-      table(
-        align: (col, _) => if (col == 0) { end} else {center},
-        columns: list_of_assignments.len() + 2,
-        _get_str_for("assignment"), ..list_of_assignments.map(str), _get_str_for("total"),
-        _get_str_for("points"), ..list_of_points.map(str), str(list_of_points.sum()),
-        _get_str_for("awarded"),
-      )
-    }
+  locate(loc => {
+
+  let pl = __point_list.final(loc)
+      
+  table(
+    align: (col, _) => if (col == 0) { end} else {center},
+    columns: pl.len() + 2,
+    _get_str_for("assignment"), ..pl.enumerate().map(((i,_)) => [#{i+1}]), _get_str_for("total"),
+    _get_str_for("points"), ..pl.map(str), get_total_points(),
+    _get_str_for("awarded"),
   )
+
+  })
 }
 
 /*
