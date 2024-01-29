@@ -10,7 +10,7 @@
 #show: exam.with(..details.exam, title: logo_title(logo, details.exam.title));
 #show: schulzeug-assignments.with(lang: "de");
 
-#point-table
+#align(center, point-table)
 
 #assignment[Grundlagen LAN]
 
@@ -23,7 +23,7 @@ aktiv #sym.arrow.r #solution(alt: lines(2))[mit Stromverbindung z.B. Switch/Rout
 passiv #sym.arrow.r #solution(alt: lines(2))[ohne Stromverbindung z.B. Leitungen]
 
 #question(points: 3)[Geben Sie *3 Kriterien* an, die bei der Vergabe von IP-Adressen *im gleichen LAN* beachtet werden müssen.]
-#solution(alt: lines(6))[
+#solution(alt: caro(6))[
     - Keine IP doppelt vergeben
     - Broadcast und Netzwerkadresse dürfen nicht an Hosts vergeben werden.
     - Alle Geräte brauchen den gleichen Netzanteil / Subnetzmaske.
@@ -31,7 +31,7 @@ passiv #sym.arrow.r #solution(alt: lines(2))[ohne Stromverbindung z.B. Leitungen
 
 #question(points: 3)[Es müssen 31 Host adressiert werden. Berechnen (_Rechenweg_) Sie die *Subnetzmaske* (_Angabe in dezimal_) passend zur Anzahl der benötigten Hosts. Geben Sie die Subnetzmaske in *dezimaler* und *CIDR-Notation*. an]
 *Rechenweg:*
-#solution(alt: lines(5))[
+#solution(alt: caro(5))[
     $2⁵-2=32-2=30$ adressierbare Host #sym.arrow.r zu wenig!
     $2⁶-2 = 64-2 = 62 $ addressierbare Hosts. Daher werden 6 Hostbits benötigt. $32-6=26$ #sym.arrow.r `/26` Subnetzmaske.
     Umrechnung in Dezimal im letztes Oktet: `1100 0000`#sub[(bin)] = `192`#sub[(dez)]
