@@ -4,14 +4,21 @@ Collection of tools, which makes the teacher life easier.
 
 > Old version of this repo is still available under the branch [depricated](https://github.com/jomaway/typst-teacher-templates/tree/depricated)
 
-⚠️ **Warning: Still in alpha state**
+⚠️ **Still a work in progres**
+
+## Features 
+
+- Create assignments with automated point summary and solutions
+- Create cover pages for the exams with grade distribution, ... (early stage, only german)
+- Create beautiful student lists from a csv file.
+
 
 ## Usage
 
 For the moment you need to Download this repo and pack it into a local package `schulzeug` then you can use it in typst like this:
 
 ```typst
-    #import "@local/schulzeug:0.1.0": *
+#import "@local/schulzeug:0.1.0": *
 ```
 
 > Planning to publish it as a package soon.
@@ -19,6 +26,7 @@ For the moment you need to Download this repo and pack it into a local package `
 ### Create an exam
 
 ```typst
+#import "@local/schulzeug:0.1.0": *
 #import templates.exam: *
 
 #show: exam.with(
@@ -41,6 +49,31 @@ For the moment you need to Download this repo and pack it into a local package `
 
 #assignment[Write some text about ...]
 ```
+
+### Create a Studentlist
+
+Take an `csv` file with your student data, like the following.
+```csv
+Firstname, Lastname,
+Anton, Arbor,
+Bernd, Bird,
+```
+
+Create a `students.typ` file like this.
+```
+#import "@local/schulzeug:0.1.0": studentlist
+
+#let data = csv("students.csv")
+
+= Studentlist
+
+#studentlist(
+  numbered: true, 
+  class: "IAV 2425",
+  data,
+)
+```
+and voilà see the result. And yes you can add more columns to the csv file.
 
 ### Examples 
 

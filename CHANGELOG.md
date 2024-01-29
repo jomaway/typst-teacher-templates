@@ -6,6 +6,7 @@
 
 - Added option to import templates with `#import templates.TEMPLATE_NAME`.
 - Added `exam` template.
+- Added `cover-page` to `exam` template.
 - Added `worksheet` template.
 
 **Assignments:**
@@ -35,11 +36,15 @@
 - Added variable `cc_by-sa-eu`
 - Added function `intro-block`
 
-**Cover Page:**
+**Grading:**
 
-- Added initial version of a `cover page` function
+- Added function `calc_grade_distribution`
+- Added function `get_max_points` and `get_min_points`
+- Added function `grading_table`
 
 **Examples:**
 
-- Added an example (*sa.typ*) for creating a exam.
-- Added an example (*cover.typ*) for creating a cover page
+- Added example (*simple-assignments.typ*) for demonstrating the basic usage of the `assignment` module.
+- Added example (*sa.typ*) for creating a exam with the `assignment` module.
+- Added example (*cover.typ*) for creating an exam cover page with grade distribution.
+- Added example (*students.typ*) for creating studentlists from `csv` files.
