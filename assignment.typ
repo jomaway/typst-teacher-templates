@@ -40,6 +40,7 @@
 #let __assignment_numbering = (..args) => {
   let nums = args.pos()
   if nums.len() == 1 {
+    set text(1em, weight: "semibold")
     numbering("1. ", nums.last())
   } else if nums.len() == 2 {
     numbering("a) ", nums.last())
@@ -105,7 +106,6 @@
       if (level == 1) {
         // on Assignments, add another item to the list of assignments
         __point_list.update(l => push_with_return(l, 0))
-        set text(size: 1.1em, weight: "semibold")
         __assignment_counter.display(__assignment_numbering);
         desc
       } else {
