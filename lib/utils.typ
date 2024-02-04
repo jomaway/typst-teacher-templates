@@ -60,7 +60,7 @@
 }
 
 // CC image
-#let cc_by-sa-nc = box(height: 1em, image("assets/by-nc-sa.eu.svg"))
+// #let cc_by-sa-nc = box(height: 1em, image("assets/by-nc-sa.eu.svg"))
 
 // Intro block
 #let intro-block(content, tools) = {

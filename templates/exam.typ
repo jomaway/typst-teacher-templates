@@ -136,7 +136,7 @@
       // Erfolg
       h(1fr)
       text(10pt, weight: "semibold", font: "Atma")[
-          #linguify("good_luck") #box(height: 1em, image("../assets/four-leaf-clover.svg"))
+          #linguify("good_luck") #box(height: 1em, image("assets/four-leaf-clover.svg"))
       ]
       h(1fr)
       // Page Counter
