@@ -1,19 +1,5 @@
 #import "utils.typ": tag, checkbox
 
-// Language settings
-#let lang_dict = toml("lang.toml");
-#let __lang = state("lang", "en");
-
-// Helpers for lang
-#let _get_str_for(key) = {
-  locate(loc => {
-    let selected_lang = __lang.at(loc)
-    if (not lang_dict.keys().contains(selected_lang)) {  selected_lang = "en" }
-    let string = lang_dict.at(selected_lang).at(key, default: none)
-    return string
-  })
-}
-
 // Global states
 #let __show_solution = state("s", false);
 #let __assignment_counter = counter("assignment-counter");
@@ -49,17 +35,11 @@
 
 // use for global config with show rule
 #let schulzeug-assignments(
-  lang: "en",
   show_solutions: false, 
   reset_assignment_counter: false,
   reset_point_counter: false,
   body 
 ) = {
-  assert(
-    type(lang) == str, 
-    message: "The lang parameter needs to be of type string."
-  );
-  __lang.update(lang);
   __show_solution.update(show_solutions)
   // check reset_assignment_counter
   if reset_assignment_counter {
@@ -78,7 +58,7 @@
 #let point-box(points, plural: false) = {
   assert.eq(type(points),int)
   __point_list.update(l => increase_last(l, points))
-  tag(fill: gray.lighten(35%))[#points #smallcaps[#if points==1 [#_get_str_for("pt")] else [#_get_str_for("pts")]]]
+  tag(fill: gray.lighten(35%))[#points #text(0.8em,smallcaps[#if points==1 [PT] else [PTs]])]
 }
 
 /* template for a grid to display the point-box on the right side. */

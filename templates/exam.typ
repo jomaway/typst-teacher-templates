@@ -1,4 +1,5 @@
-#import "../assignment.typ": __show_solution, schulzeug-assignments as assignments, get_total_points, _get_str_for, __point_list
+#import "../lib/assignment.typ": __show_solution, schulzeug-assignments as assignments, get_total_points, __point_list
+#import "@preview/linguify:0.1.0": *
 
 // Header block
 #let exam-header-block(
@@ -79,7 +80,7 @@
 #let point-sum-box = {
   align(end)[
     #box(stroke: 1pt, inset: 0.8em, radius: 2pt)[
-      #text(1.4em, sym.sum) :  \_\_\_\_ \/ #get_total_points() #smallcaps(_get_str_for("pt"))
+      #text(1.4em, sym.sum) :  \_\_\_\_ \/ #get_total_points() #smallcaps(linguify("pt"))
     ]
   ]
 }
@@ -90,10 +91,11 @@
     let pl = __point_list.final(loc)
     table(
       align: (col, _) => if (col == 0) { end} else {center},
+      inset: 1em,
       columns: pl.len() + 2,
-      _get_str_for("assignment"), ..pl.enumerate().map(((i,_)) => [#{i+1}]), _get_str_for("total"),
-      _get_str_for("points"), ..pl.map(str), get_total_points(),
-      _get_str_for("awarded"),
+      linguify("assignment"), ..pl.enumerate().map(((i,_)) => [#{i+1}]), linguify("total"),
+      linguify("points"), ..pl.map(str), get_total_points(),
+      linguify("awarded"),
     )
   })
 }
@@ -106,6 +108,7 @@
   subject: "" ,
   authors: "",
   show_solutions: false,
+  lang: "en",
   body
 ) = {
 
@@ -133,14 +136,14 @@
       // Erfolg
       h(1fr)
       text(10pt, weight: "semibold", font: "Atma")[
-          Viel Erfolg #box(height: 1em, image("../assets/four-leaf-clover.svg"))
+          #linguify("good_luck") #box(height: 1em, image("../assets/four-leaf-clover.svg"))
       ]
       h(1fr)
       // Page Counter
       counter(page).display("1 / 1", both: true)
     }
   )
-
+  show: linguify_config.with(data: toml("lang.toml"), lang: lang);
   show: assignments.with(show_solutions: show_solutions);
 
   // Include Header-Block

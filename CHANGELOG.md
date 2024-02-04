@@ -7,6 +7,7 @@
 - Added option to import templates with `#import templates.TEMPLATE_NAME`.
 - Added `exam` template.
 - Added `cover-page` to `exam` template.
+- Added `point-sum-box` and `point-eval-table` to `exam` template.
 - Added `worksheet` template.
 
 **Assignments:**
@@ -16,8 +17,8 @@
 - Added `mct` function to add multiple choice questions.
 - Added `solution` function.
 - Added `placeholder` function which is only shown if solution is hidden.
-- Added `point-sum-box` variable to show the total points.
-- Added **point-counter** to calculate the total points.
+- Added `get-total-points` function to get the total points.
+- Added `__point-list` to calculate the total points for each assignment.
 - Added `__assignment_counter` for displaying numbers in front of each assignment.
 - Added `schulzeug-assignments` for using as global show rule. 
     - Added option to show and hide a `solution` with `show_solutions: true`

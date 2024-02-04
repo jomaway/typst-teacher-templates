@@ -5,6 +5,7 @@ points= "Points"
 assignment= "Assignment"
 total= "Total"
 awarded= "Awarded"
+good_luck = "Good Luck"
 
 [de]
 pt= "pt"
@@ -13,3 +14,4 @@ points= "Punkte"
 assignment= "Aufgabe"
 total= "Gesamt"
 awarded= "Erreicht"
+good_luck = "Viel Erfolg"

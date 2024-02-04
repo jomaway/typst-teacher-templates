@@ -1,4 +1,4 @@
-#import "utils.typ": tag
+#import "../lib/utils.typ": tag
 
 #let studentlist(data, class: none, numbered: false, rh: auto) = {
     assert(type(numbered) == bool, message: "The numbered parameter can only be [true] or [false].")
