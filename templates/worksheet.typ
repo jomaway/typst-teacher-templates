@@ -1,6 +1,6 @@
 #import "../lib/utils.typ": tag
-#import "@preview/gentle-clues:0.6.0": *  // included because i often use it.
 #import "@preview/chic-hdr:0.4.0": *
+#import "@preview/gentle-clues:0.6.0": *
 
 
 #let worksheet(topic: "", subject: "",  authors: "unknown", version: none, columns: 1, body) = {
@@ -19,6 +19,7 @@
     last changed: #datetime.today().display("[year]-[month]-[day]")
   ]
 
+  set text(12pt, font: "Rubik", weight: 300, lang: "de")
   // Header settings
   show: chic.with(
     chic-header(
@@ -38,12 +39,13 @@
   // Show rules
   show: gentle-clues.with(lang: "de",show-task-counter: true)
   show heading.where(level: 1): set block(below: 1.1em);
+  show heading.where(level: 1): set text(weight: 500);
   show link: set text(blue);
   show raw.where(block: false): it => tag(fill: luma(230))[#it]
 
   // Settings
   // Set text size, font and lang 
-  set text(12pt, font: "Corbel", lang: "de")
+  set text(12pt, font: "Rubik", weight: 300, lang: "de")
   // Set spacing between lines and Blocksatz.
   set par(leading: 1em, justify: true)
   // Set header numbering only on the level 1 and 2.
@@ -59,7 +61,7 @@
 
 #let title(title) = [
   #align(center)[
-    #text(1.6em, weight: 700, title)
+    #text(1.6em, weight: 500, title)
   ]
 ]
 
