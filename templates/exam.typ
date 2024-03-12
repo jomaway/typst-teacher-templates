@@ -147,13 +147,17 @@
   total_points: 100,
   ..args
 ) = {
-  import "../utils.typ": checkbox, lines, field
-  import "../grading.typ": calc_grade_distribution, grading_table
+  import "../lib/utils.typ": checkbox, lines, field
+  import "../lib/grading.typ": calc_grade_distribution, grading_table
 
+  
   return page(
     margin: (left: 20mm, right: 20mm, top: 10mm, bottom: 20mm),
     footer: none
   )[
+    // setup linguify
+    #show: linguify_config.with(data: toml("lang.toml"));
+
     #set text(16pt)
 
     // header - title
@@ -168,10 +172,10 @@
 
     // content
     #grid(
-      columns: (auto, 4.7cm, auto, auto),
-      column-gutter: 1em,
-      row-gutter: 1em,
-      "Klasse: ", text(weight: "semibold", class),
+      columns: (auto, 1fr, auto, auto),
+      align: (col, _) => if ( calc.even(col) ) { end } else { auto },
+      gutter: 1em,
+      linguify("class") + ": ", text(weight: "semibold", class),
       "Schuljahr: ", 
       { 
         if type(dates.gehalten) == datetime {
@@ -179,9 +183,8 @@
           if date.month() < 9 {str(date.year()-1) + "/" + str(date.year())} else { str(date.year()) + "/" + str(date.year()+1) }
         } else { align(bottom,line(length: 3cm))}
       },
-      "Fach: ", text(weight: "semibold", subject),
-      [#checkbox() SA #checkbox() KA],
-      [ #checkbox() \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_]
+      linguify("subject") + ": ", text(weight: "semibold", subject),
+      grid.cell(colspan: 2, align: start)[#checkbox() SA #h(1em) #checkbox() KA \ #checkbox() #field(none)]
     )
     #v(0.5cm)
     
