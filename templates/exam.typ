@@ -1,5 +1,5 @@
 #import "../lib/assignment.typ": __show_solution, schulzeug-assignments as assignments, get_total_points, __point_list
-#import "@preview/linguify:0.1.0": *
+#import "@local/linguify:0.2.0": *
 
 // Header block
 #let exam-header-block(
@@ -87,8 +87,8 @@
 
 // Show a table with point distribution
 #let point-table = {
-  locate(loc => {
-    let pl = __point_list.final(loc)
+  context {
+    let pl = __point_list.final()
     table(
       align: (col, _) => if (col == 0) { end} else {center},
       inset: 1em,
@@ -97,7 +97,7 @@
       linguify("points"), ..pl.map(str), get_total_points(),
       linguify("awarded"),
     )
-  })
+  }
 }
 
 // The exam function defines how your document looks.
@@ -108,7 +108,6 @@
   subject: "" ,
   authors: "",
   show_solutions: false,
-  lang: "en",
   body
 ) = {
 
@@ -143,7 +142,7 @@
       counter(page).display("1 / 1", both: true)
     }
   )
-  show: linguify_config.with(data: toml("lang.toml"), lang: lang);
+  show: linguify_config.with(data: toml("lang.toml"));
   show: assignments.with(show_solutions: show_solutions);
 
   // Include Header-Block

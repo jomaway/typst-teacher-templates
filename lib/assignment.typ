@@ -16,9 +16,9 @@
 }
 
 #let get_total_points() = {
-  locate(loc => {
-    return __point_list.final(loc).sum()
-  })
+  context {
+    return __point_list.final().sum()
+  }
 }
 
 
@@ -104,18 +104,18 @@
 
 //  body will only be printed if __show_solution is false
 #let placeholder(body) = {
-  locate(loc => {
-    if __show_solution.at(loc) == false { body }
-  })
+  context {
+    if __show_solution.get() == false { body }
+  }
 }
 
 // only print if __show_solution is true
 #let solution(solution, alt: []) = {
     placeholder(alt)
     set text(fill: rgb( 255, 87, 51 ))
-    locate(loc => {
-      if __show_solution.at(loc) == true { solution }
-    })
+    context {
+      if __show_solution.get() == true { solution }
+    }
 }
 
 // multiple choice 
@@ -141,9 +141,7 @@
   choices = choices.enumerate().map(((i,a)) => 
       block[
         #box(inset: (x: 0.5em))[
-          #locate(loc => {
-          checkbox(fill: if __show_solution.at(loc) and answer.contains(i+1) {red})
-          })
+          #context checkbox(fill: if __show_solution.get() and answer.contains(i+1) {red})
         ] 
         #a
       ]
