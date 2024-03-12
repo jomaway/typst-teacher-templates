@@ -1,75 +1,33 @@
 #import "../lib/assignment.typ": __show_solution, schulzeug-assignments as assignments, get_total_points, __point_list
 #import "@local/linguify:0.2.0": *
 
-// Header block
 #let exam-header-block(
   title,
   class,
   subject,
   date,
 ) = {
-  // HEADER BLOCK
-  let cell(content) = {
-    set align(left)
-    rect(
-      width: 100%,
-      height: 100%,
-      inset: 0.7em,
-      stroke: 1pt, //(left: 1pt, right: 1pt),
-      [
-        #set text(13pt)
-        #set align(top + left)
-        #content
-      ]
-    )
-  }
-  // header
-  rect(
-    inset: 0mm, 
-    outset: 0mm, 
-    stroke: (bottom: 1pt, top: 1pt),
-    grid(
-      columns: (auto),
-      rows: (35mm),
-      grid(
-        columns: (1fr, 35mm),
-        rows: (25mm),
-        grid(
-          columns: (3fr, 5fr),
-          cell()[
-            #set text(13pt)
-            #set align(horizon)
-            #set par(leading: 1em)
-            #smallcaps("Klasse: ") #class \ 
-            #smallcaps("Fach: ") #subject \
-            #smallcaps("Datum: ") #if type(date) == datetime { date.display("[day].[month].[year]") } else {date}
-          ],
-          cell()[
-            #align(horizon + center)[
-              #block(below: 0.6em)[
-                #set text(18pt, weight: 800)
-                #title
-              ]
-            ]
-          ],
-        ),
-        grid(
-          rows: 35mm,
-          cell()[
-            #align(top + start)[
-            #smallcaps("Note:")]
-          ],  
-        ),
-        grid(
-          columns: 100%,
-          rows: 10mm,
-          cell()[#smallcaps("Name:")]
-        )
-      )
-    )
-  )
+  date = if type(date) == datetime { date.display("[day].[month].[year]") } else { date }
 
-} // END HEADER BLOCK
+  table(
+    columns: (3fr, 5fr, 35mm),
+    rows: (25mm, 10mm),
+    inset: 0.7em,
+    table.cell(align: horizon)[
+      #set par(leading: 1em)
+      #smallcaps(linguify("class") + ":") #class \ 
+      #smallcaps(linguify("subject") + ":") #subject \
+      #smallcaps(linguify("date") + ":") #date
+    ],
+    table.cell(align: center + horizon)[
+      #set text(18pt, weight: 800)
+      #title
+    ],
+    table.cell(rowspan: 2)[#align(top + start)[#smallcaps(linguify("grade") + ":")]],
+    table.cell(colspan: 2)[#smallcaps(linguify("name") + ":")]
+  )
+}
+
 
 // stack for logo-title block
 #let logo_title(image, title, dir: ltr) = {
