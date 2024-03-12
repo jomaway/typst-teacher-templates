@@ -22,16 +22,17 @@
 // Caro
 #let caro(rows, cols:auto) = {
   layout(size => {
-
+    let cols = if( cols == auto ){ int(size.width.cm() / 0.5) } else { cols }
     table(
-      columns: range(if( cols==auto ){ int(size.width.cm() / 0.5) } else { cols }).map(_ => 0.5cm),
-      rows:range(rows).map(_ => 0.5cm),
-      stroke: 0.3pt + luma(140)
+      columns: (0.5cm,) * cols, 
+      rows: (0.5cm,) * rows,
+      stroke: 0.3pt + luma(140),
+      table.cell(y: rows - 1)[],
     )
   })
 }
 
-#let checkbox(fill: none) = box(width: 0.8em, height: 0.8em, stroke: 1pt + black, fill: fill)[]
+#let checkbox(fill: none) = box(width: 0.8em, height: 0.8em, stroke: 0.7pt, radius: 1pt, fill: fill)[]
 
 
 // Tag 

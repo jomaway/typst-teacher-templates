@@ -1,5 +1,3 @@
-
-
 // IHK Notenschlüssel
 #let calc_grade_distribution(max_points, algorithm: "ihk", steps: 1) = {
   assert((0.5,1).contains(steps), message: "only steps of [0.5] or [1] is supported.")
@@ -23,23 +21,17 @@
 
 
 #let grading_table(dist) = {
-  block[
-    #show table: set block(below: 0pt)
-    #table(
-      columns: (2cm, 1fr, 5cm),
-      inset: 0.7em,
-      align: center,
-      "Note", "Punkteschlüssel", "Anzahl",
-      ..range(6).map(el => ([#{el + 1}],align(start)[#h(2cm,)
-        von #box(width: 2.2em, inset: (left: 4pt))[#get_min_points(dist, el+1)]
-        bis #box(width: 2.2em, inset: (left: 4pt))[#get_max_points(dist, el+1)]
-      ], "")).flatten(),
-    )
-    // Using a second table in a block for colspan effect
-    #table(
-      columns: (1fr, 5cm),
-      inset: 0.7em,
-      [#align(end)[Notendurchschnitt #text(22pt,sym.diameter):]], "",
-    )
-  ]
+  table(
+    columns: (2cm, 1fr, 5cm),
+    inset: 0.7em,
+    align: center,
+    "Note", "Punkteschlüssel", "Anzahl",
+    ..range(6).map(el => ([#{el + 1}],align(start)[#h(2cm,)
+      von #box(width: 2.2em, inset: (left: 4pt))[#get_min_points(dist, el+1)]
+      bis #box(width: 2.2em, inset: (left: 4pt))[#get_max_points(dist, el+1)]
+    ], "")).flatten(),
+    table.cell(colspan: 2)[
+      #align(end)[Notendurchschnitt #text(22pt,sym.diameter):]
+    ]
+  ) 
 }
