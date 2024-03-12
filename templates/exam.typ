@@ -100,6 +100,11 @@
       counter(page).display("1 / 1", both: true)
     }
   )
+
+  let cli_arg_lsg = sys.inputs.at("lsg", default: none)
+  if (cli_arg_lsg != none) { show_solutions = json.decode(cli_arg_lsg) }
+  assert.eq(type(show_solutions), bool, message: "expected bool, found " + type(show_solutions))
+
   show: linguify_config.with(data: toml("lang.toml"));
   show: assignments.with(show_solutions: show_solutions);
 
@@ -114,12 +119,10 @@
   // Predefined show rules
   show par: set block(above: 1.2em, below: 1.2em)
 
-
   // Content-Body
   body
 
 }
-
 
 
 // COVER PAGE
