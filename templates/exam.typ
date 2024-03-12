@@ -36,10 +36,15 @@
 
 // Show a box with the total_points
 #let point-sum-box = {
-  align(end)[
-    #box(stroke: 1pt, inset: 0.8em, radius: 2pt)[
-      #text(1.4em, sym.sum) :  \_\_\_\_ \/ #get_total_points() #smallcaps(linguify("pt"))
-    ]
+  box(stroke: 1pt, inset: 0.8em, radius: 3pt)[
+    #set align(bottom)
+    #stack(
+      dir:ltr,
+      spacing: 0.5em,
+      box[#text(1.4em, sym.sum) :],
+      line(stroke: 0.5pt), "/",
+      [#get_total_points() #smallcaps(linguify("pt"))]
+    )
   ]
 }
 
@@ -47,13 +52,17 @@
 #let point-table = {
   context {
     let pl = __point_list.final()
-    table(
-      align: (col, _) => if (col == 0) { end} else {center},
-      inset: 1em,
-      columns: pl.len() + 2,
-      linguify("assignment"), ..pl.enumerate().map(((i,_)) => [#{i+1}]), linguify("total"),
-      linguify("points"), ..pl.map(str), get_total_points(),
-      linguify("awarded"),
+    box(radius: 5pt, clip: true, stroke: 1pt,
+      table(
+        align: (col, _) => if (col == 0) { end } else { center },
+        inset: (x: 1em, y:0.6em),
+        fill: (x,y) =>  if (x == 0 or y == 0) { luma(230) },
+        rows: (auto, auto, 1cm),
+        columns: (auto, ..((1cm,) * pl.len()), auto),
+        linguify("assignment"), ..pl.enumerate().map(((i,_)) => [#{i+1}]), linguify("total"),
+        linguify("points"), ..pl.map(str), get_total_points(),
+        linguify("awarded"),
+      )
     )
   }
 }
