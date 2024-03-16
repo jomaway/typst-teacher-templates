@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.1.0 (upcomming)
+## v0.1.0 (upcoming)
 
 **Templates:**
 

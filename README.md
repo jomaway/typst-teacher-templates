@@ -2,9 +2,9 @@
 
 Collection of tools, which makes the teacher life easier.
 
-> Old version of this repo is still available under the branch [depricated](https://github.com/jomaway/typst-teacher-templates/tree/depricated)
+> Old version of this repo is still available under the branch [deprecated](https://github.com/jomaway/typst-teacher-templates/tree/deprecated)
 
-⚠️ **Still a work in progres**
+⚠️ **Still a work in progress**
 
 ## Features 
 

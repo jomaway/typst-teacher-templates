@@ -7,6 +7,6 @@ authors = ["Jomaway <https://github.com/jomaway>"]
 license = "MIT"
 description = "A collection of tools to make a teachers life easier (german)." 
 repository = ""
-keywords = "schulzeug, assignments, exam, template, techer tools"
+keywords = "schulzeug, assignments, exam, template, teacher tools"
 categories = []
 exclude = ["examples/*",]
