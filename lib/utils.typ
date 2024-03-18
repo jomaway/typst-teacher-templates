@@ -44,12 +44,14 @@
 
 // Tag 
 #let tag(value, fill: orange.lighten(45%)) = {
-  box(
-    inset: (x: 3pt, y: 0pt),
-    outset: (y: 3pt),
-    radius: 2pt,
-    fill: fill
-  )[#value]
+  if value != none {
+    box(
+      inset: (x: 3pt, y: 0pt),
+      outset: (y: 3pt),
+      radius: 2pt,
+      fill: fill
+    )[#value]
+  }
 }
 
 // side-by-side
