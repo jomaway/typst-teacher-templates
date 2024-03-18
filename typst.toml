@@ -8,5 +8,5 @@ license = "MIT"
 description = "A collection of tools to make a teachers life easier (german)." 
 repository = ""
 keywords = "schulzeug, assignments, exam, template, techer tools"
-categories = []
+categories = ["components", "utility"]
 exclude = ["examples/*",]
