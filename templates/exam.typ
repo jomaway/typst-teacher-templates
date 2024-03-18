@@ -1,5 +1,5 @@
 #import "../lib/assignment.typ": __show_solution, schulzeug-assignments as assignments, get_total_points, __point_list
-#import "@local/linguify:0.2.0": *
+#import "@preview/linguify:0.3.0": *
 
 #let exam-header-block(
   title,
@@ -114,7 +114,7 @@
   if (cli_arg_lsg != none) { show_solutions = json.decode(cli_arg_lsg) }
   assert.eq(type(show_solutions), bool, message: "expected bool, found " + type(show_solutions))
 
-  show: linguify_config.with(data: toml("lang.toml"));
+  linguify_set_database(toml("lang.toml"));
   show: assignments.with(show_solutions: show_solutions);
 
   // Include Header-Block

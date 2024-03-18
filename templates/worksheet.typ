@@ -1,6 +1,6 @@
 #import "../lib/utils.typ": tag
 #import "@preview/chic-hdr:0.4.0": *
-#import "@preview/gentle-clues:0.6.0": *
+#import "@preview/gentle-clues:0.7.0": *
 
 
 #let worksheet(topic: "", subject: "",  authors: "unknown", version: none, columns: 1, body) = {
