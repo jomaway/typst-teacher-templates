@@ -32,7 +32,14 @@
   })
 }
 
-#let checkbox(fill: none) = box(width: 0.8em, height: 0.8em, stroke: 0.7pt, radius: 1pt, fill: fill)[]
+#let checkbox(fill: none, tick: false) = box(
+  width: 0.8em, 
+  height: 0.8em, 
+  stroke: 0.7pt, 
+  radius: 1pt, 
+  fill: fill,
+  if (tick) { align(horizon + center, sym.checkmark) }
+)
 
 
 // Tag 
