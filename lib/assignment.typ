@@ -1,4 +1,5 @@
 #import "utils.typ": tag, checkbox
+#import "random.typ": shuffle
 
 // Global states
 #let __show_solution = state("s", false);
@@ -21,8 +22,7 @@
   }
 }
 
-
-/*  function for the numbering of the tasks and questions */
+/// function for the numbering of the tasks and questions
 #let __assignment_numbering = (..args) => {
   let nums = args.pos()
   if nums.len() == 1 {
@@ -33,7 +33,7 @@
   }
 }
 
-// use for global config with show rule
+/// use for global config with show rule
 #let schulzeug-assignments(
   show_solutions: false, 
   reset_assignment_counter: false,
@@ -72,8 +72,6 @@
     }
   )
 }
-
-
 
 // assignment indicates a new section of questions.
 // It updates the assignment-counter on the first level.
@@ -138,12 +136,20 @@
 
   }
 
-  choices = choices.enumerate().map(((i,a)) => 
+  let folder(a,b) = {
+    a.bit-xor(b)
+  }
+  let seed = 590
+
+  
+  choices = shuffle(choices.enumerate())
+
+  choices = choices.map(((i,a)) => 
       block[
         #box(inset: (x: 0.5em))[
           #context checkbox(fill: if __show_solution.get() and answer.contains(i+1) {red})
         ] 
-        #a
+        #i - #a
       ]
   )
 
