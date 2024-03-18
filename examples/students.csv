@@ -1,27 +1,27 @@
-Vorname, Nachname,
-Anton, Arbor,
-Babsi, Bloods,
-Caro, Cryio,
-Denni, Denns,
-Emil, Erikson,
-Fritz, Fischer,
-Gustav, Grav,
-Hugo, Haarnik,
-Igor, Igel,
-Johann, Jolla,
-Karlo, Kappman,
-Lars, Luv,
-Manuel, Mann,
-Nori, Namaste,
-Otto, Orbit,
-Paula, Pitz,
-Q,Quack,
-Rudi, Ritter,
-Sara,Sud,
-Tamara,Tentakel,
-Ulla, Ulrich,
-Vera,Vogel,
-Wa,Warum,
-Xit,Xit,
-Yola,Yop,
-Zeff,Ziegel,
+Vorname, Nachname, Paid
+Anton, Arbor, [ ]
+Babsi, Bloods, [x]
+Caro, Cryio, []
+Denni, Denns,[]
+Emil, Erikson,[]
+Fritz, Fischer,[]
+Gustav, Grav,[]
+Hugo, Haarnik,[]
+Igor, Igel,[]
+Johann, Jolla,[x]
+Karlo, Kappman,[]
+Lars, Luv,[x]
+Manuel, Mann,[]
+Nori, Namaste,[]
+Otto, Orbit,[x]
+Paula, Pitz,[x]
+Q,Quack,[x]
+Rudi, Ritter,[x]
+Sara,Sud,[]
+Tamara,Tentakel,[x]
+Ulla, Ulrich,[]
+Vera,Vogel,[]
+Wa,Warum,[]
+Xit,Xit,[x]
+Yola,Yop,[]
+Zeff,Ziegel,[x]
