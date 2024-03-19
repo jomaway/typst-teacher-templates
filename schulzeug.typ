@@ -1,5 +1,5 @@
 #import "lib/utils.typ": *
-#import "lib/assignment.typ": assignment, question, mct, solution, placeholder, schulzeug-assignments
+#import "lib/assignment.typ": assignment, question, mct, mct_question, solution, placeholder, schulzeug-assignments
 #import "lib/grading.typ": *
 #import "lib/studentlist.typ": studentlist, add_check_column
 

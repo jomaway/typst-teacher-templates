@@ -117,41 +117,39 @@
 }
 
 // multiple choice 
-#let mct(choices: (), answer: none, dir: ttb) = {
-  assert(
-    (type(answer) == int or type(answer) == array), 
-    message: "Answer needs to be an integer with the index of the correct answer"
-  )
-  if type(answer) == int { answer = (answer,)}
+#let mct(distractors: (), answer: (), dir: ttb) = {
+  let answers = if (type(answer) == array ) { answer } else { (answer,) }
+  let choices = (..distractors, ..answers)
 
-  assert(
-    type(choices) == array, 
-    message: "Choises must be given as an array"
-  )
-  for a in answer {
-    assert(
-      choices.len() >= a, 
-      message: "anwers outside of bound"
-    )
-
-  }
-
-  let folder(a,b) = {
-    a.bit-xor(b)
-  }
-  let seed = 590
-
-  
-  choices = shuffle(choices.enumerate())
-
-  choices = choices.map(((i,a)) => 
-      block[
-        #box(inset: (x: 0.5em))[
-          #context checkbox(fill: if __show_solution.get() and answer.contains(i+1) {red})
-        ] 
-        #i - #a
-      ]
-  )
+  choices = shuffle(choices).map(choice => {
+    box(inset:(x:0.5em))[
+      #context {
+        let is-solution =  __show_solution.get() and choice in answers
+        checkbox(fill: if is-solution { red }, tick: is-solution )
+      }
+    ]; choice
+  })
 
   stack(dir:dir, spacing: 1em, ..choices)
+}
+
+#let mct_question(data) = {
+  // assertions
+  assert(type(data) == dictionary, message: "expected data to be a dictionary, found " + type(data))
+  let keys = data.keys()
+  assert("prompt" in keys, message: "could not find prompt in keys");
+  assert("distractors" in keys, message: "could not find distractors in keys");
+  assert("answer" in keys, message: "could not find answer in keys");
+
+  // create output
+  question[#data.prompt]
+  mct(
+    distractors: data.distractors, 
+    answer: data.answer
+  )
+
+  // show context hint if available.
+  if ("context" in data.keys()) {
+    text(weight: 100)[Hint: #data.at("context", default: none)]
+  }
 }
