@@ -16,10 +16,20 @@
   return a_list
 }
 
-#let get_total_points() = {
-  context {
-    return __point_list.final().sum()
-  }
+/// get list of points 
+/// ! needs context
+#let get_points() = {
+    __point_list.final()
+}
+
+#let set-solution-mode-active(val) = {
+  assert.eq(type(val), bool, message: "expected bool, found " + type(val))
+  __show_solution.update(val)
+}
+
+/// ! needs context
+#let is-solution-mode-active() = {
+  __show_solution.get()
 }
 
 /// function for the numbering of the tasks and questions

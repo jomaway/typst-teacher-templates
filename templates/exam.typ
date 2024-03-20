@@ -1,4 +1,4 @@
-#import "../lib/assignment.typ": __show_solution, schulzeug-assignments as assignments, get_total_points, __point_list
+#import "../lib/assignment.typ": schulzeug-assignments as assignments, get_points
 #import "@preview/linguify:0.3.0": *
 
 #let exam-header-block(
@@ -34,6 +34,8 @@
     stack(spacing: 0.5em, dir:dir, image, title)
 }
 
+#let total_points = context get_points().sum()
+
 // Show a box with the total_points
 #let point-sum-box = {
   box(stroke: 1pt, inset: 0.8em, radius: 3pt)[
@@ -43,7 +45,7 @@
       spacing: 0.5em,
       box[#text(1.4em, sym.sum) :],
       line(stroke: 0.5pt), "/",
-      [#get_total_points() #smallcaps(linguify("pt"))]
+      [#total_points #smallcaps(linguify("pt"))]
     )
   ]
 }
@@ -51,16 +53,16 @@
 // Show a table with point distribution
 #let point-table = {
   context {
-    let pl = __point_list.final()
+    let points = get_points()
     box(radius: 5pt, clip: true, stroke: 1pt,
       table(
         align: (col, _) => if (col == 0) { end } else { center },
         inset: (x: 1em, y:0.6em),
         fill: (x,y) =>  if (x == 0 or y == 0) { luma(230) },
         rows: (auto, auto, 1cm),
-        columns: (auto, ..((1cm,) * pl.len()), auto),
-        linguify("assignment"), ..pl.enumerate().map(((i,_)) => [#{i+1}]), linguify("total"),
-        linguify("points"), ..pl.map(str), get_total_points(),
+        columns: (auto, ..((1cm,) * points.len()), auto),
+        linguify("assignment"), ..points.enumerate().map(((i,_)) => [#{i+1}]), linguify("total"),
+        linguify("points"), ..points.map(str), total_points,
         linguify("awarded"),
       )
     )
