@@ -2,7 +2,7 @@
 // Lines
 #let lines(count) = {
     for _ in range(count) {
-        block(spacing: 1.6em, line(length:100%, stroke: black.lighten(20%)) )
+        block(above: 0.9cm, line(length:100%, stroke: 0.3pt + black.lighten(20%)) )
     }
 }
 
@@ -45,12 +45,16 @@
 // Tag 
 #let tag(value, fill: orange.lighten(45%)) = {
   if value != none {
-    box(
-      inset: (x: 3pt, y: 0pt),
-      outset: (y: 3pt),
-      radius: 2pt,
-      fill: fill
-    )[#value]
+    context {
+      let size = measure(value)
+      box(
+        width: size.width + 6pt,
+        inset: (x: 3pt, y: 0pt),
+        outset: (y: 3pt),
+        radius: 2pt,
+        fill: fill
+      )[#value]
+    }
   }
 }
 
@@ -67,6 +71,13 @@
   
   grid(columns: columns, gutter: gutter, ..cols)
   
+}
+
+/// utility function to stick header and following block together
+#let stick-together(a, b, threshold: 3em) = {
+  block(a + v(threshold), breakable: false)
+  v(-1 * threshold)
+  b
 }
 
 // CC image
@@ -86,3 +97,24 @@
     *Hilfsmittel:* #if tools == none [keine] else [#tools]
   ]
 }
+
+#let if-auto-then(val, ret) = {
+  if (val == auto) {
+    ret
+  } else {
+    val
+  }
+}
+
+
+#let frame(body, ..args) = box(radius: 3pt, stroke: 0.5pt, inset: 1em, ..args, body)
+
+// #let push_and_return(a_list, value) = {
+//   a_list.push(value)
+//   return a_list
+// }
+
+// #let increase_last(a_list, value) = {
+//   a_list.last() += value
+//   return a_list
+// }

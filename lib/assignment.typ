@@ -1,128 +1,157 @@
-#import "utils.typ": tag, checkbox
+#import "utils.typ": tag, checkbox, if-auto-then, caro, lines as _lines
 #import "random.typ": shuffle
 
 // Global states
-#let __show_solution = state("s", false);
-#let __assignment_counter = counter("assignment-counter");
-#let __point_list = state("point-list", ())
+#let _solution = state("schulzeug-solution", false);
+#let _question_counter = counter("schulzeug-assignment-counter");
+#let reset-question-counter() = { _question_counter.update(0) }
 
-#let push_with_return(a_list, value) = {
-  a_list.push(value)
-  return a_list
+// Labels
+#let _assignment_label = label("schulzeug-assignment-label")
+#let _question_label = label("schulzeug-question-label")
+
+// Queries 
+#let current-assignment() = { query(selector(_assignment_label).before(here())).last().value }
+#let all-assignments() = { query(_assignment_label).map(m => m.value) }
+#let current-question() = { query(selector(_question_label).before(here())).last().value }
+#let all-questions() = { query(_question_label).map(m => m.value) }
+#let get-questions(filter: none) = {
+  if filter != none {
+    all-questions().filter(filter)
+  } else {
+    all-questions()
+  }
 }
 
-#let increase_last(a_list, value) = {
-  a_list.last() += value
-  return a_list
-}
+// Numbering utility functions
+#let q-nr(style: "a)") = context numbering(style, current-question().num.last())
+#let a-nr(style: "1.") = context numbering(style, current-assignment().num.first())
 
-/// get list of points 
+/// returns an array with points, grouped by assignments. 
 /// ! needs context
 #let get_points() = {
-    __point_list.final()
+  let a_count = _question_counter.final().first()
+  let list = ()
+  for i in range(a_count) {
+    let filter = q => (q.points != none and q.num.first() == i+1)
+    list.push(
+      get-questions(filter: filter).map(q => q.points ).sum(default: 0)
+    )
+  }
+  return list
 }
 
-#let set-solution-mode-active(val) = {
-  assert.eq(type(val), bool, message: "expected bool, found " + type(val))
-  __show_solution.update(val)
-}
+// Solution methods
+#let show-solutions() = { _solution.update(true) }
+#let hide-solutions() = { _solution.update(false) }
 
 /// ! needs context
-#let is-solution-mode-active() = {
-  __show_solution.get()
+#let is-solution-mode() = {
+  _solution.get()
 }
 
-/// function for the numbering of the tasks and questions
-#let __assignment_numbering = (..args) => {
-  let nums = args.pos()
-  if nums.len() == 1 {
-    set text(1em, weight: "semibold")
-    numbering("1. ", nums.last())
-  } else if nums.len() == 2 {
-    numbering("a) ", nums.last())
-  }
+#let set-solution-mode(value) = {
+  assert.eq(type(value), bool, message: "expected bool, found " + type(value))
+  _solution.update(value)
 }
 
-/// use for global config with show rule
-#let schulzeug-assignments(
-  show_solutions: false, 
-  reset_assignment_counter: false,
-  reset_point_counter: false,
-  body 
-) = {
-  __show_solution.update(show_solutions)
-  // check reset_assignment_counter
-  if reset_assignment_counter {
-    __assignment_counter.update(0)
-  }
-  // check reset_point_counter
-  if reset_point_counter {
-    __point_list.update(())
-  }
+/// Sets whether solutions are shown for a particular part of the document.
+///
+/// - solution (boolean): the solution state to apply for the body
+/// - body (content): the content to show
+/// -> content
+#let with-solution(solution, body) = context {
+  let orig-solution = _solution.get()
+  _solution.update(solution)
   body
+  _solution.update(orig-solution)
 }
+
 
 // draws a small gray box which indicates the amount of points for that assignment/question  
 // points: given points -> needs to be an integer
 // plural: if true it displays an s if more than one point
-#let point-box(points, plural: false) = {
+#let point-tag(points, plural: false) = {
   assert.eq(type(points),int)
-  __point_list.update(l => increase_last(l, points))
-  tag(fill: gray.lighten(35%))[#points #text(0.8em,smallcaps[#if points==1 [PT] else [PTs]])]
+  // __point_list.update(l => increase_last(l, points))
+  tag(fill: gray.lighten(35%))[#points #text(0.8em,smallcaps[#if points==1 [PT$\u{0020}$] else [PTs]])]
 }
 
-/* template for a grid to display the point-box on the right side. */
-#let point-grid(body, points) = {
+
+// assignments
+#let _assignment_env = state("schulzeug-assignment-state", none)
+
+#let enter_assignment_environment() = {
+  _question_counter.step(level: 1)
+  // __point_list.update(l => push_and_return(l, 0))
+  context [#metadata((type: "schulzeug-assignment", num: _question_counter.get() )) #_assignment_label]
+  _assignment_env.update(_question_counter.get())
+}
+
+#let leave_assignment_environment() = {
+  _assignment_env.update(none)
+}
+
+#let is-inside-ass-env() = {
+  _assignment_env.get() != none
+}
+
+#let assignment(body, number: "1.") = {
+  context enter_assignment_environment()
+  
+  if (number != none and number != "hide") { a-nr(style: number) }
+  body
+
+  context leave_assignment_environment()
+}
+
+// questions low level api
+#let _question(body, points: none) = {
+  if points != none {
+    assert.eq(type(points), int, message: "expected points argument to be an integer, found " + type(points))
+  }
+  context {
+    let level = if is-inside-ass-env() { 2 } else { 1 }
+    _question_counter.step(level: level)
+    // note: metadata must be a new context to fetch the updated _question_counter value correct
+    context [#metadata((type: "schulzeug-question", num: _question_counter.get() ,points: points, level: level)) #_question_label]
+    // __point_list.update(l => increase_last(l, points))
+  }
+  body
+}
+
+// questions high level api
+#let question(body, points: none, num_style: auto) = {
   grid(
     columns: (1fr, auto),
-    gutter: 1.5em,
-    body,
+    column-gutter: 0.5em,
+    // ass(points: points,level: 2)[
+    _question(points: points)[
+      #context q-nr(style: if-auto-then(num_style, { if is-inside-ass-env() { "a)" } else { "1." }  }))
+      #body
+    ],
     if points != none {
-      point-box(points)
+      place(end, dx: 1cm,point-tag(points))
     }
   )
 }
 
-// assignment indicates a new section of questions.
-// It updates the assignment-counter on the first level.
-// It displays the title of the new assignment and numbers it with digits.
-// optional a point box can be displayed for a whole assignment.
-#let assignment(desc, points: none, level: 1) = {
-  __assignment_counter.step(level: level)
-  point-grid(
-    {
-      if (level == 1) {
-        // on Assignments, add another item to the list of assignments
-        __point_list.update(l => push_with_return(l, 0))
-        __assignment_counter.display(__assignment_numbering);
-        desc
-      } else {
-        __assignment_counter.display(__assignment_numbering);
-        desc
-      }
-    },
-    points
-  )
-}
 
-// Second level assignment
-#let question(desc, points: none, level: 2) = assignment(
-  desc, points: points,level: level)
-
-
-//  body will only be printed if __show_solution is false
+//  body will only be printed if _solution is false
 #let placeholder(body) = {
   context {
-    if __show_solution.get() == false { body }
+    if _solution.get() == false { body }
   }
 }
 
-// only print if __show_solution is true
+// only print if _solution is true
 #let solution(solution, alt: []) = {
     placeholder(alt)
-    set text(fill: rgb( 255, 87, 51 ))
     context {
-      if __show_solution.get() == true { solution }
+      if _solution.get() == true { 
+        set text(fill: rgb( 255, 87, 51 )) // set a red text.
+        solution 
+      }
     }
 }
 
@@ -134,7 +163,7 @@
   choices = shuffle(choices).map(choice => {
     box(inset:(x:0.5em))[
       #context {
-        let is-solution =  __show_solution.get() and choice in answers
+        let is-solution =  _solution.get() and choice in answers
         checkbox(fill: if is-solution { red }, tick: is-solution )
       }
     ]; choice
@@ -143,7 +172,7 @@
   stack(dir:dir, spacing: 1em, ..choices)
 }
 
-#let mct_question(data) = {
+#let multiple-choice(data) = {
   // assertions
   assert(type(data) == dictionary, message: "expected data to be a dictionary, found " + type(data))
   let keys = data.keys()
@@ -152,14 +181,24 @@
   assert("answer" in keys, message: "could not find answer in keys");
 
   // create output
-  question[#data.prompt]
-  mct(
-    distractors: data.distractors, 
-    answer: data.answer
+  block(breakable: false,
+    question(points: if (type(data.answer) == array) { data.answer.len() } else { 1 })[
+      #data.prompt
+      #mct(
+        distractors: data.distractors, 
+        answer: data.answer
+      )
+      // show context hint if available.
+      #if ("context" in data.keys()) {
+        text(weight: 100)[Hint: #data.at("context", default: none)]
+      }
+    ]
   )
+}
 
-  // show context hint if available.
-  if ("context" in data.keys()) {
-    text(weight: 100)[Hint: #data.at("context", default: none)]
-  }
+#let free-text-question(body, points: 0, area: _lines(4), sol: none) = {
+  question(points: points)[
+    #body
+    #placeholder(area)
+  ]
 }

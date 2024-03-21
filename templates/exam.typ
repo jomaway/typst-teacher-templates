@@ -1,4 +1,4 @@
-#import "../lib/assignment.typ": schulzeug-assignments as assignments, get_points
+#import "../lib/assignment.typ": set-solution-mode, get_points
 #import "@preview/linguify:0.3.0": *
 
 #let exam-header-block(
@@ -112,12 +112,12 @@
     }
   )
 
-  let cli_arg_lsg = sys.inputs.at("lsg", default: none)
+  let cli_arg_lsg = sys.inputs.at("solution", default: none)
   if (cli_arg_lsg != none) { show_solutions = json.decode(cli_arg_lsg) }
   assert.eq(type(show_solutions), bool, message: "expected bool, found " + type(show_solutions))
 
   linguify_set_database(toml("lang.toml"));
-  show: assignments.with(show_solutions: show_solutions);
+  set-solution-mode(show_solutions)
 
   // Include Header-Block
   exam-header-block(
