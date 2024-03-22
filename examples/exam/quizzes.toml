@@ -1,0 +1,48 @@
+[[questions]]
+type = "mct"
+prompt = """
+What does it mean if a variable `x` is immutable?
+"""
+distractors = [
+  "`x` is stored in the immutable region of memory.",
+  "After being defined, `x` can be changed at most once.",
+  "You cannot create a reference to `x`."
+]
+answer = "`x` cannot be changed after being assigned to a value."
+context = """
+Immutable means "not mutable", or not changeable.
+"""
+
+[[questions]]
+type = "mct"
+prompt = "Auf welcher Schicht arbeitet ein Router?"
+distractors = [
+  "Bitübertragungsschicht",
+  "Anwendungsschicht",
+  "Transportschicht"
+]
+answer = "Netzwerkschicht"
+context = "A router works with IP Adresses."
+
+
+[[questions]]
+type = "mct"
+prompt = "Which of the given addresses is a Broadcast-Address?"
+distractors = [
+  "201.55.255.155/26",  
+  "1.255.25.128/26", 
+  "192.223.240.65/26", 
+  "10.255.0.255/16"
+]
+answer = "23.255.223.127/26"
+
+
+[[questions]]
+type = "mct"
+prompt = "Which numbers are even"
+distractors = [
+  "1", "3", "5"
+]
+answer = [
+  "2", "4",
+]

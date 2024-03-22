@@ -1,4 +1,6 @@
-#import "utils.typ": tag as _tag, checkbox
+#import "@local/ttt-utils:0.1.0": components
+
+#import components: tag as _tag, checkbox
 
 #let eval_row(row) = {
     row = row.map(cell => {

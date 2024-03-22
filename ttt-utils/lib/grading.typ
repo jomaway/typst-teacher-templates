@@ -18,20 +18,3 @@
 #let get_max_points(dist,grade) = {
   dist.rev().find(val => val.at(1) == grade).at(0)
 };
-
-
-#let grading_table(dist) = {
-  table(
-    columns: (2cm, 1fr, 5cm),
-    inset: 0.7em,
-    align: center,
-    "Note", "Punkteschlüssel", "Anzahl",
-    ..range(6).map(el => ([#{el + 1}],align(start)[#h(2cm,)
-      von #box(width: 2.2em, inset: (left: 4pt))[#get_min_points(dist, el+1)]
-      bis #box(width: 2.2em, inset: (left: 4pt))[#get_max_points(dist, el+1)]
-    ], "")).flatten(),
-    table.cell(colspan: 2)[
-      #align(end)[Notendurchschnitt #text(22pt,sym.diameter):]
-    ]
-  ) 
-}

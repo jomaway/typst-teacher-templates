@@ -1,14 +1,15 @@
-#import "utils.typ": tag, checkbox, if-auto-then, caro, lines as _lines
+#import "components.typ": tag, checkbox, caro, lines as _lines
+#import "helpers.typ": if-auto-then
 #import "random.typ": shuffle
 
 // Global states
-#let _solution = state("schulzeug-solution", false);
-#let _question_counter = counter("schulzeug-assignment-counter");
+#let _solution = state("ttt-solution", false);
+#let _question_counter = counter("ttt-assignment-counter");
 #let reset-question-counter() = { _question_counter.update(0) }
 
 // Labels
-#let _assignment_label = label("schulzeug-assignment-label")
-#let _question_label = label("schulzeug-question-label")
+#let _assignment_label = label("ttt-assignment-label")
+#let _question_label = label("ttt-question-label")
 
 // Queries 
 #let current-assignment() = { query(selector(_assignment_label).before(here())).last().value }
@@ -79,12 +80,12 @@
 
 
 // assignments
-#let _assignment_env = state("schulzeug-assignment-state", none)
+#let _assignment_env = state("ttt-assignment-state", none)
 
 #let enter_assignment_environment() = {
   _question_counter.step(level: 1)
   // __point_list.update(l => push_and_return(l, 0))
-  context [#metadata((type: "schulzeug-assignment", num: _question_counter.get() )) #_assignment_label]
+  context [#metadata((type: "ttt-assignment", num: _question_counter.get() )) #_assignment_label]
   _assignment_env.update(_question_counter.get())
 }
 
@@ -114,7 +115,7 @@
     let level = if is-inside-ass-env() { 2 } else { 1 }
     _question_counter.step(level: level)
     // note: metadata must be a new context to fetch the updated _question_counter value correct
-    context [#metadata((type: "schulzeug-question", num: _question_counter.get() ,points: points, level: level)) #_question_label]
+    context [#metadata((type: "ttt-question", num: _question_counter.get() ,points: points, level: level)) #_question_label]
     // __point_list.update(l => increase_last(l, points))
   }
   body
@@ -156,7 +157,7 @@
 }
 
 // multiple choice 
-#let mct(distractors: (), answer: (), dir: ttb) = {
+#let _mct(distractors: (), answer: (), dir: ttb) = {
   let answers = if (type(answer) == array ) { answer } else { (answer,) }
   let choices = (..distractors, ..answers)
 
@@ -172,8 +173,9 @@
   stack(dir:dir, spacing: 1em, ..choices)
 }
 
-#let multiple-choice(data) = {
+#let multiple-choice(..args) = {
   // assertions
+  let data = args.named()
   assert(type(data) == dictionary, message: "expected data to be a dictionary, found " + type(data))
   let keys = data.keys()
   assert("prompt" in keys, message: "could not find prompt in keys");
@@ -184,9 +186,10 @@
   block(breakable: false,
     question(points: if (type(data.answer) == array) { data.answer.len() } else { 1 })[
       #data.prompt
-      #mct(
+      #_mct(
         distractors: data.distractors, 
-        answer: data.answer
+        answer: data.answer,
+        dir: if data.at("dir", default: none) != none { data.at("dir") } else { ttb }
       )
       // show context hint if available.
       #if ("context" in data.keys()) {
@@ -196,9 +199,6 @@
   )
 }
 
-#let free-text-question(body, points: 0, area: _lines(4), sol: none) = {
-  question(points: points)[
-    #body
-    #placeholder(area)
-  ]
+#let answer-field(body, area: _lines(4)) = {
+    solution(alt: area)[#body]
 }

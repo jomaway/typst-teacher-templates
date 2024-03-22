@@ -1,13 +1,18 @@
 [package]
-name = "schulzeug"
+name = "ttt-exam"
 version = "0.1.0"
 compiler = "0.11.0"
-entrypoint = "schulzeug.typ"
+entrypoint = "lib.typ"
 authors = ["Jomaway <https://github.com/jomaway>"]
 license = "MIT"
 description = "A collection of tools to make a teachers life easier (german)." 
 repository = "https://github.com/jomaway/typst-teacher-templates"
-keywords = "schulzeug, assignments, exam, template, techer tools"
-categories = ["components", "utility"]
+keywords = "assignments, exam, template, teacher, tools"
+categories = ["office"]
 discipline = ["education"]
 exclude = ["examples/*",]
+
+[template]
+path = "template"
+entrypoint = "exam.typ"
+thumbnail = "thumbnail.png"

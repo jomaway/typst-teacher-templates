@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+set -eu
+
+# adapted from https://github.com/johannes-wolf/cetz/blob/35c0868378cea5ad323cc0d9c2f76de8ed9ba5bd/scripts/package
+# licensed under Apache License 2.0
+
+# List of all files that get packaged
+files=(
+  typst.toml
+  README.md
+  LICENSE
+  lib/
+)
+
+# Local package directories per platform
+if [[ "$OSTYPE" == "linux"* ]]; then
+  DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  DATA_DIR="$HOME/Library/Application Support"
+else
+  DATA_DIR="${APPDATA}"
+fi
+
+if (( $# < 2 )) || [[ "${1:-}" == "help" ]]; then
+  echo "package PACKAGE TARGET"
+  echo ""
+  echo "Packages all relevant files into a directory named '<PACKAGE>/<version>'"
+  echo "at TARGET. If TARGET is set to @local or @preview, the local Typst package"
+  echo "directory will be used so that the package gets installed for local use."
+  echo "The version is read from 'typst.toml' in the project root."
+  echo ""
+  echo "Local package prefix: $DATA_DIR/typst/package/local"
+  echo "Local preview package prefix: $DATA_DIR/typst/package/preview"
+  exit 1
+fi
+
+function read-toml() {
+  local file="$1"
+  local key="$2"
+  # Read a key value pair in the format: <key> = "<value>"
+  # stripping surrounding quotes.
+  $(awk -F ' *= *' "/^${key}/ {gsub(/"/, "", $2); print $2}" $file)
+}
+
+PKG_PREFIX="${1:?Missing package name}"
+SOURCE="$(cd "$(dirname "$0")"; pwd -P)/../$PKG_PREFIX" # macOS has no realpath
+TARGET="${2:?Missing target path or @local}"
+VERSION="$(read-toml "$SOURCE/typst.toml" "version")"
+
+if [[ "$TARGET" == "@local" ]] || [[ "$TARGET" == "install" ]]; then
+  TARGET="${DATA_DIR}/typst/packages/local/"
+  echo "Install dir: $TARGET"
+fi
+
+if [[ "$TARGET" == "@preview" ]]; then
+  TARGET="${DATA_DIR}/typst/packages/preview/"
+  echo "Install dir: $TARGET"
+fi
+
+TMP="$(mktemp -d)"
+
+for f in "${files[@]}"; do
+  mkdir -p "$TMP/$(dirname "$f")" 2>/dev/null
+  cp -r "$SOURCE/$f" "$TMP/$f"
+done
+
+TARGET="${TARGET:?}/${PKG_PREFIX:?}/${VERSION:?}"
+echo "Packaged to: $TARGET"
+if rm -rf "${TARGET:?}" 2>/dev/null; then
+  echo "Overwriting existing version."
+fi
+mkdir -p "$TARGET"
+mv "$TMP"/* "$TARGET"

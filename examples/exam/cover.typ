@@ -1,5 +1,4 @@
-#import "@local/schulzeug:0.1.0": *
-#import templates.exam: cover-page
+#import "@local/ttt-exam:0.1.0":  cover-page
 
 #let details = toml("details.toml")
 
@@ -15,5 +14,8 @@
     comment: none, 
     total_points:  70,
 )
+
+#set text(lang: "de", font: "Rubik", weight: 300)
+#set strong(delta: 200)
 
 #cover-page(..meta)

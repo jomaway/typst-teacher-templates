@@ -1,4 +1,5 @@
-/* Helpers */
+/// Helper and utility functions
+
 // Lines
 #let lines(count) = {
     for _ in range(count) {
@@ -32,6 +33,7 @@
   })
 }
 
+/// Checkbox
 #let checkbox(fill: none, tick: false) = box(
   width: 0.8em, 
   height: 0.8em, 
@@ -58,63 +60,6 @@
   }
 }
 
-// side-by-side
-#let side-by-side(columns: none, gutter: 1em, ..cols) = {
-  
-  let cols = cols.pos()
-  let columns = if columns ==  none { (1fr,) * cols.len() } else { columns }
-
-  assert(
-    columns.len() == cols.len(),
-    message: "number of columns must match number of cols"
-  )
-  
-  grid(columns: columns, gutter: gutter, ..cols)
-  
-}
-
-/// utility function to stick header and following block together
-#let stick-together(a, b, threshold: 3em) = {
-  block(a + v(threshold), breakable: false)
-  v(-1 * threshold)
-  b
-}
-
-// CC image
-// #let cc_by-sa-nc = box(height: 1em, image("assets/by-nc-sa.eu.svg"))
-
-// Intro block
-#let intro-block(content, tools) = {
-  block(
-    fill: rgb( 214, 234, 248 ), 
-    inset: 0.6em, 
-    width: 100%,
-    radius: 0.3em
-  )[
-    #set text(0.9em)
-    #set par(leading: 1em)
-    #content \
-    *Hilfsmittel:* #if tools == none [keine] else [#tools]
-  ]
-}
-
-#let if-auto-then(val, ret) = {
-  if (val == auto) {
-    ret
-  } else {
-    val
-  }
-}
-
 
 #let frame(body, ..args) = box(radius: 3pt, stroke: 0.5pt, inset: 1em, ..args, body)
 
-// #let push_and_return(a_list, value) = {
-//   a_list.push(value)
-//   return a_list
-// }
-
-// #let increase_last(a_list, value) = {
-//   a_list.last() += value
-//   return a_list
-// }

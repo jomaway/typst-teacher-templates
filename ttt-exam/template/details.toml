@@ -1,0 +1,7 @@
+[exam]
+class = "IAV12"
+subject = "math"
+authors = "jomaway"
+title = "1. Exam"
+date = 2023-12-12
+show_solutions = false

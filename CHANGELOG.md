@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.1.0 (upcomming)
+## v0.1.0 (upcoming)
 
 **Templates:**
 
@@ -14,7 +14,7 @@
 
 - Added `assignment` function with different levels.
 - Added `question` function as shortcut to level:2 assignment.
-- Added `mct` function to add multiple choice questions.
+- Added `mct` and `mct_question` functions to add multiple choice questions.
 - Added `solution` function.
 - Added `placeholder` function which is only shown if solution is hidden.
 - Added `get-total-points` function to get the total points.
@@ -34,8 +34,8 @@
 - Added function `checkmark`
 - Added function `field`
 - Added function `side-by-side`
-- Added variable `cc_by-sa-eu`
 - Added function `intro-block`
+- Added variable `cc_by-sa-eu`
 
 **Grading:**
 

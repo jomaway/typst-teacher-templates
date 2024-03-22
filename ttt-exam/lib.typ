@@ -1,4 +1,8 @@
-#import "../lib/assignment.typ": set-solution-mode, get_points
+#import "@local/ttt-utils:0.1.0": assignments, components, grading
+#import assignments: *
+#import components: *
+#import grading: *
+
 #import "@preview/linguify:0.3.0": *
 
 #let exam-header-block(
@@ -27,7 +31,6 @@
     table.cell(colspan: 2)[#smallcaps(linguify("name") + ":")]
   )
 }
-
 
 // stack for logo-title block
 #let logo_title(image, title, dir: ltr) = {
@@ -116,16 +119,11 @@
   if (cli_arg_lsg != none) { show_solutions = json.decode(cli_arg_lsg) }
   assert.eq(type(show_solutions), bool, message: "expected bool, found " + type(show_solutions))
 
-  linguify_set_database(toml("lang.toml"));
+  linguify_set_database(toml("assets/lang.toml"));
   set-solution-mode(show_solutions)
 
   // Include Header-Block
-  exam-header-block(
-    title,
-    class,
-    subject,
-    date,
-  )
+  exam-header-block(title, class, subject, date)
 
   // Predefined show rules
   show par: set block(above: 1.2em, below: 1.2em)
@@ -135,6 +133,23 @@
 
 }
 
+
+
+#let grading_table(dist) = {
+  table(
+    columns: (2cm, 1fr, 5cm),
+    inset: 0.7em,
+    align: center,
+    "Note", "Punkteschlüssel", "Anzahl",
+    ..range(6).map(el => ([#{el + 1}],align(start)[#h(2cm,)
+      von #box(width: 2.2em, inset: (left: 4pt))[#get_min_points(dist, el+1)]
+      bis #box(width: 2.2em, inset: (left: 4pt))[#get_max_points(dist, el+1)]
+    ], "")).flatten(),
+    table.cell(colspan: 2)[
+      #align(end)[Notendurchschnitt #text(22pt,sym.diameter):]
+    ]
+  ) 
+}
 
 // COVER PAGE
 #let cover-page(
@@ -149,16 +164,13 @@
   total_points: 100,
   ..args
 ) = {
-  import "../lib/utils.typ": checkbox, lines, field
-  import "../lib/grading.typ": calc_grade_distribution, grading_table
-
   
   return page(
     margin: (left: 20mm, right: 20mm, top: 10mm, bottom: 20mm),
     footer: none
   )[
     // setup linguify
-    #show: linguify_config.with(data: toml("lang.toml"));
+    #linguify_set_database(toml("assets/lang.toml"));
 
     #set text(16pt)
 
