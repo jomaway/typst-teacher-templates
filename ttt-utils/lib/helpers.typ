@@ -1,5 +1,5 @@
 
-/// if value is auto the return other value else return value itself
+/// if value is auto then return other value else return value itself
 #let if-auto-then(val, ret) = {
   if (val == auto) {
     ret
