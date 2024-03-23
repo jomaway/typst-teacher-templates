@@ -1,4 +1,4 @@
-#import "@preview/ttt-utils:0.1.0": tag
+#import "@preview/ttt-utils:0.1.0": components
 #import "@preview/chic-hdr:0.4.0": *
 #import "@preview/gentle-clues:0.7.0": *
 
@@ -20,11 +20,12 @@
   ]
 
   set text(12pt, font: "Rubik", weight: 300, lang: "de")
+
   // Header settings
   show: chic.with(
     chic-header(
       side-width: (auto, 1fr, auto),
-      left-side: [#tag(subject) - #emph(chic-heading-name(fill: true))],
+      left-side: [#components.tag(subject) - #emph(chic-heading-name(fill: true))],
       right-side: smallcaps(topic)
     ),
     chic-footer(
@@ -41,7 +42,7 @@
   show heading.where(level: 1): set block(below: 1.1em);
   show heading.where(level: 1): set text(weight: 500);
   show link: set text(blue);
-  show raw.where(block: false): it => tag(fill: luma(230))[#it]
+  show raw.where(block: false): it => components.tag(fill: luma(230))[#it]
 
   // Settings
   // Set text size, font and lang 
