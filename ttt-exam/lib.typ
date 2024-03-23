@@ -1,4 +1,4 @@
-#import "@local/ttt-utils:0.1.0": assignments, components, grading
+#import "@preview/ttt-utils:0.1.0": assignments, components, grading
 #import assignments: *
 #import components: *
 #import grading: *

@@ -1,4 +1,4 @@
-#import "../lib/utils.typ": tag
+#import "@preview/ttt-utils:0.1.0": tag
 #import "@preview/chic-hdr:0.4.0": *
 #import "@preview/gentle-clues:0.7.0": *
 

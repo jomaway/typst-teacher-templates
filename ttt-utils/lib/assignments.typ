@@ -1,21 +1,23 @@
-#import "components.typ": tag, checkbox, caro, lines as _lines
+#import "components.typ": point-tag, checkbox, caro, lines as _lines
 #import "helpers.typ": if-auto-then
 #import "random.typ": shuffle
 
-// Global states
+// States
 #let _solution = state("ttt-solution", false);
-#let _question_counter = counter("ttt-assignment-counter");
+#let _answer_field = state("ttt-auto-field", _lines(2))
+#let set-default-answer-field(field) = _answer_field.update(field)
+
+// Counters
+#let _question_counter = counter("ttt-question-counter");
 #let reset-question-counter() = { _question_counter.update(0) }
 
 // Labels
-#let _assignment_label = label("ttt-assignment-label")
 #let _question_label = label("ttt-question-label")
 
 // Queries 
-#let current-assignment() = { query(selector(_assignment_label).before(here())).last().value }
-#let all-assignments() = { query(_assignment_label).map(m => m.value) }
 #let current-question() = { query(selector(_question_label).before(here())).last().value }
 #let all-questions() = { query(_question_label).map(m => m.value) }
+
 #let get-questions(filter: none) = {
   if filter != none {
     all-questions().filter(filter)
@@ -25,26 +27,13 @@
 }
 
 // Numbering utility functions
-#let q-nr(style: "a)") = context numbering(style, current-question().num.last())
-#let a-nr(style: "1.") = context numbering(style, current-assignment().num.first())
+#let a-nr(style: "1.") = context numbering(style, _question_counter.get().first())
+#let q-nr(style: "a)") = context numbering(style, _question_counter.get().last())
 
-/// returns an array with points, grouped by assignments. 
-/// ! needs context
-#let get_points() = {
-  let a_count = _question_counter.final().first()
-  let list = ()
-  for i in range(a_count) {
-    let filter = q => (q.points != none and q.num.first() == i+1)
-    list.push(
-      get-questions(filter: filter).map(q => q.points ).sum(default: 0)
-    )
-  }
-  return list
-}
 
 // Solution methods
-#let show-solutions() = { _solution.update(true) }
-#let hide-solutions() = { _solution.update(false) }
+#let show-solutions = { _solution.update(true) }
+#let hide-solutions = { _solution.update(false) }
 
 /// ! needs context
 #let is-solution-mode() = {
@@ -69,41 +58,28 @@
 }
 
 
-// draws a small gray box which indicates the amount of points for that assignment/question  
-// points: given points -> needs to be an integer
-// plural: if true it displays an s if more than one point
-#let point-tag(points, plural: false) = {
-  assert.eq(type(points),int)
-  // __point_list.update(l => increase_last(l, points))
-  tag(fill: gray.lighten(35%))[#points #text(0.8em,smallcaps[#if points==1 [PT$\u{0020}$] else [PTs]])]
-}
-
-
 // assignments
 #let _assignment_env = state("ttt-assignment-state", none)
 
-#let enter_assignment_environment() = {
+#let new-assignment = {
   _question_counter.step(level: 1)
-  // __point_list.update(l => push_and_return(l, 0))
-  context [#metadata((type: "ttt-assignment", num: _question_counter.get() )) #_assignment_label]
-  _assignment_env.update(_question_counter.get())
+  context _assignment_env.update(_question_counter.get().first())
 }
 
-#let leave_assignment_environment() = {
-  _assignment_env.update(none)
-}
+#let end-assignment = _assignment_env.update(none)
 
-#let is-inside-ass-env() = {
+#let is-assignment() = {
   _assignment_env.get() != none
 }
 
+
 #let assignment(body, number: "1.") = {
-  context enter_assignment_environment()
+  new-assignment
   
   if (number != none and number != "hide") { a-nr(style: number) }
   body
 
-  context leave_assignment_environment()
+  end-assignment
 }
 
 // questions low level api
@@ -112,11 +88,10 @@
     assert.eq(type(points), int, message: "expected points argument to be an integer, found " + type(points))
   }
   context {
-    let level = if is-inside-ass-env() { 2 } else { 1 }
+    let level = if is-assignment() { 2 } else { 1 }
     _question_counter.step(level: level)
     // note: metadata must be a new context to fetch the updated _question_counter value correct
     context [#metadata((type: "ttt-question", num: _question_counter.get() ,points: points, level: level)) #_question_label]
-    // __point_list.update(l => increase_last(l, points))
   }
   body
 }
@@ -126,9 +101,8 @@
   grid(
     columns: (1fr, auto),
     column-gutter: 0.5em,
-    // ass(points: points,level: 2)[
     _question(points: points)[
-      #context q-nr(style: if-auto-then(num_style, { if is-inside-ass-env() { "a)" } else { "1." }  }))
+      #context q-nr(style: if-auto-then(num_style, { if is-assignment() { "a)" } else { "1." }  }))
       #body
     ],
     if points != none {
@@ -137,27 +111,8 @@
   )
 }
 
-
-//  body will only be printed if _solution is false
-#let placeholder(body) = {
-  context {
-    if _solution.get() == false { body }
-  }
-}
-
-// only print if _solution is true
-#let solution(solution, alt: []) = {
-    placeholder(alt)
-    context {
-      if _solution.get() == true { 
-        set text(fill: rgb( 255, 87, 51 )) // set a red text.
-        solution 
-      }
-    }
-}
-
 // multiple choice 
-#let _mct(distractors: (), answer: (), dir: ttb) = {
+#let _multiple-choice(distractors: (), answer: (), dir: ttb) = {
   let answers = if (type(answer) == array ) { answer } else { (answer,) }
   let choices = (..distractors, ..answers)
 
@@ -186,19 +141,51 @@
   block(breakable: false,
     question(points: if (type(data.answer) == array) { data.answer.len() } else { 1 })[
       #data.prompt
-      #_mct(
+      #_multiple-choice(
         distractors: data.distractors, 
         answer: data.answer,
         dir: if data.at("dir", default: none) != none { data.at("dir") } else { ttb }
       )
-      // show context hint if available.
-      #if ("context" in data.keys()) {
-        text(weight: 100)[Hint: #data.at("context", default: none)]
+      // show hint if available.
+      #if ("hint" in data.keys()) {
+        strong(delta: -100)[Hint: #data.at("hint", default: none)]
       }
     ]
   )
 }
 
-#let answer-field(body, area: _lines(4)) = {
-    solution(alt: area)[#body]
+// only print if _solution is true
+#let solution(solution) = {
+    context {
+      if _solution.get() == true { 
+        set text(fill: rgb( 255, 87, 51 )) // set a red text.
+        solution 
+      }
+    }
+}
+
+//  body will only be printed if _solution is false
+#let answer-field(body) = {
+  context {
+    if _solution.get() == false { body }
+  }
+}
+
+#let answer(body, field: auto) = {
+    answer-field(context if-auto-then(field, _answer_field.get()))
+    solution(body)
+}
+
+/// returns an array with points, grouped by assignments. 
+/// ! needs context
+#let get_points() = {
+  let a_count = _question_counter.final().first()
+  let list = ()
+  for i in range(a_count) {
+    let filter = q => (q.points != none and q.num.first() == i+1)
+    list.push(
+      get-questions(filter: filter).map(q => q.points ).sum(default: 0)
+    )
+  }
+  return list
 }

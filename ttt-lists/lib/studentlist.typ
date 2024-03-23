@@ -1,4 +1,4 @@
-#import "@local/ttt-utils:0.1.0": components
+#import "@preview/ttt-utils:0.1.0": components
 
 #import components: tag as _tag, checkbox
 

@@ -1,4 +1,4 @@
-#import "@local/ttt-exam:0.1.0": *
+#import "@preview/ttt-exam:0.1.0": *
 
 #set text(size: 12pt, font: ("Rubik"), weight: 300, lang: "de")
 

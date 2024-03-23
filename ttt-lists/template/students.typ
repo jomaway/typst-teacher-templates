@@ -1,4 +1,4 @@
-#import "@local/ttt-lists:0.1.0": studentlist as list
+#import "@preview/ttt-lists:0.1.0": studentlist as list
 
 
 #set page("a4", margin: 1cm)

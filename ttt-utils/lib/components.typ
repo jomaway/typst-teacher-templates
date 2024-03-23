@@ -63,3 +63,10 @@
 
 #let frame(body, ..args) = box(radius: 3pt, stroke: 0.5pt, inset: 1em, ..args, body)
 
+// draws a small gray box which indicates the amount of points for that assignment/question  
+// points: given points -> needs to be an integer
+// plural: if true it displays an s if more than one point
+#let point-tag(points, plural: false) = {
+  assert.eq(type(points),int)
+  tag(fill: gray.lighten(35%))[#points #text(0.8em,smallcaps[#if points==1 [PT$\u{0020}$] else [PTs]])]
+}
