@@ -16,7 +16,7 @@
     
     $ 3x+5=17 $]
 
-    #solution(alt: caro(6))[
+    #answer(field: caro(6))[
       $ 3x+5=17 $
       $ 3x=17-53x=17-5 $
       $ 3x=123x=12 $

@@ -1,7 +1,6 @@
 # ttt-utils
 
-`ttt-utils` is the core package of the [typst-teacher-tools-collection](https://github.com/jomaway/typst-teacher-templates).
-
+`ttt-utils` is the core package of the [typst-teacher-tools collection](https://github.com/jomaway/typst-teacher-templates).
 
 ## Modules
 It contains several modules:
@@ -11,7 +10,7 @@ It contains several modules:
 - `grading` contains functions for grading exams.
 - `helpers` contains some utility functions.
 - `layout` contains some layout functions such as _side-by-side_, etc...
-- `random` contains a function to shuffle an array. ! Might be replaced with [suiji](https://typst.app/universe/package/suiji) soon.
+- `random` contains a function to shuffle an array.
 
 
 ## Usage 
@@ -45,8 +44,9 @@ or import the wanted functions:
 
 ```
 
-See the [docs](./docs/docs.typ) for all functions and features.
+## Similar projects
 
+- [scrutinize](https://github.com/SillyFreak/typst-packages/tree/main/scrutinize) by [SillyFreak](https://github.com/SillyFreak): Package to create exams, very similar to the `assignment` module, but only questions without assignments, and a bit more low level. I adopted a few of his ideas.
 
 ## CHANGELOG 
 

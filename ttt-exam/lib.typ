@@ -1,6 +1,6 @@
 #import "@preview/ttt-utils:0.1.0": assignments, components, grading
-#import assignments: *
 #import components: *
+#import assignments: *
 #import grading: *
 
 #import "@preview/linguify:0.3.0": *
@@ -133,20 +133,15 @@
 
 }
 
-
-
 #let grading_table(dist) = {
   table(
     columns: (2cm, 1fr, 5cm),
     inset: 0.7em,
     align: center,
     "Note", "Punkteschlüssel", "Anzahl",
-    ..range(6).map(el => ([#{el + 1}],align(start)[#h(2cm,)
-      von #box(width: 2.2em, inset: (left: 4pt))[#get_min_points(dist, el+1)]
-      bis #box(width: 2.2em, inset: (left: 4pt))[#get_max_points(dist, el+1)]
-    ], "")).flatten(),
+    ..dist.rev().map(g => (g.grade, [von #g.lower-limit bis #g.upper-limit], []) ).flatten(),
     table.cell(colspan: 2)[
-      #align(end)[Notendurchschnitt #text(22pt,sym.diameter):]
+      #align(end)[Notendurchschnitt #math.lr(size: 1em)[#sym.diameter]:]
     ]
   ) 
 }
