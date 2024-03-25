@@ -2,15 +2,14 @@
 name = "ttt-exam"
 version = "0.1.0"
 compiler = "0.11.0"
-entrypoint = "lib.typ"
+entrypoint = "lib/lib.typ"
 authors = ["Jomaway <https://github.com/jomaway>"]
 license = "MIT"
 description = "A collection of tools to make a teachers life easier (german)." 
 repository = "https://github.com/jomaway/typst-teacher-templates"
-keywords = "assignments, exam, template, teacher, tools"
+keywords = ["teacher","assignments", "exam", "grading"]
 categories = ["office"]
-discipline = ["education"]
-exclude = ["examples/*",]
+disciplines = ["education"]
 
 [template]
 path = "template"
