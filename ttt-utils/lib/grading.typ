@@ -1,4 +1,4 @@
-#import "assignments.typ": get-questions
+#import "assignments.typ": get-questions, _question_counter
 
 /// Fetch the total points which can be reached from the questions metadata
 /// ! needs context.
