@@ -2,9 +2,8 @@
 
 #set text(size: 12pt, font: ("Rubik"), weight: 300, lang: "de")
 
-#let logo = box(height: 2cm, image("logo.jpg", fit: "contain")) 
-#let details = toml("details.toml")
-#show: exam.with(..details.exam, title: logo_title(logo, details.exam.title));
+#let logo = box(height: 3cm,image("logo.jpg") )
+#show: exam.with(..toml("meta.toml").exam, logo: logo, header: "page", point-field: "table");
 
 = Part 1: Free text questions
 
@@ -25,21 +24,29 @@
     ]
   ]
 
+  #question(points: 22)[
+    Write what comes to your mind.
+    #answer-field(lines(6))
+  ]
+
 
 = Part 2: Multiple and single choice
 
-#multiple-choice((
+#multiple-choice(
   prompt: "Which numbers are even",
   distractors: (
     "1", "3", "5"
   ),
   answer: (
     "2", "4",
-  )
-))
+  ),
+  dir: ltr,
+  hint: [_Two options are correct_]
+)
 
-= Punkteverteilung
 // show point-table or point-sum-box
-#point-table  
-#h(1fr)
-#point-sum-box 
+// uncomment if you need it.
+// = Points
+// #point-table  
+// #h(1fr)
+// #point-sum-box 
