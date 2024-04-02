@@ -2,8 +2,8 @@
 
 #set text(size: 12pt, font: ("Rubik"), weight: 300, lang: "de")
 
-#let logo = box(height: 3cm,image("logo.jpg") )
-#show: exam.with(..toml("meta.toml").exam, logo: logo, header: "page", point-field: "table");
+#let logo = box(height: 5cm,image("logo.jpg") )
+#show: exam.with(..toml("meta.toml").exam, logo: logo );
 
 = Part 1: Free text questions
 
@@ -24,11 +24,6 @@
     ]
   ]
 
-  #question(points: 22)[
-    Write what comes to your mind.
-    #answer-field(lines(6))
-  ]
-
 
 = Part 2: Multiple and single choice
 
@@ -44,9 +39,21 @@
   hint: [_Two options are correct_]
 )
 
+ 
+#multiple-choice(
+  prompt: "Which number is a prime number",
+  distractors: (
+    "1", "6", "15", "9", 
+  ),
+  answer: (
+    "7",
+  ),
+  dir: ltr,
+)
+
 // show point-table or point-sum-box
 // uncomment if you need it.
 // = Points
 // #point-table  
 // #h(1fr)
-// #point-sum-box 
+// #align(end, point-sum-box) 
