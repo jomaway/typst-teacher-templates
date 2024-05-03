@@ -51,10 +51,10 @@
 #let ihk-grades(total, step: 1) = grades(
   max: total,
   step: step, 
-  [6], 
-  0.3 * total, [5], 
-  0.5 * total, [4], 
-  0.67 * total, [3], 
-  0.81 * total, [2], 
-  0.91 * total, [1], 
+  6, 
+  0.3 * total, 5, 
+  0.5 * total, 4, 
+  0.67 * total, 3, 
+  0.81 * total, 2, 
+  0.91 * total, 1, 
 )
