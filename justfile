@@ -10,4 +10,4 @@ default:
 
 
 pack package target:
-	./scripts/pack "{{package}}" "{{target}}"
+	./scripts/pack.py "{{package}}" "{{target}}"
