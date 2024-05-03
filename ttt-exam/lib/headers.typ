@@ -1,5 +1,5 @@
 #import "@preview/ttt-utils:0.1.0": assignments
-#import "i18n.typ": *
+#import "i18n.typ": ling
 
 #let header-block(
   logo: none,
@@ -17,9 +17,9 @@
     inset: 0.7em,
     table.cell(align: horizon)[
       #set par(leading: 1em)
-      #smallcaps(linguify("class", from: ling_db) + ":") #class \ 
-      #smallcaps(linguify("subject", from: ling_db) + ":") #subject \
-      #smallcaps(linguify("date", from: ling_db) + ":") #date
+      #smallcaps(ling("class") + ":") #class \ 
+      #smallcaps(ling("subject") + ":") #subject \
+      #smallcaps(ling("date") + ":") #date
     ],
     table.cell(align: center + horizon)[
       
@@ -55,8 +55,8 @@
           if subtitle != none { subtitle } 
         }
     ],
-    table.cell(rowspan: 2)[#align(top + start)[#smallcaps(linguify("grade", from: ling_db) + ":")] #context if assignments.is-solution-mode() { align(center + horizon,text(32pt, weight: 700, red, "X")) }],
-    table.cell(colspan: 2)[#smallcaps(linguify("name", from: ling_db) + ":") #context if assignments.is-solution-mode() { text(red, linguify("solution", from: ling_db)) }]
+    table.cell(rowspan: 2)[#align(top + start)[#smallcaps(ling("grade") + ":")] #context if assignments.is-solution-mode() { align(center + horizon,text(32pt, weight: 700, red, "X")) }],
+    table.cell(colspan: 2)[#smallcaps(ling("name") + ":") #context if assignments.is-solution-mode() { text(red, ling("solution")) }]
   )
 }
 
@@ -102,19 +102,20 @@
           inset: (x: 2pt, y: 5pt),
           row-gutter: 1em,
           column-gutter: 5pt,
-          smallcaps(linguify("name", from: ling_db) + ":"), context if assignments.is-solution-mode() { text(red, linguify("solution", from: ling_db)) },
-          smallcaps(linguify("class", from: ling_db) + ":"), class,
-          smallcaps(linguify("date", from: ling_db) + ":"), date,
+          smallcaps(ling("name") + ":"), context if assignments.is-solution-mode() { text(red, ling("solution")) },
+          smallcaps(ling("class") + ":"), class,
+          smallcapps(ling("subject")), subject,
+          smallcaps(ling("date") + ":"), date,
         )
       },
       [
-        *#linguify("grade", from: ling_db):*
+        *#ling("grade"):*
         #rect(width: 3cm, height: 3cm)[#context if assignments.is-solution-mode() { align(center + horizon,text(32pt, weight: 700, red, "X")) }]
       ]
     ),
     align(end,block[
       #set align(start)
-      *#linguify("points", from: ling_db):* \
+      *#ling("points"):* \
       #point-field
     ])
   )

@@ -1,5 +1,5 @@
 #import "@preview/ttt-utils:0.1.0": grading
-#import "i18n.typ": *
+#import "i18n.typ": ling
 
 #let total_points = context grading.get_points().sum()
 
@@ -28,10 +28,22 @@
         fill: (x,y) =>  if (x == 0 or y == 0) { luma(230) },
         rows: (auto, auto, 1cm),
         columns: (auto, ..((1cm,) * points.len()), auto),
-        linguify("assignment", from: ling_db), ..points.enumerate().map(((i,_)) => [#{i+1}]), linguify("total", from: ling_db),
-        linguify("points", from: ling_db), ..points.map(str), total_points,
-        linguify("awarded", from: ling_db),
+        ling("assignment"), ..points.enumerate().map(((i,_)) => [#{i+1}]), ling("total"),
+        ling("points"), ..points.map(str), total_points,
+        ling("awarded"),
       )
     )
   }
+}
+
+
+#let small-grading-table(grades, dist) = {
+  table(
+    columns: (1fr,) *6,
+    inset: 0.5em,
+    align: center,
+    table.header(..grades.rev().map(g => [#g.grade])),
+    ..grades.rev().map(g => ([ #g.upper-limit - #g.lower-limit]) ).flatten(),
+    ..dist.values().map(v => [#v x])
+  ) 
 }

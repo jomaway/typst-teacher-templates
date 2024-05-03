@@ -3,3 +3,4 @@
 // load linguify database file
 #let ling_db = toml("assets/lang.toml")
 
+#let ling(key) = linguify(key, from: ling_db)
