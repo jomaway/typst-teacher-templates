@@ -58,3 +58,14 @@
   0.81 * total, 2, 
   0.91 * total, 1, 
 )
+
+
+/// Fetch a grade for a certain amount of points
+///
+/// - points (integer, float): the points a student reached.
+/// - grades (dictionary): The dictionary returned from the @@grades function.
+/// -> (any) ! Depends on the value inside the dictionary.at("grade")
+#let points-to-grade(points, grades) = {
+  let result = grades.find(g => g.lower-limit <= points and g.upper-limit >= points)
+  result.grade 
+}
