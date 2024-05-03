@@ -64,8 +64,24 @@
 ///
 /// - points (integer, float): the points a student reached.
 /// - grades (dictionary): The dictionary returned from the @@grades function.
-/// -> (any) ! Depends on the value inside the dictionary.at("grade")
+/// -> (any) The grade. Type depending on the value inside the dictionary.at("grade")
 #let points-to-grade(points, grades) = {
   let result = grades.find(g => g.lower-limit <= points and g.upper-limit >= points)
   result.grade 
+}
+
+
+/// calculates the grade average for an given grade distribution 
+/// currently the grades need to be int-values, like in germany.
+///
+/// - dist (dictionary): The grade distribution as dict. e.x. ("1":0,"2":0,"3":0,"4":0,"5":0,"6":0)
+/// - digits: (integer): Number of digits which the result is rounded to. Default: 2
+/// -> (float): The rounded grade average.
+#let grade-average(dist, digits: 2) = {
+  assert.eq(type(dist), dictionary, message: "Expected dist to be of type dictionary, found " + type(dist))
+  let sum = dist.pairs().fold(0, (sum,(k,v)) => {
+    sum = sum + int(k) * v
+    sum
+  })
+  calc.round(sum / dist.values().sum(), digits: digits)
 }
