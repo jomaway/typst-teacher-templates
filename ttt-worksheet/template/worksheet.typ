@@ -1,15 +1,18 @@
-#import "preview/ttt-worksheet:0.1.0": * 
+#import "@preview/ttt-worksheet:0.1.0": * 
 
 #show: worksheet.with(
   topic: "LESSON TOPIC",
   subject: "math",
-  authors: ("jomaway,"),
-  version: "last changed: " + datetime.today().display(),
+  authors: ("unknown",),
 )
 
 #title[The todays lesson is about ...]
 
-#set outline(ident:auto)
+#goal[
+  - Write nice documents
+]
+
+#set outline(indent:auto)
 #outline()
 #pagebreak()
 

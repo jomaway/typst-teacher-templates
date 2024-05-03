@@ -7,10 +7,9 @@ authors = ["Jomaway <https://github.com/jomaway>"]
 license = "MIT"
 description = "Part of the ttt-collection to make a teachers life easier." 
 repository = "https://github.com/jomaway/typst-teacher-templates"
-keywords = "utilities, teacher, tools, helper, studentslist"
+keywords = "worksheets, teacher, tutorial, teaching, education"
 categories = ["components", "utility", "office"]
 discipline = ["education"]
-exclude = []
 
 [template]
 path = "template"

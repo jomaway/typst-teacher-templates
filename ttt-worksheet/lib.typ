@@ -1,6 +1,6 @@
 #import "@preview/ttt-utils:0.1.0": components
 #import "@preview/chic-hdr:0.4.0": *
-#import "@preview/gentle-clues:0.7.0": *
+#import "@preview/gentle-clues:0.8.0": *
 
 
 #let worksheet(topic: "", subject: "",  authors: "unknown", version: none, columns: 1, body) = {
@@ -16,10 +16,19 @@
   version = if version != none [
     v#version
   ] else [
-    last changed: #datetime.today().display("[year]-[month]-[day]")
+    changed: #datetime.today().display("[year]-[month]-[day]")
   ]
 
+  // Settings
+  // Set text size, font and lang 
   set text(12pt, font: "Rubik", weight: 300, lang: "de")
+  // Set spacing between lines and Blocksatz.
+  set par(leading: 1em, justify: true)
+  // Set header numbering only on the level 1 and 2.
+  set heading(numbering: (..args) => {
+    let nums = args.pos()
+    if nums.len() < 3 {numbering("1.", ..nums)}
+  })
 
   // Header settings
   show: chic.with(
@@ -38,31 +47,21 @@
   )
 
   // Show rules
-  show: gentle-clues.with(lang: "de",show-task-counter: true)
   show heading.where(level: 1): set block(below: 1.1em);
   show heading.where(level: 1): set text(weight: 500);
   show link: set text(blue);
   show raw.where(block: false): it => components.tag(fill: luma(230))[#it]
 
-  // Settings
-  // Set text size, font and lang 
-  set text(12pt, font: "Rubik", weight: 300, lang: "de")
-  // Set spacing between lines and Blocksatz.
-  set par(leading: 1em, justify: true)
-  // Set header numbering only on the level 1 and 2.
-  set heading(numbering: (..args) => {
-    let nums = args.pos()
-    if nums.len() < 3 {numbering("1.", ..nums)}
-  })
-  
   // Content-Body
   body
 }
 
 
-#let title(title) = [
-  #align(center)[
-    #text(1.6em, weight: 500, title)
-  ]
+#let title(title) = align(center)[
+  #text(1.6em, weight: 500, title)
 ]
 
+
+#let subtitle(title) = align(center)[
+  #text(1.2em, title)
+]
