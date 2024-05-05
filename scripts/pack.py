@@ -64,25 +64,25 @@ def main():
     else:
         target = Path(target)
     
-    tmp_dir = tempfile.mkdtemp()
+    with tempfile.TemporaryDirectory() as tmp_dir:
 
-    for file_path in source.glob("**/*"):
-        if file_path.is_file() and file_path.name not in exclude:
-            rel_path = file_path.relative_to(source)
-            dest_path = Path(tmp_dir) / rel_path
-            dest_path.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(file_path, dest_path)
-    
+        for file_path in source.glob("**/*"):
+            if file_path.is_file() and file_path.name not in exclude:
+                rel_path = file_path.relative_to(source)
+                dest_path = Path(tmp_dir) / rel_path
+                dest_path.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(file_path, dest_path)
+        
 
 
-    target = target / pkg_prefix / version
-    print("Packaged to:", target)
+        target = target / pkg_prefix / version
+        print("Packaged to:", target)
 
-    if target.exists():
-        print("Overwriting existing version.")
-        shutil.rmtree(target)
-    # target.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(Path(tmp_dir), target)
+        if target.exists():
+            print("Overwriting existing version.")
+            shutil.rmtree(target)
+        # target.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(Path(tmp_dir), target)
 
 if __name__ == "__main__":
     main()
