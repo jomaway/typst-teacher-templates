@@ -83,5 +83,7 @@
     sum = sum + int(k) * v
     sum
   })
-  calc.round(sum / dist.values().sum(), digits: digits)
+  if dist.values().sum() != 0 {
+    calc.round(sum / dist.values().sum(), digits: digits) 
+  } else { 0 }
 }
