@@ -1,4 +1,4 @@
-#import "@preview/ttt-utils:0.1.0": assignments, components, grading
+#import "@preview/ttt-utils:0.1.1": assignments, components, grading, helpers
 #import "i18n.typ": *
 
 #import components: *
@@ -56,11 +56,7 @@
   )
 
   // check cli input for solution
-  let cli_arg_lsg = sys.inputs.at("solution", default: none)
-  if (cli_arg_lsg != none) { solutions = json.decode(cli_arg_lsg) }
-  assert.eq(type(solutions), bool, message: "expected bool, found " + type(solutions))
-
-  set-solution-mode(solutions)
+  set-solution-mode(helpers.bool-input("solution"))
 
   // Include Header-Block
   if (header == "page") {
