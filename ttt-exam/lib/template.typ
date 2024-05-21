@@ -1,4 +1,4 @@
-#import "@preview/ttt-utils:0.1.1": assignments, components, grading, helpers
+#import "@preview/ttt-utils:0.1.2": assignments, components, grading, helpers
 #import "i18n.typ": *
 
 #import components: *

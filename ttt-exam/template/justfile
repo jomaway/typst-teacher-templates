@@ -32,12 +32,13 @@ save-meta:
 	if [ ! -d "build" ]; then mkdir -p "build"; fi
 	typst query exam.typ "<ttt-question-label>" --field value > ./build/metadata.json
 
-build-cover:
-	typst compile cover.typ build/cover.pdf --input total_points=$(cat build/metadata.json | sed -n 's/.*"points": \([0-9]*\),/\1/p' | awk '{ sum += $1 } END { print sum }')
-
 build:
 	@just build-teacher-version
 	@just build-student-version
+
+eval:
+	if [ ! -d "build" ]; then mkdir -p "build"; fi
+	typst compile eval.typ build/evaluation.typ
 
 clean:
 	rm -r build

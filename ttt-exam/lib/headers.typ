@@ -1,4 +1,4 @@
-#import "@preview/ttt-utils:0.1.0": assignments
+#import "@preview/ttt-utils:0.1.2": assignments
 #import "i18n.typ": ling
 
 #let header-block(
