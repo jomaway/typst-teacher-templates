@@ -1,6 +1,6 @@
 [package]
 name = "ttt-exam"
-version = "0.1.1"
+version = "0.1.2"
 compiler = "0.11.0"
 entrypoint = "lib/lib.typ"
 authors = ["Jomaway <https://github.com/jomaway>"]
