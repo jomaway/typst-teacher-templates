@@ -3,7 +3,7 @@
 #set text(size: 12pt, font: ("Rubik"), weight: 300, lang: "de")
 
 #let logo = box(height: 5cm,image("logo.jpg") )
-#show: exam.with(..toml("meta.toml").exam, logo: logo );
+#show: exam.with(..toml("meta.toml").info, logo: logo );
 
 = Part 1: Free text questions
 

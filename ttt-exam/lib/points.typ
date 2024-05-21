@@ -37,13 +37,14 @@
 }
 
 
-#let small-grading-table(grades, dist) = {
+#let small-grading-table(grading-scale, dist) = {
+  grading.validate-scale(grading-scale)
   table(
-    columns: (1fr,) *6,
+    columns: (1fr,) * len(grading-scale),
     inset: 0.5em,
     align: center,
-    table.header(..grades.rev().map(g => [#g.grade])),
-    ..grades.rev().map(g => ([ #g.upper-limit - #g.lower-limit]) ).flatten(),
+    table.header(..grading-scale.rev().map(g => [#g.grade])),
+    ..grading-scale.rev().map(g => ([ #g.upper-limit - #g.lower-limit]) ).flatten(),
     ..dist.values().map(v => [#v x])
   ) 
 }
