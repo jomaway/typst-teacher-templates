@@ -23,13 +23,13 @@
 }
 
 
-/// Generate a grade distribution with upper and lower point limits.
+/// Generate a grading scale with upper and lower point limits.
 ///
 /// - step (integer): smallest unit of a point. 0.5 for half points and 1 for full points.
 /// - max (integer): total points which can be reached.
-/// ..args (float, integer, string, content): excepts conditional arguments with a lower bound followed by the grade as content or string.
+/// ..args (float, integer, string, content): excepts conditional arguments with a lower bound followed by the grade. See @@ihk-scale as example.
 /// -> array
-#let grades(step: 1, max: none, ..args) = {
+#let gen-scale(step: 1, max: none, ..args) = {
   assert(args.named().len() == 0)
   assert(step in (0.5,1), message: "only steps of [0.5] or [1] is supported.")
   let args = args.pos()
@@ -42,14 +42,31 @@
   ))
 }
 
+/// validates if the given array is a valid grading scale
+#let validate-scale(scale) = {
+  if type(scale) == array {
+    let error = false
+     for entry in scale {
+      if type(entry) == dictionary {
+        if entry.keys().sorted() != ("grade", "lower-limit", "upper-limit") {
+          error = true
+        }
+      } else {
+        error = true
+      }
+    }
+    return not error
+  }
+  return false
+}
 
-/// The german IHK grading distribution
+/// Generate the german IHK grading scale for a total amount of points.
 ///
 /// - total (integer): total points which can be reached
 /// - step (float, integer): smallest unit of a point. 0.5 for half points and 1 for full points.
-/// - offset (integer): amount of points which the grade scala is shiffted down.
+/// - offset (integer): amount of points which the grade scale is shiffted down.
 /// -> array
-#let ihk-grades(total, step: 1, offset: 0) = grades(
+#let ihk-scale(total, step: 1, offset: 0) = gen-scale(
   max: total,
   step: step, 
   6, 
@@ -64,11 +81,15 @@
 /// Fetch a grade for a certain amount of points
 ///
 /// - points (integer, float): the points a student reached.
-/// - grades (dictionary): The dictionary returned from the @@grades function.
-/// -> (any) The grade. Type depending on the value inside the dictionary.at("grade")
-#let points-to-grade(points, grades) = {
-  let result = grades.find(g => g.lower-limit <= points and g.upper-limit >= points)
-  result.grade 
+/// - scale (array): The array returned from the @@gen-scale function.
+/// -> (any) The grade if found, or none if not found. Type of grade depending on the value inside the scale dictionary.at("grade")
+#let points-to-grade(points, scale) = {
+  if validate-scale(scale) {
+    let result = scale.find(g => g.lower-limit <= points and g.upper-limit >= points)
+    if result != none {
+      result.grade 
+    }
+  }
 }
 
 
