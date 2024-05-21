@@ -38,13 +38,14 @@
 
 
 #let small-grading-table(grading-scale, dist) = {
-  grading.validate-scale(grading-scale)
-  table(
-    columns: (1fr,) * len(grading-scale),
-    inset: 0.5em,
-    align: center,
-    table.header(..grading-scale.rev().map(g => [#g.grade])),
-    ..grading-scale.rev().map(g => ([ #g.upper-limit - #g.lower-limit]) ).flatten(),
-    ..dist.values().map(v => [#v x])
-  ) 
+  if grading.validate-scale(grading-scale) {
+    table(
+      columns: (1fr,) * grading-scale.len(),
+      inset: 0.5em,
+      align: center,
+      table.header(..grading-scale.rev().map(g => [#g.grade])),
+      ..grading-scale.rev().map(g => ([ #g.upper-limit - #g.lower-limit]) ).flatten(),
+      ..dist.values().map(v => [#v])
+    ) 
+  }
 }
