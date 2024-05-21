@@ -38,7 +38,7 @@ build:
 
 eval:
 	if [ ! -d "build" ]; then mkdir -p "build"; fi
-	typst compile eval.typ build/evaluation.typ
+	typst compile eval.typ build/evaluation.pdf
 
 clean:
 	rm -r build
