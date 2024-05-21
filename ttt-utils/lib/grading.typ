@@ -46,17 +46,18 @@
 /// The german IHK grading distribution
 ///
 /// - total (integer): total points which can be reached
-/// - step: smallest unit of a point. 0.5 for half points and 1 for full points.
+/// - step (float, integer): smallest unit of a point. 0.5 for half points and 1 for full points.
+/// - offset (integer): amount of points which the grade scala is shiffted down.
 /// -> array
-#let ihk-grades(total, step: 1) = grades(
+#let ihk-grades(total, step: 1, offset: 0) = grades(
   max: total,
   step: step, 
   6, 
-  0.3 * total, 5, 
-  0.5 * total, 4, 
-  0.67 * total, 3, 
-  0.81 * total, 2, 
-  0.91 * total, 1, 
+  0.3 * total - offset, 5, 
+  0.5 * total - offset, 4, 
+  0.67 * total - offset, 3, 
+  0.81 * total - offset, 2, 
+  0.91 * total - offset, 1, 
 )
 
 
