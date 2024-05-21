@@ -8,6 +8,29 @@
   }
 }
 
+/// if value is none return other value else return value itself
+#let if-none-then(val, ret) = {
+  if (val == none) {
+    ret
+  } else {
+    val
+  }
+} 
+
+/// check if a value is a certain type
+#let is-type(val, typ) = {
+  if typ == none  or typ == auto {
+    val == typ
+  } else {
+    type(val) == typ
+  }
+}
+
+/// assert if a value is a certain type
+#let assert-type(val, typ) = {
+  assert(is-type(val,typ), message: "Expected " + typ + ", found " + type(val))
+}
+
 /// decode an input
 #let decode-input(name, default: none) = {
   let input = sys.inputs.at(name, default: default)
