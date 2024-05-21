@@ -1,6 +1,7 @@
+[conf]
 default-lang = "en"
 
-[en]
+[lang.en]
 points = "Points"
 assignment = "Assignment"
 total = "Total"
@@ -14,7 +15,7 @@ date = "Date"
 appendix = "Appendix"
 solution = "Solution"
 
-[de]
+[lang.de]
 points = "Punkte"
 assignment = "Aufgabe"
 total = "Gesamt"
