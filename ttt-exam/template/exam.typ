@@ -1,9 +1,14 @@
-#import "@preview/ttt-exam:0.1.1": *
+#import "@preview/ttt-exam:0.1.2": *
 
 #set text(size: 12pt, font: ("Rubik"), weight: 300, lang: "de")
 
-#let logo = box(height: 5cm,image("logo.jpg") )
-#show: exam.with(..toml("meta.toml").info, logo: logo );
+#show: exam.with(
+  ..toml("meta.toml").info, 
+  logo: image("logo.jpg"),
+  cover: true, // true or false
+  eval-table: false,  // true or false
+  appendix: none, // content or none
+)
 
 = Part 1: Free text questions
 
@@ -50,10 +55,3 @@
   ),
   dir: ltr,
 )
-
-// show point-table or point-sum-box
-// uncomment if you need it.
-// = Points
-// #point-table  
-// #h(1fr)
-// #align(end, point-sum-box) 

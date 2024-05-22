@@ -45,7 +45,7 @@
       align: center,
       table.header(..grading-scale.rev().map(g => [#g.grade])),
       ..grading-scale.rev().map(g => ([ #g.upper-limit - #g.lower-limit]) ).flatten(),
-      ..dist.values().map(v => [#v])
+      ..dist.values().map(v => [#v x])
     ) 
   }
 }

@@ -80,7 +80,7 @@
       set text(22pt)
       set align(center)
 
-      if logo != none { place(top+end, logo) }
+      if logo != none { place(top+end, box(height: 5cm,logo)) }
 
       grid(
         align: center,
@@ -104,7 +104,7 @@
           column-gutter: 5pt,
           smallcaps(ling("name") + ":"), context if assignments.is-solution-mode() { text(red, ling("solution")) },
           smallcaps(ling("class") + ":"), class,
-          smallcapps(ling("subject")), subject,
+          smallcaps(ling("subject") + ":"), subject,
           smallcaps(ling("date") + ":"), date,
         )
       },
