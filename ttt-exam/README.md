@@ -17,6 +17,7 @@ This will scaffold the following folder structure.
 my-exam/
 ├─ meta.toml
 ├─ exam.typ
+├─ eval.typ
 ├─ justfile
 └─ logo.jpg
 ```
@@ -24,12 +25,13 @@ my-exam/
 Replace the `logo.jpg` with your schools, university, ... logo or remove it. Then edit the `meta.toml`.
 Edit the `exam.typ` and replace the questions with your own. If you like you can also remove the `meta.toml` file and specify the values directly inside `exam.typ`
 
-If you have installed [just]() you can use it to build a *student* and *teacher* version of your exam by running `just build`.
+If you have installed [just](https://just.systems) you can use it to build a *student* and *teacher* version of your exam by running `just build`.
 
 Here you can see an example with both versions. On the left the student version and on the right the teachers version.
 
 ![Thumbnail with both versions](https://github.com/jomaway/typst-teacher-templates/blob/main/ttt-exam/thumbnail.png)
 
+The `eval.typ` is a template for generating grade lists. You need to add your students to `meta.toml` and add the total amount of points.
 
 ## Features
 
@@ -38,17 +40,18 @@ You can pass the following arguments to `exam`
 ```typ
 #let exam(
   // metadata 
-  logo: none, // an image
-  title: "exam", // shoes the title of the exam -> 1. Schulaufgabe | Stegreifaufgabe | Kurzarbeit
-  subtitle: none, // Shown below the title
+  logo: none, // none | image
+  title: "exam", // the title of the exam
+  subtitle: none, // is shown below the title
   date: none,     // date of the exam, preferred type of datetime.
   class: "",      
   subject: "" ,
-  authors: "",
+  authors: "",  // string | array
   // config
-  solutions: false,  // if solutions are displayed can also be specified with `--input solution=true` on the cli.
-  header: "block",  // "block" or "page" -> if the header is only a block like in the screenshot or a whole page.
-  point-field: "sum",  // "sum" or "table" // which point-field is show if header is page.
-  body
+  solution: auto,  // if solutions are displayed can also be specified with `--input solution=true` on the cli.
+   cover: true, // true | false
+   header: auto, // true | false | auto
+   eval-table: false,  // true | false
+   appendix: none, // content | none
 )
 ```

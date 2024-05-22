@@ -10,6 +10,7 @@ repository = "https://github.com/jomaway/typst-teacher-templates"
 keywords = ["teacher","assignments", "exam", "grading"]
 categories = ["office"]
 disciplines = ["education"]
+exclude = ["example/**"]
 
 [template]
 path = "template"
