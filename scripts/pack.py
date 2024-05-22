@@ -4,7 +4,9 @@ import sys
 import shutil
 import argparse
 import tempfile
+import toml
 from pathlib import Path
+from fnmatch import fnmatch
 
 # List of all files that get packaged
 files = [
@@ -27,14 +29,29 @@ def parse_arguments():
     parser.add_argument("target", help="Target path or @local/@preview")
     return parser.parse_args()
 
+# Function to check if a file matches any exclude patterns
+def is_excluded(path,excludes):
+    # Check if the file or directory is hidden
+    if any(part.startswith('.') for part in path.parts):
+        return True
+
+    if path.is_file() and path.name in excludes:
+        return True
+    
+    for pattern in excludes:
+        if fnmatch(path.as_posix(), pattern):
+            return True
+    return False
+    
 def main():
     args = parse_arguments()
 
-    pkg_prefix = args.package
+    pkg_prefix = args.package    
+
     source = Path(__file__).resolve().parent.parent / pkg_prefix
     target = args.target
 
-    print(f"Source file {source}")
+    print(f"Source dir {source}")
 
     for file in files:
         if not (source / file).exists():
@@ -42,19 +59,24 @@ def main():
             exit(-1)
 
     # Extract the version of the typst.toml using awk
-    with open(source / "typst.toml") as f:
-        for line in f:
-            if line.startswith("version"):
-                version = line.split("=")[-1].strip().strip('"')
-                break
-            elif line.startswith("exclude"):
-                exclude = line.split("=")[-1].strip().strip('"')
-            else:
-                exclude = []
+    with open(source / "typst.toml", mode="r") as f:
+        config = toml.load(f)
+        version = config["package"].get("version", "").strip()
+        exclude = config["package"].get("exclude", [])
+        
+        # for line in f:
+        #     if line.startswith("version"):
+        #         version = line.split("=")[-1].strip().strip('"')
+        #     elif line.startswith("exclude"):
+        #         print("found exlude line")
+        #         exclude = [entry.strip().strip('"') for entry in line.split("=")[-1].strip().strip("[]").split(",")]
+        #     else:
+        #         exclude = []
 
     print("Version:", version)
     print("Exclude:", exclude)
-
+    exclude = [source / entry for entry in exclude]
+    
     if target == "@local" or target == "install":
         target = data_dir / "typst" / "packages" / "local"
         print("Install dir:", target)
@@ -67,7 +89,8 @@ def main():
     with tempfile.TemporaryDirectory() as tmp_dir:
 
         for file_path in source.glob("**/*"):
-            if file_path.is_file() and file_path.name not in exclude:
+            if file_path.is_file() and not is_excluded(file_path,exclude):
+                print(f"Filepath: {file_path.relative_to(source)}")
                 rel_path = file_path.relative_to(source)
                 dest_path = Path(tmp_dir) / rel_path
                 dest_path.parent.mkdir(parents=True, exist_ok=True)
@@ -75,7 +98,7 @@ def main():
         
 
 
-        target = target / pkg_prefix / version
+        target = target / pkg_prefix.removeprefix("typst-") / version
         print("Packaged to:", target)
 
         if target.exists():
