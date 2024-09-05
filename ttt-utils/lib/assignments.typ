@@ -216,7 +216,7 @@
 /// - body (content): the content to show
 /// -> content
 #let with-solution(solution, body) = context {
-  assert.eq(type(value), bool, message: "expected bool, found " + type(value))
+  assert.eq(type(solution), bool, message: "expected bool, found " + type(solution))
   let orig-solution = _solution.get()
   _solution.update(solution)
   body
