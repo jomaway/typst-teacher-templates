@@ -4,9 +4,9 @@
 ///
 /// - rows (int): number of rows to
 /// -> content
-#let lines(rows) = {
+#let lines(rows, height: 1.2cm) = {
     for _ in range(rows) {
-        block(above: 0.9cm, line(length:100%, stroke: 0.3pt + black.lighten(20%)) )
+        block(above: height, line(length:100%, stroke: 0.3pt + black.lighten(20%)) )
     }
 }
 
