@@ -1,11 +1,11 @@
 [package]
 name = "ttt-exam"
-version = "0.1.2"
+version = "0.1.3"
 compiler = "0.11.0"
 entrypoint = "lib/lib.typ"
 authors = ["Jomaway <https://github.com/jomaway>"]
 license = "MIT"
-description = "A collection of tools to make a teachers life easier (german)." 
+description = "A collection of tools to make a teachers life easier (german)."
 repository = "https://github.com/jomaway/typst-teacher-templates"
 keywords = ["teacher","assignments", "exam", "grading"]
 categories = ["office"]
