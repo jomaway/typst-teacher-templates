@@ -1,4 +1,4 @@
-#import "@preview/ttt-utils:0.1.2": grading
+#import "@preview/ttt-utils:0.1.3": grading
 #import "i18n.typ": ling
 
 #let total_points = context grading.get_points().sum()
@@ -46,6 +46,6 @@
       table.header(..grading-scale.rev().map(g => [#g.grade])),
       ..grading-scale.rev().map(g => ([ #g.upper-limit - #g.lower-limit]) ).flatten(),
       ..dist.values().map(v => [#v x])
-    ) 
+    )
   }
 }
