@@ -1,13 +1,15 @@
 #import "@preview/ttt-exam:0.1.3": *
 
 #set text(size: 12pt, font: ("Rubik"), weight: 300, lang: "de")
-#set par(spacing: 1.2em)
+#if sys.version.at(1) >= 12 {
+  set par(spacing: 1.2em)
+}
 
 
 #show: exam.with(
   class: get-from-input("class"),
   subject: get-from-input("subject"),
-  date :  date-input(),
+  date :  date-input("date"),
   authors : get-from-input("authors"),
   logo: box(height: 2cm,image(get-from-input("logo",default: "logo.jpg"))),
   title : get-from-input("title",default: "Exam"),

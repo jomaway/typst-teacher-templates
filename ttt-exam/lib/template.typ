@@ -1,9 +1,10 @@
-#import "@preview/ttt-utils:0.1.2": assignments, components, grading, helpers
+#import "@preview/ttt-utils:0.1.3": assignments, components, grading, helpers
 #import "i18n.typ": ling
 
 #import components: *
 #import assignments: *
 #import grading: *
+#import helpers: *
 
 #import "points.typ": *
 #import "headers.typ": *
@@ -12,19 +13,14 @@
   sys.inputs.at(key,default: default)
 }
 
-#let date-input(default: "") = {
-   let value = sys.inputs.at("date", default: none)
-   if value != none {
-    let decoded-data = toml.decode("date="+value)
-    return decoded-data.at("date")
-   }
-   return default
-}
-
 #let last-page-number = counter("last-page-number")
 
 #let _appendix(body, title: auto, ..args) = [
-  #set page(footer: auto, header:none, numbering: ("[A]"), ..args.named())
+  #if sys.version.at(1) >= 12 {
+    set page(footer: auto, header:none, numbering: ("[A]"), ..args.named())
+  } else {
+    set page(header:none, numbering: ("[A]"), ..args.named())
+  }
   #metadata((appendix: true)) <appendix>
   #counter(page).update(1)
   #if-auto-then(title, heading(ling("appendix")))

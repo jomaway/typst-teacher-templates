@@ -1,4 +1,4 @@
-#import "@preview/ttt-utils:0.1.2": assignments
+#import "@preview/ttt-utils:0.1.3": assignments
 #import "i18n.typ": ling
 
 #let header-block(
@@ -17,12 +17,12 @@
     inset: 0.7em,
     table.cell(align: horizon)[
       #set par(leading: 1em)
-      #smallcaps(ling("class") + ":") #class \ 
+      #smallcaps(ling("class") + ":") #class \
       #smallcaps(ling("subject") + ":") #subject \
       #smallcaps(ling("date") + ":") #date
     ],
     table.cell(align: center + horizon)[
-      
+
       #if logo != none {
         context {
           let size = measure(box(height: 2cm, logo))
@@ -38,7 +38,7 @@
           } else {
             grid(
               columns: 2,
-              column-gutter: 12pt, 
+              column-gutter: 12pt,
               align: horizon,
               box(height: 2cm, width: calc.min(size.width, 2cm), logo),
               {
@@ -49,10 +49,10 @@
             )
           }
         }
-      } else { 
+      } else {
         text(16pt, weight: 500, title)
           linebreak()
-          if subtitle != none { subtitle } 
+          if subtitle != none { subtitle }
         }
     ],
     table.cell(rowspan: 2)[#align(top + start)[#smallcaps(ling("grade") + ":")] #context if assignments.is-solution-mode() { align(center + horizon,text(32pt, weight: 700, red, "X")) }],
@@ -69,9 +69,9 @@
   date,
   point-field: none
 ) = {
-  
+
   date = if type(date) == datetime { date.display("[day].[month].[year]") } else { date }
-  
+
   grid(
     columns: 1fr,
     rows: (2fr,1fr,1fr),
