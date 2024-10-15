@@ -15,7 +15,7 @@
   } else {
     val
   }
-} 
+}
 
 /// check if a value is a certain type
 #let is-type(val, typ) = {
@@ -44,6 +44,16 @@
   let value = json.decode(sys.inputs.at(name, default: "false"))
   assert(type(value) == bool, message: "--input " + name + "=... must be set to true or false if present")
   value
+}
+
+// maps an input to a date
+#let date-input(name, default: "") = {
+  let value = sys.inputs.at("name", default: none)
+  if value != none {
+   let decoded-data = toml.decode("date="+value)
+   return decoded-data.at("date")
+  }
+  default
 }
 
 // #let push_and_return(a_list, value) = {

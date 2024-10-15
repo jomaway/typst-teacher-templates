@@ -13,12 +13,12 @@ It contains several modules:
 - `random` contains a function to shuffle an array.
 
 
-## Usage 
+## Usage
 
 You can import the modules you need with:
 
 ```typst
-#import "@preview/ttt-utils:0.1.0": components
+#import "@preview/ttt-utils:0.1.3": components
 ```
 
 then you can access the modules function with:
@@ -28,7 +28,7 @@ then you can access the modules function with:
 or import the wanted functions:
 
 ```typst
-#import "@preview/ttt-utils:0.1.0": components, assignments
+#import "@preview/ttt-utils:0.1.3": components, assignments
 
 #import assignments: assignment, question, answer
 #import components: caro as grid_pattern
@@ -48,6 +48,6 @@ or import the wanted functions:
 
 - [scrutinize](https://github.com/SillyFreak/typst-packages/tree/main/scrutinize) by [SillyFreak](https://github.com/SillyFreak): Package to create exams, very similar to the `assignment` module, but only questions without assignments, and a bit more low level. I adopted a few of his ideas.
 
-## CHANGELOG 
+## CHANGELOG
 
 See [CHANGELOG.md](../CHANGELOG.md)
