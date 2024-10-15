@@ -4,11 +4,11 @@
 
 // States
 #let _solution = state("ttt-solution", false);
-#let _answer_field = state("ttt-auto-field", _lines(2))
+#let _answer_field = state("ttt-auto-field", none)
 
 /// wrapper for updating the `_answer_field` state
 ///
-/// - field (content): Content to be shown if @answer field parameter is `auto` 
+/// - field (content): Content to be shown if @answer field parameter is `auto`
 /// -> content (state-update)
 #let set-default-answer-field(field) = _answer_field.update(field)
 
@@ -49,7 +49,7 @@
 }
 
 /// Ends the assignment environment.
-/// All following questions will be treated as stand alone questions. 
+/// All following questions will be treated as stand alone questions.
 #let end-assignment = _assignment_env.update(none)
 
 /// Wrapper to check if the assignment environment is active.
@@ -57,11 +57,11 @@
   _assignment_env.get() != none
 }
 
-/// Add an assignment environment. 
-/// By default this adds the current assignment number up front. 
+/// Add an assignment environment.
+/// By default this adds the current assignment number up front.
 ///
 /// Example:
-/// 
+///
 /// ```typ
 /// #assignment [
 ///   Answer the questions
@@ -75,14 +75,14 @@
 /// -> content
 #let assignment(body, number: "1.") = {
   new-assignment
-  
+
   if (number != none and number != "hide") { a-nr(style: number) }
   body
 
   end-assignment
 }
 
-/// Add a question and some metadata to your document. 
+/// Add a question and some metadata to your document.
 ///
 /// This function will just render the given body and store the points as metadata inside the document.
 /// You mostly want to use the higher level `question` function.
@@ -103,13 +103,13 @@
   body
 }
 
-/// Add a question with number and point-tag to your document. 
+/// Add a question with number and point-tag to your document.
 ///
 /// This function adds the current question number up front and a `point-tag` on the right side.
 /// If you just want the plain question to render use the low level `_question` function.
 ///
 /// Example:
-/// 
+///
 /// ```typ
 ///   #question(points: 2)[What is the result of $1 + 1$ ?]
 /// ```
@@ -173,7 +173,7 @@
     question(points: if (type(data.answer) == array) { data.answer.len() } else { 1 })[
       #data.prompt
       #_multiple-choice(
-        distractors: data.distractors, 
+        distractors: data.distractors,
         answer: data.answer,
         dir: dir //if data.at("dir", default: none) != none { data.at("dir") } else { ttb }
       )
@@ -186,7 +186,7 @@
 }
 
 // -----------------
-// Solution methods 
+// Solution methods
 // -----------------
 
 /// Wrapper to set solution-mode to true
@@ -201,7 +201,7 @@
   _solution.get()
 }
 
-/// Sets the solution to a defined state. 
+/// Sets the solution to a defined state.
 ///
 /// - value (bool): the solution state
 /// -> content
@@ -244,15 +244,15 @@
 #let answer(body, color: red, field: auto) = {
     answer-field(context if-auto-then(field, _answer_field.get()))
     context {
-      if is-solution-mode() { 
+      if is-solution-mode() {
         set text(fill: color)
-        body 
+        body
       }
     }
 }
 
 // ---------
-// Queries 
+// Queries
 // ---------
 
 /// Fetch the metadata of the last defined question
@@ -272,4 +272,3 @@
     all-questions
   }
 }
-

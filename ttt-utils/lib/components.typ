@@ -19,15 +19,15 @@
   layout(size => {
     let cols = if( cols == auto ){ int(size.width.cm() / 0.5) } else { cols }
     table(
-      columns: (0.5cm,) * cols, 
+      columns: (0.5cm,) * cols,
       rows: (0.5cm,) * rows,
-      stroke: 0.3pt + luma(140),
+      stroke: 0.3pt + luma(180),
       table.cell(y: rows - 1)[],
     )
   })
 }
 
-/// Create a small line with a label like a signature field in a form. 
+/// Create a small line with a label like a signature field in a form.
 ///
 /// - label (string): label which is rendered underneath the line.
 /// - width (length): width of the field.
@@ -35,14 +35,14 @@
 /// -> content
 #let field(label, width: 3.5cm, value: none) = {
   box(
-    stroke: (bottom: 0.5pt), 
-    width: width, 
+    stroke: (bottom: 0.5pt),
+    width: width,
     height: 0.8cm,
     inset: (bottom: 3pt)
   )[
     #align(bottom + center,value)
     #place(bottom + end,dy: 12pt)[#text(10pt, label)]
-  ] 
+  ]
 }
 
 /// Create a checkbox
@@ -51,10 +51,10 @@
 /// - tick (bool): if true a checkmark symbol is shown inside the box.
 /// -> content
 #let checkbox(fill: none, tick: false) = box(
-  width: 0.8em, 
-  height: 0.8em, 
-  stroke: 0.7pt, 
-  radius: 1pt, 
+  width: 0.8em,
+  height: 0.8em,
+  stroke: 0.7pt,
+  radius: 1pt,
   fill: fill,
   if (tick) { align(horizon + center, sym.checkmark) }
 )
@@ -86,7 +86,7 @@
 }
 
 
-/// Create a small tag label with the given amount of points. 
+/// Create a small tag label with the given amount of points.
 ///
 /// - points (int): given get_points
 /// -> content
