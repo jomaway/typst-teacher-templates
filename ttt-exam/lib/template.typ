@@ -9,20 +9,28 @@
 #import "points.typ": *
 #import "headers.typ": *
 
-#let get-from-input(key, default: none) = {
+#let get-from-input(key, default: "") = {
   sys.inputs.at(key,default: default)
+}
+
+#let image-input(name, default: none) = {
+  let img =  get-from-input(name, default: none)
+    if img != none {
+      return box(height: 2cm, image(img))
+    }
+    return default
 }
 
 #let last-page-number = counter("last-page-number")
 
 #let _appendix(body, title: auto, ..args) = [
+    #set page(footer: [#context align(center, counter(page).display("[A]"))],header:none, ..args.named())
   #if sys.version.at(1) >= 12 {
     set page(footer: auto, header:none, numbering: ("[A]"), ..args.named())
   } else {
-    set page(header:none, numbering: ("[A]"), ..args.named())
   }
-  #metadata((appendix: true)) <appendix>
   #counter(page).update(1)
+  #metadata((appendix: true)) <appendix>
   #if-auto-then(title, heading(ling("appendix")))
 
   #body

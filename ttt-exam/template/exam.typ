@@ -5,13 +5,20 @@
   set par(spacing: 1.2em)
 }
 
+#let logo-input(name, default: none) = {
+  let _logo =  get-from-input(name, default: none)
+    if _logo != none {
+      return box(height: 2cm, image(_logo))
+    }
+    return default
+}
 
 #show: exam.with(
   class: get-from-input("class"),
   subject: get-from-input("subject"),
-  date :  date-input("date"),
+  date :  parse-date-str(get-from-input("date")),
   authors : get-from-input("authors"),
-  logo: box(height: 2cm,image(get-from-input("logo",default: "logo.jpg"))),
+  logo: box(height: 2cm, image(get-from-input("logo", default: "logo.jpg"))),
   title : get-from-input("title",default: "Exam"),
   subtitle : get-from-input("subtitle"),
   cover: true, // true or false
