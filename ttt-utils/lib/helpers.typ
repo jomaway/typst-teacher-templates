@@ -47,13 +47,10 @@
 }
 
 // maps an input to a date
-#let date-input(name, default: "") = {
-  let value = sys.inputs.at("name", default: none)
-  if value != none {
-   let decoded-data = toml.decode("date="+value)
-   return decoded-data.at("date")
-  }
-  default
+#let parse-date-str(date) = {
+  assert(type(date) == str, message: "Expected string, found:" + type(date))
+  let da = date.split("-").map(p => int(p))
+  return datetime(year: da.at(0), month: da.at(1), day: da.at(2))
 }
 
 // #let push_and_return(a_list, value) = {
