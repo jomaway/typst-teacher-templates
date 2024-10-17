@@ -49,8 +49,12 @@
 // maps an input to a date
 #let parse-date-str(date) = {
   assert(type(date) == str, message: "Expected string, found:" + type(date))
-  let da = date.split("-").map(p => int(p))
-  return datetime(year: da.at(0), month: da.at(1), day: da.at(2))
+  if date.match(regex("^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$")) != none {
+    let da = date.split("-").map(p => int(p))
+    return datetime(year: da.at(0), month: da.at(1), day: da.at(2))
+  }
+  return none
+
 }
 
 // #let push_and_return(a_list, value) = {
