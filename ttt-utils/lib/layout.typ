@@ -4,10 +4,10 @@
 /// - gutter (length): grid gutter
 /// - ..cols (content): content to show
 /// -> content
-#let side-by-side(columns: none, gutter: 1em, ..cols) = {
+#let side-by-side(columns: auto, gutter: 1em, ..cols) = {
 
   let cols = cols.pos()
-  let columns = if columns ==  none { (1fr,) * cols.len() } else { columns }
+  let columns = if columns == auto { (1fr,) * cols.len() } else { columns }
 
   assert(
     columns.len() == cols.len(),
@@ -16,12 +16,4 @@
 
   grid(columns: columns, gutter: gutter, ..cols)
 
-}
-
-/// utility function to stick header and following block together
-/// depricated: since 0.12 use block.sticky instead
-#let stick-together(a, b, threshold: 3em) = {
-  block(a + v(threshold), breakable: false)
-  v(-1 * threshold)
-  b
 }
