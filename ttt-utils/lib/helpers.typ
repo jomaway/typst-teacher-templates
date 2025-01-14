@@ -56,13 +56,3 @@
   return none
 
 }
-
-// #let push_and_return(a_list, value) = {
-//   a_list.push(value)
-//   return a_list
-// }
-
-// #let increase_last(a_list, value) = {
-//   a_list.last() += value
-//   return a_list
-// }
