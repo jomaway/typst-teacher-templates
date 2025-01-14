@@ -48,6 +48,7 @@
 
 // maps an input to a date
 #let parse-date-str(date) = {
+  if date == none { return none }
   assert(type(date) == str, message: "Expected string, found:" + type(date))
   if date.match(regex("^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$")) != none {
     let da = date.split("-").map(p => int(p))
