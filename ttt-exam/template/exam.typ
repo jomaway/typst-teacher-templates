@@ -5,14 +5,6 @@
   set par(spacing: 1.2em)
 }
 
-#let logo-input(name, default: none) = {
-  let _logo =  get-from-input(name, default: none)
-    if _logo != none {
-      return box(height: 2cm, image(_logo))
-    }
-    return default
-}
-
 #show: exam.with(
   class: get-from-input("class"),
   subject: get-from-input("subject"),
