@@ -14,9 +14,9 @@
 }
 
 #let image-input(name, default: none) = {
-  let img =  get-from-input(name, default: none)
-    if img != none {
-      return box(height: 2cm, image(img))
+  let path =  get-from-input(name, default: none)
+    if path != none {
+      return box(height: 2cm, image(path))
     }
     return default
 }
@@ -39,17 +39,17 @@
 #let exam(
   // metadata
   logo: none,
-  title: "exam", // shoes the title of the exam -> 1. Schulaufgabe | Stegreifaufgabe | Kurzarbeit
-  subtitle: none,
-  date: none,     // date of the exam
-  class: "",
-  subject: "" ,
-  authors: "",
+  title: get-from-input("title",default: "Exam"), // shoes the title of the exam -> 1. Schulaufgabe | Stegreifaufgabe | Kurzarbeit
+  subtitle:  get-from-input("subtitle", default: none ),
+  date: parse-date-str(get-from-input("date", default: none)),     // date of the exam
+  class: get-from-input("class", default: ""),
+  subject: get-from-input("subject", default: ""),
+  authors: get-from-input("author", default: ""),
   // config
   solution: auto, // auto | false | true
-  cover: false, // false | true
+  cover: true, // false | true
   header: auto, // auto | false | true
-  eval-table: true,
+  eval-table: false,
   appendix: none,
   footer-msg: auto,
   body
