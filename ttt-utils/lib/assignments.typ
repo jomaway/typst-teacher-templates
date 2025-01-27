@@ -242,7 +242,11 @@
 /// - field (auto, content): some content which is shown if solution-mode is off. default: `_answer_field` state value
 /// -> content
 #let answer(body, color: red, field: auto) = {
-    answer-field(context if-auto-then(field, _answer_field.get()))
+    if field == hide {
+      answer-field( hide(body))
+    } else {
+      answer-field(context if-auto-then(field, _answer_field.get()))
+    }
     context {
       if is-solution-mode() {
         set text(fill: color)
