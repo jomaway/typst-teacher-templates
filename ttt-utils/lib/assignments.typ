@@ -117,7 +117,8 @@
 /// - points (int): the given points for a correct answer of this question. Will be stored as metadata.
 /// - number (string, none): if none no number will be displayed otherwise the string gets passed to typst `numbering` function.
 /// -> content
-#let question(body, points: none, number: auto) = {
+#let question(body, points: none, number: auto, breakable: true) = {
+  set block(breakable: breakable)
   grid(
     columns: (1fr, auto),
     column-gutter: 0.5em,
