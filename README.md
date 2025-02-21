@@ -12,6 +12,9 @@ Collection of tools, which makes the teacher life easier. This repo contains mul
 
 ## Templates
 
+⚠️The templates are not maintained anymore.
+So don't expect an update on them soon.
+
 - [ttt-exam](./ttt-exam/)
 - [ttt-lists](./ttt-lists/)
 - [ttt-worksheet](./ttt-worksheet/)
