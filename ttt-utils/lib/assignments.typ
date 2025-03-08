@@ -73,7 +73,8 @@
 /// - body (content): the content to be displayed for this assignment
 /// - number (string, none): if none no number will be displayed otherwise the string gets passed to typst `numbering` function.
 /// -> content
-#let assignment(body, number: "1.") = {
+#let assignment(body, number: "1.", breakable: true) = {
+  set block(breakable: breakable)
   new-assignment
 
   if (number != none and number != "hide") { a-nr(style: number) }
@@ -92,7 +93,7 @@
 /// -> content
 #let _question(body, points: none) = {
   if points != none {
-    assert.eq(type(points), int, message: "expected points argument to be an integer, found " + type(points))
+    assert.eq(type(points), int, message: "expected points argument to be an integer, found " + str(type(points)))
   }
   context {
     let level = if is-assignment() { 2 } else { 1 }
@@ -163,7 +164,7 @@
 #let multiple-choice(..args, dir: ttb) = {
   // assertions
   let data = args.named()
-  assert(type(data) == dictionary, message: "expected data to be a dictionary, found " + type(data))
+  assert(type(data) == dictionary, message: "expected data to be a dictionary, found " + str(type(data)))
   let keys = data.keys()
   assert("prompt" in keys, message: "could not find prompt in keys");
   assert("distractors" in keys, message: "could not find distractors in keys");
@@ -207,7 +208,7 @@
 /// - value (bool): the solution state
 /// -> content
 #let set-solution-mode(value) = {
-  assert.eq(type(value), bool, message: "expected bool, found " + type(value))
+  assert.eq(type(value), bool, message: "expected bool, found " + str(type(value)))
   _solution.update(value)
 }
 
@@ -217,7 +218,7 @@
 /// - body (content): the content to show
 /// -> content
 #let with-solution(solution, body) = context {
-  assert.eq(type(value), bool, message: "expected bool, found " + type(value))
+  assert.eq(type(value), bool, message: "expected bool, found " + str(type(value)))
   let orig-solution = _solution.get()
   _solution.update(solution)
   body
