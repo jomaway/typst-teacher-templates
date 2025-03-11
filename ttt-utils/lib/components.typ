@@ -1,5 +1,11 @@
 /// Helper and utility functions
 
+
+/// Create a small line
+#let gap(length, stroke: (bottom: 0.5pt), value: none) = {
+  box(width: length, outset: (y: 0.5em), stroke: stroke, value)
+}
+
 /// Create a block of lines like in a lined notebook.
 ///
 /// - rows (int): number of rows to
