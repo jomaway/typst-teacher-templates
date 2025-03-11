@@ -41,7 +41,7 @@
 
 /// maps an input to an boolean
 #let bool-input(name) = {
-  let value = json(sys.inputs.at(name, default: bytes("false")))
+  let value = json(bytes(sys.inputs.at(name, default: "false")))
   assert(type(value) == bool, message: "--input " + name + "=... must be set to true or false if present")
   value
 }
