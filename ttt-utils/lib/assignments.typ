@@ -24,6 +24,52 @@
 // Labels
 #let _question_label = label("ttt-question-label")
 
+// -----------------
+// Solution methods
+// -----------------
+
+// Wrapper to set solution-mode to true
+#let show-solutions = { _solution.update(true) }
+// Wrapper to set solution-mode to false
+#let hide-solutions = { _solution.update(false) }
+
+// Wrapper to get the current value of the _solution state
+// ! needs context
+// -> bool
+#let is-solution-mode() = {
+  _solution.get()
+}
+
+/// Sets the solution to a defined state.
+///
+/// -> content
+#let set-solution-mode(
+  /// the solution state
+  /// -> bool
+  value
+) = {
+  assert.eq(type(value), bool, message: "expected bool, found " + str(type(value)))
+  _solution.update(value)
+}
+
+/// Sets whether solutions are shown for a particular part of the document.
+///
+/// -> content
+#let with-solution(
+  /// the solution state to apply for the body
+  /// -> bool
+  solution,
+  /// - body (content): the content to show
+  /// -> content
+  body
+) = context {
+  assert.eq(type(solution), bool, message: "expected bool, found " + str(type(solution)))
+  let orig-solution = _solution.get()
+  _solution.update(solution)
+  body
+  _solution.update(orig-solution)
+}
+
 
 /// Add the current assignment number
 ///
@@ -176,122 +222,93 @@
   )
 }
 
-// A stack with multiple options and a checkbox upfront.
-//
-// -> content
-#let _multiple-choice(
-  // all wrong choices
-  // -> array
-  distractors: (),
-  // one or multiple correct choices.
-  // -> array | string | integer
-  answer: (),
-  // direction of the options. Get's passed to typst `stack` function.
-  // -> direction
-  dir: ttb
-) = {
-  let answers = if (type(answer) == array ) { answer } else { (answer,) }
-  let choices = (..distractors, ..answers)
-
-  choices = shuffle(choices).map(choice => {
-    box(inset:(x:0.5em))[
-      #context {
-        let is-solution =  _solution.get() and choice in answers
-        checkbox(fill: if is-solution { red }, tick: is-solution )
-      }
-    ]; choice
-  })
-
-  stack(dir:dir, spacing: 1em, ..choices)
-}
-
-/// A multiple or single choice question.
-///
+/// A single/multiple choice question. \
 /// The checkbox of an answer will be filled red and ticked if solution-mode is set to true.
 ///
-/// -> content
-#let multiple-choice(
-  /// only looking for prompt, distractors, answer and hint.
-  /// -> arguments
-  ..args,
+/// ```example
+/// >>> #box(width: 8cm)[
+/// #choice(
+///   prompt: [What is the result of $1+1$?],
+///   distractors: (1, 3, 4),
+///   answers: 2,
+///   hint: "The result is even.",
+///   dir: ltr
+/// )
+/// >>> ]
+/// ```
+#let choice(
+  /// the question prompt
+  /// -> content
+  prompt: none,
+  /// all wrong choices
+  /// -> array
+  distractors: (),
+  /// one or multiple correct choices.
+  /// -> array
+  answers: (),
+  /// some hint for the question
+  /// -> none | content
+  hint: none,
+  /// the amount of points for this question. \
+  /// - if auto the amount of correct answers will be used. \
+  /// - if none no points will be given.
+  /// - otherwise the given number will be used.
+  /// -> int | auto | none
+  points: auto,
   /// direction of the options. Get's passed to typst `stack` function.
-  /// -> direction
-  dir: ttb
+  dir: ttb,
 ) = {
-  // assertions
-  let data = args.named()
-  assert(type(data) == dictionary, message: "expected data to be a dictionary, found " + str(type(data)))
-  let keys = data.keys()
-  assert("prompt" in keys, message: "could not find prompt in keys");
-  assert("distractors" in keys, message: "could not find distractors in keys");
-  assert("answer" in keys, message: "could not find answer in keys");
+  let answers = if (type(answers) == array ) { answers } else { (answers,) }
+  answers = answers.map(entry => [#entry])
+  distractors = distractors.map(entry => [#entry])
 
-  // create output
   block(breakable: false,
-    question(points: if (type(data.answer) == array) { data.answer.len() } else { 1 })[
-      #data.prompt
-      #_multiple-choice(
-        distractors: data.distractors,
-        answer: data.answer,
-        dir: dir //if data.at("dir", default: none) != none { data.at("dir") } else { ttb }
-      )
+    question(points: if-auto-then(points, answers.len()))[
+      #prompt
+      #let choices = (..distractors, ..answers)
+
+      #let choices = shuffle(choices).map(choice => {
+        box(inset:(x:0.5em))[
+          #context {
+            let is-solution = is-solution-mode() and choice in answers
+            checkbox(fill: if is-solution { red }, tick: is-solution )
+          }
+        ]; choice
+      })
+
+      #stack(dir:dir, spacing: 1em, ..choices)
+
+
       // show hint if available.
-      #if ("hint" in data.keys()) {
-        strong(delta: -100)[Hint: #data.at("hint", default: none)]
+      #if (hint != none) {
+        strong(delta: -100)[Hint: #hint]
       }
     ]
   )
 }
 
-// -----------------
-// Solution methods
-// -----------------
-
-// Wrapper to set solution-mode to true
-#let show-solutions = { _solution.update(true) }
-// Wrapper to set solution-mode to false
-#let hide-solutions = { _solution.update(false) }
-
-// Wrapper to get the current value of the _solution state
-// ! needs context
-// -> bool
-#let is-solution-mode() = {
-  _solution.get()
-}
-
-/// Sets the solution to a defined state.
-///
-/// -> content
-#let set-solution-mode(
-  /// the solution state
-  /// -> bool
-  value
-) = {
-  assert.eq(type(value), bool, message: "expected bool, found " + str(type(value)))
-  _solution.update(value)
-}
-
-/// Sets whether solutions are shown for a particular part of the document.
-///
-/// -> content
-#let with-solution(
-  /// the solution state to apply for the body
-  /// -> bool
-  solution,
-  /// - body (content): the content to show
-  /// -> content
-  body
-) = context {
-  assert.eq(type(solution), bool, message: "expected bool, found " + str(type(solution)))
-  let orig-solution = _solution.get()
-  _solution.update(solution)
-  body
-  _solution.update(orig-solution)
-}
-
 
 /// An answer field which is only shown if solution-mode is false.
 ///
+/// ```example
+/// *With solution mode off:*
+///
+/// #assignment[
+///   What is the result of $1+1$?
+///
+///   #answer-field(box(stroke: 1pt+ blue, width: 2cm, height: 1cm)[])
+/// ]
+///
+/// *With solution mode on:*
+/// #set-solution-mode(true)
+///
+/// #assignment[
+///   What is the result of $1+1$?
+///
+///   #answer-field(box(stroke: blue, width: 5cm, height: 5cm)[])
+/// ]
+/// >>> #set-solution-mode(false)
+/// ```
 /// -> content
 #let answer-field(
   /// the content to show if solution-mode is off
@@ -322,6 +339,7 @@
 ///
 ///   #answer[$1+1 = 2$]
 /// ]
+/// >>> #set-solution-mode(false)
 /// ```
 /// -> content
 #let answer(
@@ -353,6 +371,10 @@
 // ---------
 
 /// Fetch the metadata of the last defined question
+///
+/// ```example
+/// #context current-question()
+/// ```
 ///
 /// -> dictionary
 #let current-question() = { query(selector(_question_label).before(here())).last().value }
