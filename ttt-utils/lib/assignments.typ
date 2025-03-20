@@ -177,13 +177,10 @@
 /// This function adds the current question number up front and a `point-tag` on the right side.
 /// If you just want the plain question to render use the low level `_question` function.
 ///
-/// Example:
 /// ```example
-/// >>> #box(width: 8cm)[
 /// #question(points: 2)[
 ///   What is the result of $1 + 1$ ?
 /// ]
-/// >>> ]
 ///
 /// #assignment[
 ///   Assignment with questions.
@@ -226,7 +223,6 @@
 /// The checkbox of an answer will be filled red and ticked if solution-mode is set to true.
 ///
 /// ```example
-/// >>> #box(width: 8cm)[
 /// #choice(
 ///   prompt: [What is the result of $1+1$?],
 ///   distractors: (1, 3, 4),
@@ -234,7 +230,6 @@
 ///   hint: "The result is even.",
 ///   dir: ltr
 /// )
-/// >>> ]
 /// ```
 #let choice(
   /// the question prompt
