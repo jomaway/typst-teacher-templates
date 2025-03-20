@@ -18,7 +18,7 @@
 /// Create a block of lines like in a lined notebook.
 ///
 /// ```example
-/// Lines:
+/// Lines: #lines(2)
 /// ```
 ///
 /// -> content
