@@ -46,9 +46,12 @@ by #pkg-info.at("author").
 #pagebreak()
 #set align(start)
 = References
-test
 
-// tidy docs
+#show: tidy.render-examples.with(
+  layout: (code,preview) => grid(columns: 1, gutter: 1em, box(inset: 0.5em,code))
+)
+
+// tidy docs for assignments
 #let docs-assign = tidy.parse-module(
   read("../lib/assignments.typ"),
   name: "Assignments",
@@ -57,10 +60,24 @@ test
   label-prefix: "assign"
 )
 
-#show: tidy.render-examples.with(
-  layout: (code,preview) => grid(columns: 1, gutter: 1em, box(inset: 0.5em,code))
+
+// tidy docs for assignments
+#let docs-components = tidy.parse-module(
+  read("../lib/components.typ"),
+  name: "Components",
+  scope: (components: components),
+  preamble: "#import components: *;",
+  label-prefix: "assign"
 )
 
+
+#tidy.show-module(
+  docs-components,
+  style: tidy.styles.default,
+  omit-private-definitions: true,
+)
+
+#pagebreak()
 #tidy.show-module(
   docs-assign,
   style: tidy.styles.default,
