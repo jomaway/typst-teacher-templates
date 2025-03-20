@@ -282,7 +282,7 @@
   /// -> content
   body
 ) = context {
-  assert.eq(type(value), bool, message: "expected bool, found " + str(type(value)))
+  assert.eq(type(solution), bool, message: "expected bool, found " + str(type(solution)))
   let orig-solution = _solution.get()
   _solution.update(solution)
   body
