@@ -1,6 +1,7 @@
 // WIP - coming soon!
 #import "../lib/lib.typ": assignments, components, grading
 #import "@preview/tidy:0.4.2"
+#import "@preview/gentle-clues:1.2.0": info, code as code-block, example
 
 // extract version from typst.toml package file.
 #let pkg-data = toml("../typst.toml").package
@@ -27,6 +28,24 @@
 )
 #show link: set text(blue)
 
+#let example-layout(code, preview) = [
+  #set text(0.8em)
+  #grid(
+    columns: (1fr,1fr),
+    gutter: 1em,
+    code-block(code),
+    example(title: "Result", preview)
+  )
+]
+
+#show: tidy.show-example.render-examples.with(
+  scope: (assignments: assignments, components: components, grading: grading),
+  layout: example-layout,
+)
+
+// ---------------------------------------------
+// Document starts here
+// ---------------------------------------------
 
 #set align(center)
 #v(3cm)
@@ -68,25 +87,122 @@ If you only need to use a specific module, you can import it like this:
 
 === Assignment module
 
-The `assignments` module provides functions and definitions for creating assignments, questions, and solutions.
-To use the functions and definitions from the imported module without prefixing them with the module name, you can import them with the wildcard `*` like this:
+#info[
+  All following examples are using the `assignments` module. Make sure to import it!
+  #import_statement(modules: "assignments")
+]
 
-#import_statement(modules: "assignments")
-```typ
-#import assignments: *
+The `assignments` module provides functions and definitions for creating assignments, questions, and solutions.
+Here is an example of how to create an assignment with questions:
+
+```example
+#assignments.question(points: 1)[What's the difference between an assignment and a question?]
+
+#assignments.assignment[
+  Assignments are collections of questions, while questions are individual tasks or problems.
+
+  #assignments.question[How to do that?]
+  #assignments.question(points:2)[Do i get points?]
+]
+
 ```
 
-#box(stroke: 0.5pt + blue, radius: 3pt, inset:1em, width: 100%)[
-  #assignments.assignment[
-    Create your first assignment here.
+To use the functions and definitions from the imported module without prefixing them with the module name, you can import them with the wildcard `*`.
+Then you can use the functions and definitions directly in your document, like shown in the examples below.
 
-    #assignments.question[How to do that?]
-    #assignments.question(points:2)[Do i get points?]
-    #assignments.question(points: 3)[What is the answer?]
-  ]
+```example
+#import assignments: *
+#assignment[
+  Create your first assignment here.
 
-  #assignments.question(points: 1)[What's the difference between an assignment and a question?]
+  #question[How to do that?]
+  #question(points:2)[Do i get points?]
 ]
+```
+
+If those names interfere with other names in your document, you can use the `as` keyword to rename the imported module.
+
+```example
+#import assignments: assignment as assign, question as q, answer as a
+#assign[
+  With this approach you don't need to type that much as well.
+
+  #q[What do you think about this?]
+  #a[I think it's great!]
+]
+```
+
+As you can see the `answer` is not shown in the output. This is because the `answer` is only shown if the `solution` flag is set to `true`.
+You can do this with `#set-solution-mode(true)` or use `#with-solution` directive.
+
+```example
+#import assignments: *
+
+#set-solution-mode(true)
+#answer[This answer is visible.]
+
+#set-solution-mode(false)
+#answer[This answer is not visible.]
+
+#with-solution(true)[
+  #answer[This answer is visible as well.]
+]
+```
+
+Often you want to display a field for the student to write their answer. You can do this with the `#answer-field` directive. Or setting the `field` argument in the `#answer` directive.
+
+```example
+>>> #import components: *
+#import assignments: *
+
+#set-solution-mode(true)
+_Only the answer will be visible._
+
+#answer(field: caro(2))[Correct answer!]
+#answer-field[_You can't see me!_]
+
+#set-solution-mode(false)
+_Only the field will be visible._
+
+#answer(field:caro(2))[Not visible.]
+#answer-field[#checkbox() Check me!]
+```
+
+There is also a handy function to create single or multiple choice questions. You can use the `#choice` directive for this.
+By default, the choices are displayed in a random order and for each correct answer 1 point is assigned to the question.
+
+```example
+#import assignments: choice
+#choice(
+  prompt: [What is the result of $1+1$?],
+  distractors: (1, 3, 4),
+  answers: 2,
+  hint: "The result is even.",
+  dir: ltr
+)
+```
+
+The numbering scheme for questions is automatically generated. But can be changed with the `number` parameter.
+
+```example
+>>> #import assignments: *
+#assignment(number: none)[
+    This is the assignment
+    #question(number: "I.")[This is the question.]
+]
+```
+
+If for some reason you want to reset the question counter, you can use the `reset-question-counter()` function.
+
+```example
+>>> #import assignments: *
+#question[This is some question.]
+#reset-question-counter()
+#question[This is question 1 again.]
+```
+
+=== Components module
+
 #pagebreak()
 = API - References
 
