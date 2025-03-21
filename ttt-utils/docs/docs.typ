@@ -133,15 +133,15 @@ If those names interfere with other names in your document, you can use the `as`
 ```
 
 As you can see the `answer` is not shown in the output. This is because the `answer` is only shown if the `solution` flag is set to `true`.
-You can do this with `#set-solution-mode(true)` or use `#with-solution` directive.
+You can do this with `#show-solutions` and `#hide-solutions` or `#set-solution-mode(true)`. There is also a `#with-solution` directive to apply this to a local scope.
 
 ```example
 #import assignments: *
 
-#set-solution-mode(true)
+#show-solutions
 #answer[This answer is visible.]
 
-#set-solution-mode(false)
+#hide-solutions
 #answer[This answer is not visible.]
 
 #with-solution(true)[
@@ -155,13 +155,13 @@ Often you want to display a field for the student to write their answer. You can
 >>> #import components: *
 #import assignments: *
 
-#set-solution-mode(true)
+#show-solutions
 _Only the answer will be visible._
 
 #answer(field: caro(2))[Correct answer!]
 #answer-field[_You can't see me!_]
 
-#set-solution-mode(false)
+#hide-solutions
 _Only the field will be visible._
 
 #answer(field:caro(2))[Not visible.]
