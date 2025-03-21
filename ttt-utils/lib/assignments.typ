@@ -1,4 +1,4 @@
-#import "components.typ": point-tag, checkbox, caro, lines as _lines
+#import "components.typ": point-tag, checkbox
 #import "helpers.typ": if-auto-then
 #import "random.typ": shuffle
 
@@ -74,7 +74,7 @@
 /// Add the current assignment number
 ///
 /// -> content
-#let a-nr(
+#let _get-a-nr(
   /// style of the number gets passed to typst `numbering` function. default: "1."
   /// -> string
   style: "1."
@@ -83,7 +83,7 @@
 /// Add the current question number
 ///
 /// -> content
-#let q-nr(
+#let _get-q-nr(
   /// style of the number gets passed to typst `numbering` function. default: "a)"
   /// -> string
   style: "a)"
@@ -140,7 +140,7 @@
   set block(breakable: breakable)
   new-assignment
 
-  if (number != none and number != "hide") { a-nr(style: number) }
+  if (number != none and number != "hide") { _get-a-nr(style: number) }
   body
 
   end-assignment
@@ -210,7 +210,7 @@
     columns: if points == none {1} else {(1fr, auto)},
     column-gutter: 0.5em,
     _question(points: points)[
-      #context q-nr(style: if-auto-then(number, { if is-assignment() { "a)" } else { "1." }  }))
+      #context _get-q-nr(style: if-auto-then(number, { if is-assignment() { "a)" } else { "1." }  }))
       #body
     ],
     if points != none {
