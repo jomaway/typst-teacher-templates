@@ -4,16 +4,6 @@
 
 // States
 #let _solution = state("ttt-solution", false);
-#let _answer_field = state("ttt-auto-field", none)
-
-/// wrapper for updating the `_answer_field` state
-///
-/// -> content (state-update)
-#let set-default-answer-field(
-  /// Content to be shown if @answer field parameter is `auto`
-  /// -> content
-  field
-) = _answer_field.update(field)
 
 // Counters
 #let _question_counter = counter("ttt-question-counter");
@@ -28,9 +18,9 @@
 // Solution methods
 // -----------------
 
-// Wrapper to set solution-mode to true
+/// Wrapper to set solution-mode to true
 #let show-solutions = { _solution.update(true) }
-// Wrapper to set solution-mode to false
+/// Wrapper to set solution-mode to false
 #let hide-solutions = { _solution.update(false) }
 
 // Wrapper to get the current value of the _solution state
@@ -346,13 +336,17 @@
   color: red,
   /// some content which is shown if solution-mode is off. default: `_answer_field` state value
   /// -> auto | content
-  field: auto
+  field: none,
+  /// if true the answer is only hidden if solution mode is false.
+  /// -> bool
+  hide: false
 ) = {
-    if field == hide {
-      answer-field( hide(body))
+    if hide == true {
+      answer-field(hide(body))
     } else {
-      answer-field(context if-auto-then(field, _answer_field.get()))
+      answer-field(field)
     }
+
     context {
       if is-solution-mode() {
         set text(fill: color)
