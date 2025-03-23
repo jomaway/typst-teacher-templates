@@ -1,8 +1,6 @@
 # typst-teacher-tools (ttt)
 
-Collection of tools, which makes the teacher life easier. This repo contains multiple packages and templates.
-
-> Old version of this repo is still available under the branch [deprecated](https://github.com/jomaway/typst-teacher-templates/tree/deprecated)
+Collection of tools, which makes the teacher life easier. This repo contains one package and some templates.
 
 ⚠️ **Still a work in progress**
 
@@ -10,14 +8,14 @@ Collection of tools, which makes the teacher life easier. This repo contains mul
 
 - [ttt-utils](./ttt-utils/): the core package.
 
+
 ## Templates
 
-⚠️The templates are not maintained anymore.
+⚠️The templates are not maintained/published anymore.
 So don't expect an update on them soon.
 
 - [ttt-exam](./ttt-exam/)
 - [ttt-lists](./ttt-lists/)
-- [ttt-worksheet](./ttt-worksheet/)
 
 # Changelog
 
