@@ -1,4 +1,5 @@
 #import "../lib/assignments.typ": *
+#set page(margin: 2cm)
 
 = Test assignments
 

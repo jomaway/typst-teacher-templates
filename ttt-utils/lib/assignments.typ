@@ -161,16 +161,16 @@
 
 
 #let point-grid(points, body) = {
-  let content = if points != none {
-    (body,align(top, point-tag(points)))
+  if points != none {
+    grid(
+      columns: (1fr, auto),
+      column-gutter: 0.5em,
+      body,
+      align(top, point-tag(points))
+    )
   } else {
-    (body,)
+    block(body)
   }
-  grid(
-    columns: if points == none {1} else {(1fr, auto)},
-    column-gutter: if points != none {0.5em} else {0pt},
-    ..content
-  )
 }
 
 
