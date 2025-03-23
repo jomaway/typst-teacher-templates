@@ -2,17 +2,97 @@
 #import "helpers.typ": if-auto-then
 #import "random.typ": shuffle
 
-// States
-#let _solution = state("ttt-solution", false);
-
+// ------------
 // Counters
+// ------------
 #let _question_counter = counter("ttt-question-counter");
 
 /// Wrapper to reset the `_question_counter` back to zero
 #let reset-question-counter() = { _question_counter.update(0) }
 
+// ------------
 // Labels
+// // ------------
 #let _question_label = label("ttt-question-label")
+
+// ------------
+//  States
+// ------------
+#let _solution = state("ttt-solution", false);
+// the assignment environment state
+// should contain `none` or an `integer` with the current assignment number
+#let _assignment_env = state("ttt-assignment-state", none)
+
+// Starts a new assignment environment.
+// All following questions will be grouped into this assignment until a `end-assignment` statement occurs.
+#let new-assignment = {
+  _question_counter.step(level: 1)
+  context _assignment_env.update(
+    (
+      number: _question_counter.get().first(),
+      collect: false
+    )
+  )
+}
+
+// Ends the assignment environment.
+// All following questions will be treated as stand alone questions.
+#let end-assignment = _assignment_env.update(none)
+
+// Wrapper to check if the assignment environment is active.
+#let is-assignment() = {
+  _assignment_env.get() != none
+}
+
+/// Get the current assignment number.
+///
+/// -> int | none
+#let get-assignment-number() = {
+  _assignment_env.get().number
+}
+
+#let set-assignment-collect-points(value) = {
+  _assignment_env.update(
+    (
+      number: get-assignment-number(),
+      collect: value
+    )
+  )
+}
+
+#let get-assignment-collect-points() = {
+  _assignment_env.get().collect
+}
+
+
+// ---------
+// Queries
+// ---------
+
+/// Fetch the metadata of the last defined question
+///
+/// ```example
+/// #context current-question()
+/// ```
+///
+/// -> dictionary
+#let current-question() = { query(selector(_question_label).before(here())).last().value }
+
+/// Fetch the metadata of all questions  in the document.
+///
+/// -> dictionary
+#let get-questions(
+  /// a filter which is applied before returning
+  /// -> function
+  filter: none
+) = {
+  let all-questions = query(_question_label).map(m => m.value)
+  if filter != none {
+    all-questions.filter(filter)
+  } else {
+    all-questions
+  }
+}
 
 // -----------------
 // Solution methods
@@ -80,26 +160,17 @@
 ) = context numbering(style, _question_counter.get().last())
 
 
-
-// the assignment environment state
-// should contain `none` or an `integer` with the current assignment number
-#let _assignment_env = state("ttt-assignment-state", none)
-
-// Starts a new assignment environment.
-// All following questions will be grouped into this assignment until a `end-assignment` statement occurs.
-#let new-assignment = {
-  _question_counter.step(level: 1)
-  context _assignment_env.update(_question_counter.get().first())
+#let point-grid(points, body) = {
+  grid(
+    columns: if points == none {1} else {(1fr, auto)},
+    column-gutter: 0.5em,
+    body,
+    if points != none {
+      align(top, point-tag(points))
+    }
+  )
 }
 
-// Ends the assignment environment.
-// All following questions will be treated as stand alone questions.
-#let end-assignment = _assignment_env.update(none)
-
-// Wrapper to check if the assignment environment is active.
-#let is-assignment() = {
-  _assignment_env.get() != none
-}
 
 /// Add an assignment environment.
 /// By default this adds the current assignment number up front.
@@ -125,13 +196,28 @@
   number: "1.",
   /// if true the assignment can be broken over multiple pages
   /// -> bool
-  breakable: true
+  breakable: true,
+  /// collect all points for this assignment and display the summary.
+  /// -> bool
+  collect-points: false,
 ) = {
   set block(breakable: breakable)
   new-assignment
 
-  if (number != none and number != "hide") { _get-a-nr(style: number) }
-  body
+  body = {
+    if (number != none and number != "hide") { _get-a-nr(style: number) }
+    body
+  }
+
+  if collect-points {
+    context {
+      set-assignment-collect-points(true)
+      let points = get-questions(filter: q => q.num.first() == get-assignment-number()).map(q => q.points).sum(default: 0)
+      point-grid(points, body)
+    }
+  } else {
+    body
+  }
 
   end-assignment
 }
@@ -203,8 +289,14 @@
       #context _get-q-nr(style: if-auto-then(number, { if is-assignment() { "a)" } else { "1." }  }))
       #body
     ],
-    if points != none {
-      align(top, point-tag(points))
+    context {
+      if is-assignment() and get-assignment-collect-points() {
+        none
+      } else {
+        if points != none {
+          align(top, point-tag(points))
+        }
+      }
     }
   )
 }
@@ -353,33 +445,4 @@
         body
       }
     }
-}
-
-// ---------
-// Queries
-// ---------
-
-/// Fetch the metadata of the last defined question
-///
-/// ```example
-/// #context current-question()
-/// ```
-///
-/// -> dictionary
-#let current-question() = { query(selector(_question_label).before(here())).last().value }
-
-/// Fetch the metadata of all questions  in the document.
-///
-/// -> dictionary
-#let get-questions(
-  /// a filter which is applied before returning
-  /// -> function
-  filter: none
-) = {
-  let all-questions = query(_question_label).map(m => m.value)
-  if filter != none {
-    all-questions.filter(filter)
-  } else {
-    all-questions
-  }
 }
