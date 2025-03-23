@@ -1,7 +1,7 @@
 // WIP - coming soon!
 #import "../lib/lib.typ": assignments, components, grading
 #import "@preview/tidy:0.4.2"
-#import "@preview/gentle-clues:1.2.0": info, code as code-block, example
+#import "@preview/gentle-clues:1.2.0": info, code as code-block, example, warning
 
 // extract version from typst.toml package file.
 #let pkg-data = toml("../typst.toml").package
@@ -194,11 +194,27 @@ The numbering scheme for questions is automatically generated. But can be change
 
 If for some reason you want to reset the question counter, you can use the `reset-question-counter()` function.
 
+
 ```example
 >>> #import assignments: *
 #question[This is some question.]
 #reset-question-counter()
 #question[This is question 1 again.]
+```
+
+#warning[
+  This can cause problems with the `collect-points` functionality.
+]
+
+Sometimes you want to collect the points of the questions in an assignment. You can do this with the `#collect-points` argument.
+
+```example
+>>> #import assignments: *
+#assignment(collect-points: true)[
+  Answer the following questions:
+  #question(points: 2)[This question is worth 2 points.]
+  #question(points: 3)[This question is worth 3 points.]
+]
 ```
 
 === Components module

@@ -161,13 +161,15 @@
 
 
 #let point-grid(points, body) = {
+  let content = if points != none {
+    (body,align(top, point-tag(points)))
+  } else {
+    (body,)
+  }
   grid(
     columns: if points == none {1} else {(1fr, auto)},
-    column-gutter: 0.5em,
-    body,
-    if points != none {
-      align(top, point-tag(points))
-    }
+    column-gutter: if points != none {0.5em} else {0pt},
+    ..content
   )
 }
 
@@ -222,36 +224,9 @@
   end-assignment
 }
 
-// Add a question and some metadata to your document.
-//
-// This function will just render the given body and store the points as metadata inside the document.
-// You mostly want to use the higher level `question` function.
-//
-// -> content
-#let _question(
-  // the content to be displayed for this assignment
-  // -> content
-  body,
-  // the given points for a correct answer of this question. Will be stored as metadata.
-  // -> int
-  points: none
-) = {
-  if points != none {
-    assert.eq(type(points), int, message: "expected points argument to be an integer, found " + str(type(points)))
-  }
-  context {
-    let level = if is-assignment() { 2 } else { 1 }
-    _question_counter.step(level: level)
-    // note: metadata must be a new context to fetch the updated _question_counter value correct
-    context [#metadata((type: "ttt-question", num: _question_counter.get() ,points: points, level: level)) #_question_label]
-  }
-  body
-}
-
 /// Add a question with number and point-tag to your document.
 ///
 /// This function adds the current question number up front and a `point-tag` on the right side.
-/// If you just want the plain question to render use the low level `_question` function.
 ///
 /// ```example
 /// #question(points: 2)[
@@ -281,24 +256,42 @@
   /// -> bool
   breakable: true
 ) = {
+  // assertions
+  if points != none {
+    assert.eq(type(points), int, message: "expected points argument to be an integer, found " + str(type(points)))
+  }
+
+  // save metadata
+  context {
+    let level = if is-assignment() { 2 } else { 1 }
+    _question_counter.step(level: level)
+    // note: metadata must be a new context to fetch the updated _question_counter value correct
+    context [#metadata((type: "ttt-question", num: _question_counter.get() ,points: points, level: level)) #_question_label]
+  }
+
+  // render the question
   set block(breakable: breakable)
-  grid(
-    columns: if points == none {1} else {(1fr, auto)},
-    column-gutter: 0.5em,
-    _question(points: points)[
-      #context _get-q-nr(style: if-auto-then(number, { if is-assignment() { "a)" } else { "1." }  }))
-      #body
-    ],
-    context {
-      if is-assignment() and get-assignment-collect-points() {
-        none
+  context {
+    if is-assignment() {
+      let collect = get-assignment-collect-points()
+      if collect {
+        point-grid(none)[
+          #_get-q-nr(style: if-auto-then(number, { "a)" }))
+          #body
+        ]
       } else {
-        if points != none {
-          align(top, point-tag(points))
-        }
+        point-grid(points)[
+          #_get-q-nr(style: if-auto-then(number, { "a)" }))
+          #body
+        ]
       }
+    } else {
+      point-grid(points)[
+        #_get-q-nr(style: if-auto-then(number, { "1." }))
+        #body
+      ]
     }
-  )
+  }
 }
 
 /// A single/multiple choice question. \
