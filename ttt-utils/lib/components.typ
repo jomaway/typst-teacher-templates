@@ -25,10 +25,13 @@
 #let lines(
   /// number of rows
   /// -> int
-  rows
+  rows,
+  /// height of the lines
+  /// -> length
+  height: 0.9cm,
 ) = {
     for _ in range(rows) {
-        block(above: 0.9cm, line(length:100%, stroke: 0.3pt + black.lighten(20%)) )
+        block(above: height, line(length:100%, stroke: 0.3pt + black.lighten(20%)) )
     }
 }
 
