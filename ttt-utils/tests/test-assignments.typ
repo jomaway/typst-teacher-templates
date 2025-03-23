@@ -2,7 +2,7 @@
 
 = Test assignments
 
-== Seperated tests
+== Separated tests
 === Assignment without questions
 #assignment[
   This is a first assignment.

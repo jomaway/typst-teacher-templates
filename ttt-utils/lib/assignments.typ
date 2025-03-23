@@ -332,7 +332,7 @@
   /// - otherwise the given number will be used.
   /// -> int | auto | none
   points: auto,
-  /// direction of the options. Get's passed to typst `stack` function.
+  /// direction of the options. Gets passed to typst `stack` function.
   dir: ttb,
 ) = {
   let answers = if (type(answers) == array ) { answers } else { (answers,) }
