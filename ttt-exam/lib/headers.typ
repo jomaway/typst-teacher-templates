@@ -1,4 +1,4 @@
-#import "@preview/ttt-utils:0.1.3": assignments
+#import "@preview/ttt-utils:0.1.4": assignments
 #import "i18n.typ": ling
 
 #let header-block(
@@ -67,10 +67,22 @@
   class,
   subject,
   date,
+  time: none,
   point-field: none
 ) = {
 
   date = if type(date) == datetime { date.display("[day].[month].[year]") } else { date }
+  let header-grid = (
+    smallcaps(ling("name") + ":"), context if assignments.is-solution-mode() { text(red, ling("solution")) },
+    smallcaps(ling("class") + ":"), class,
+    smallcaps(ling("subject") + ":"), subject,
+    smallcaps(ling("date") + ":"), date,
+
+  )
+  if time != none {
+    header-grid.push(smallcaps(ling("time") + ":"))
+    header-grid.push(time)
+  }
 
   grid(
     columns: 1fr,
@@ -102,10 +114,7 @@
           inset: (x: 2pt, y: 5pt),
           row-gutter: 1em,
           column-gutter: 5pt,
-          smallcaps(ling("name") + ":"), context if assignments.is-solution-mode() { text(red, ling("solution")) },
-          smallcaps(ling("class") + ":"), class,
-          smallcaps(ling("subject") + ":"), subject,
-          smallcaps(ling("date") + ":"), date,
+          ..header-grid,
         )
       },
       [

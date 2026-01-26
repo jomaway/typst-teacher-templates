@@ -1,4 +1,4 @@
-#import "@preview/linguify:0.4.0": *
+#import "@preview/linguify:0.5.0": *
 
 // load linguify database file
 #let ling_db = toml("assets/lang.toml")

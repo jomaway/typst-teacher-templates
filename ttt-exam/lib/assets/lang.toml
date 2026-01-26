@@ -14,6 +14,7 @@ subject = "Subject"
 date = "Date"
 appendix = "Appendix"
 solution = "Solution"
+time = "Time"
 
 [lang.de]
 points = "Punkte"
@@ -28,3 +29,4 @@ subject = "Fach"
 date = "Datum"
 appendix = "Anhang"
 solution = "Lösung"
+time = "Zeit"

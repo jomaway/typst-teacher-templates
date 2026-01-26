@@ -1,4 +1,4 @@
-#import "@preview/ttt-utils:0.1.3": grading
+#import "@preview/ttt-utils:0.1.4": grading
 #import "i18n.typ": ling
 
 #let total_points = context grading.get_points().sum()
