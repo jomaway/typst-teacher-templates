@@ -207,7 +207,10 @@
   new-assignment
 
   body = {
-    if (number != none and number != "hide") { _get-a-nr(style: number) }
+    if (number != none and number != "hide") {
+      _get-a-nr(style: number)
+      [ ]
+    }
     body
   }
 
