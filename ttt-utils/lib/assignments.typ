@@ -330,6 +330,9 @@
   points: auto,
   /// direction of the options. Gets passed to typst `stack` function.
   dir: ttb,
+  /// if true the choices will be shuffled. default: true
+  /// -> bool
+  shuffled: true,
 ) = {
   let answers = if (type(answers) == array ) { answers } else { (answers,) }
   answers = answers.map(entry => [#entry])
@@ -340,17 +343,23 @@
       #prompt
       #let choices = (..distractors, ..answers)
 
-      #let choices = shuffle(choices).map(choice => {
-        box(inset:(x:0.5em))[
-          #context {
-            let is-solution = is-solution-mode() and choice in answers
-            checkbox(fill: if is-solution { red }, tick: is-solution )
-          }
-        ]; choice
-      })
+      #context {
+        let shuffled-choices = if shuffled {
+             shuffle(choices, _question_counter.get())
+        } else {
+             choices
+        }
 
-      #stack(dir:dir, spacing: 1em, ..choices)
+        let is-sol-mode = is-solution-mode()
 
+        let final-choices = shuffled-choices.map(choice => {
+            let is-solution = is-sol-mode and choice in answers
+            box(inset:(x:0.5em))[
+              #checkbox(fill: if is-solution { red }, tick: is-solution )
+            ]; choice
+        })
+        stack(dir:dir, spacing: 1em, ..final-choices)
+      }
 
       // show hint if available.
       #if (hint != none) {

@@ -1,16 +1,30 @@
-/// create a hash value from a seed for some content
-#let hash(value, seed) = {
-  array(bytes(repr(value))).fold(seed, (a,b) => (a.bit-lshift(1)).bit-xor(b))
+#import "@preview/suiji:0.5.1" as suiji
+
+// Global RNG state (stores the master seed integer)
+#let rng-state = state("ttt-rng", 0)
+
+/// Initialize the global random number generator with a seed.
+///
+/// - seed (int): The seed to use.
+#let init-rng(seed) = {
+  rng-state.update(seed)
 }
 
-/// shuffle an array.
+/// Shuffle an array using the global RNG state and a unique identifier.
 ///
-/// - arr (array): the array to randomize
-/// - seed (int): a seed to start with. if auto the current date will be used (default).
-/// -> array
-#let shuffle(arr, seed: auto) = arr.sorted(key: it => {
-  let now = datetime.today()
-  let rand = if (seed == auto) { int(now.year() + now.month() * 256 * now.day() * 65535) } else { seed }
-  hash(it,rand)
-})
+/// - choices (array): The array to shuffle.
+/// - id (array): A unique identifier for the shuffle context (e.g. question counter).
+#let shuffle(choices, id) = {
+  let master-seed = rng-state.get()
 
+  // Mix master seed with ID to get a deterministic local seed
+  // Assumes id is an array of integers (like a counter value)
+  let flat-idx = id.at(0) * 100 + id.at(1, default: 0)
+
+  // Simple mixing to avoid linear correlation if seeds are close
+  let local-seed = master-seed + flat-idx * 31337
+
+  let rng = suiji.gen-rng(local-seed)
+  let (_, shuffled) = suiji.shuffle(rng, choices)
+  shuffled
+}
