@@ -86,7 +86,7 @@
       // todo: rethink page number implementation. Want to include/exclude appendix?
       // context last-page-number.final()
     },
-    header: context if (counter(page).get().first() > 1) { box(stroke: ( 0.5pt), width: 100%, inset: 6pt)[ Name: ] },
+    header: context if (counter(page).get().first() > 1) { box(stroke: ( 0.5pt), width: 100%, inset: 6pt)[ #ling("name"): ] },
   )
 
   // check cli input for solution
