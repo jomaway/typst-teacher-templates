@@ -4,3 +4,4 @@
 #import "helpers.typ"
 #import "layout.typ"
 #import "random.typ"
+#import "rubric.typ"
