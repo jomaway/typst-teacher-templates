@@ -1,4 +1,4 @@
-#import "@preview/ttt-utils:0.1.3": assignments, components, grading, helpers
+#import "@preview/ttt-utils:0.1.4": assignments, components, grading, helpers
 #import "i18n.typ": ling
 
 #import components: *
@@ -44,6 +44,7 @@
   date: parse-date-str(get-from-input("date", default: none)),     // date of the exam
   class: get-from-input("class", default: ""),
   subject: get-from-input("subject", default: ""),
+  time: get-from-input("time", default: none),
   authors: get-from-input("author", default: ""),
   // config
   solution: auto, // auto | false | true
@@ -105,7 +106,8 @@
     class,
     subject,
     date,
-    point-field: point-sum-box
+    time: time,
+    point-field: point-sum-box,
   )
 
   let header-block = header-block(
