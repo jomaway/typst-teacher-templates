@@ -173,6 +173,11 @@
   }
 }
 
+#let place-point-tag(points) = {
+  if points != none {
+    place(top + end, point-tag(points))
+  }
+}
 
 /// Add an assignment environment.
 /// By default this adds the current assignment number up front.
@@ -218,7 +223,11 @@
     context {
       set-assignment-collect-points(true)
       let points = get-questions(filter: q => q.num.first() == get-assignment-number()).map(q => q.points).sum(default: 0)
-      point-grid(points, body)
+      // point-grid(points, body)
+      block(width: 100%)[
+        #place-point-tag(points)
+        #body
+      ]
     }
   } else {
     body
