@@ -1,7 +1,7 @@
 [package]
 name = "ttt-utils"
-version = "0.1.4"
-compiler = "0.13.0"
+version = "0.2.0"
+compiler = "0.14.0"
 entrypoint = "lib/lib.typ"
 authors = ["Jomaway <https://github.com/jomaway>"]
 license = "MIT"
@@ -10,4 +10,4 @@ repository = "https://github.com/jomaway/typst-teacher-templates"
 keywords = ["teacher", "tools", "assignments", "notebooks", "grading"]
 categories = ["components", "utility"]
 disciplines = ["education"]
-exclude = ["docs/**", "*.pdf", "tests/**"]
+exclude = ["justfile","docs/**", "*.pdf", "tests/**"]

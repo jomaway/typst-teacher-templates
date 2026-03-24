@@ -6,6 +6,7 @@
 It contains several modules:
 
 - `assignments` contains functions for creating exams.
+- `rubic` contains a function for creating rubic tables.
 - `components` contains useful visual components such _lines_ or _caro pattern_, _tags_, etc ...
 - `grading` contains functions for grading exams.
 - `helpers` contains some utility functions.
@@ -18,7 +19,7 @@ It contains several modules:
 You can import the modules you need with:
 
 ```typst
-#import "@preview/ttt-utils:0.1.4": components
+#import "@preview/ttt-utils:0.2.0": components
 ```
 
 then you can access the modules function with:
@@ -28,7 +29,7 @@ then you can access the modules function with:
 or import the wanted functions:
 
 ```typst
-#import "@preview/ttt-utils:0.1.4": components, assignments
+#import "@preview/ttt-utils:0.2.0": components, assignments
 
 #import assignments: assignment, question, answer
 #import components: caro as grid_pattern
@@ -43,7 +44,3 @@ or import the wanted functions:
 ]
 
 ```
-
-## Similar projects
-
-- [scrutinize](https://github.com/SillyFreak/typst-packages/tree/main/scrutinize) by [SillyFreak](https://github.com/SillyFreak): Package to create exams, very similar to the `assignment` module, but only questions without assignments, and a bit more low level. I adopted a few of his ideas.
