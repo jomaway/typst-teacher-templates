@@ -1,0 +1,19 @@
+set quiet
+
+# set aliases
+self := justfile_directory()
+export TYPST_ROOT := self
+
+
+[private]
+default:
+    @just --list --unsorted
+
+# generate manual
+doc:
+  typst compile docs/docs.typ docs/docs.pdf
+
+test module:
+    echo "Testing file: test-{{module}}.typ"
+    typst compile "tests/test-{{module}}.typ"
+    echo "Test {{module}} passed!"
