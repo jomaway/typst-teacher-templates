@@ -74,16 +74,16 @@
   size: 0.5cm,
   radius: 0pt,
   fill: white,
-  stroke: (paint: black, thickness: 0.5pt, dash: "dotted"),
+  border: 0.4pt + black.lighten(40%),
   body
 ) = {
   layout(container-size => {
     let cols = if( cols == auto ){ int(container-size.width.cm() / size.cm()) } else { cols }
 
     box(
-      height: rows * size,
-      width: cols * size,
-      stroke: 0.4pt + black.lighten(20%),
+      height: (rows * size) + 0.5pt,
+      width: (cols * size) + 0.5pt,
+      stroke: border,
       fill: caro-pattern(size: size, fill: fill),
       inset: (x: size/2, y: size + 0.1cm),
       radius: radius,
