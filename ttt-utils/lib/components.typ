@@ -42,13 +42,20 @@
 #let caro-pattern(
   /// size of the caros in the pattern
   /// -> length
-  size: 0.5cm
+  size: 0.5cm,
+  /// color of the background of the pattern
+  /// -> color
+  fill: none,
+  /// color of the lines in the pattern
+  /// -> stroke
+  stroke: (paint: black, thickness: 0.5pt, dash: "dotted"),
 ) = {
   tiling(
     size: (size, size),
     square(
       size: size,
-      stroke: 0.3pt + luma(180)
+      stroke: stroke,
+      fill: fill,
     )
   )
 }
@@ -65,6 +72,9 @@
   rows,
   cols: auto,
   size: 0.5cm,
+  radius: 0pt,
+  fill: white,
+  stroke: (paint: black, thickness: 0.5pt, dash: "dotted"),
   body
 ) = {
   layout(container-size => {
@@ -73,9 +83,10 @@
     box(
       height: rows * size,
       width: cols * size,
-      stroke: 0.3pt + luma(180),
-      fill: caro-pattern(size: size),
-      inset: (x: size/2, y: size + 0.1cm)
+      stroke: 0.4pt + black.lighten(20%),
+      fill: caro-pattern(size: size, fill: fill),
+      inset: (x: size/2, y: size + 0.1cm),
+      radius: radius,
     )[#body]
   })
 }
