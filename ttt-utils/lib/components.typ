@@ -74,7 +74,7 @@
   size: 0.5cm,
   radius: 0pt,
   fill: white,
-  border: 0.4pt + black.lighten(40%),
+  border: none,
   body
 ) = {
   layout(container-size => {
