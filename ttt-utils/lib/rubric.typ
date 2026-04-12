@@ -70,6 +70,10 @@
   /// By default, it will return the level value as a string with a lightened color.
   /// -> function
   level-hints: it => text(luma(180), str(it)),
+  /// sets whether points will be added to the metadata and rendered in the rubric. If false, points will not be calculated or rendered at all.
+  /// Default: true
+  /// -> bool
+  calc-points: true,
   /// additional properties for the table, such as stroke, fill, etc.
   ..rest
 ) = {
@@ -82,11 +86,13 @@
     // save metadata
     let points = (calc.max(..levels.map(l => l.value)) * criteria.data.len())
 
-    context {
-      let level = if is-assignment() { 2 } else { 1 }
-      _question_counter.step(level: level)
-      // note: metadata must be a new context to fetch the updated _question_counter value correct
-      context [#metadata((type: "ttt-question", num: _question_counter.get() ,points: points, level: level)) #_question_label]
+    if calc-points {
+      context {
+        let level = if is-assignment() { 2 } else { 1 }
+        // _question_counter.step(level: level)
+        // note: metadata must be a new context to fetch the updated _question_counter value correct
+        context [#metadata((type: "ttt-question", num: _question_counter.get() ,points: points, level: level)) #_question_label]
+      }
     }
 
     // render table
