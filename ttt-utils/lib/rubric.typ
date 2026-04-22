@@ -1,5 +1,5 @@
 #import "@preview/valkyrie:0.2.2" as z
-#import "assignments.typ": question, is-assignment, _question_counter, point-tag, get-assignment-collect-points, _question_label
+#import "assignments.typ": question, is-assignment, _question_counter, point-tag, get-assignment-collect-points, _question-label
 
 // ------------
 // Schemas
@@ -91,7 +91,7 @@
         let level = if is-assignment() { 2 } else { 1 }
         // _question_counter.step(level: level)
         // note: metadata must be a new context to fetch the updated _question_counter value correct
-        context [#metadata((type: "ttt-question", num: _question_counter.get() ,points: points, level: level)) #_question_label]
+        context [#metadata((type: "ttt-question", num: _question_counter.get() ,points: points, level: level)) #_question-label]
       }
     }
 

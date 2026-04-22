@@ -1,6 +1,5 @@
 // Helper and utility functions
 
-
 /// Create a small line
 ///
 /// ```example
@@ -68,7 +67,7 @@
 /// ```
 ///
 /// -> content
-#let caro-box(
+#let caro(
   rows,
   cols: auto,
   size: 0.5cm,
@@ -85,12 +84,13 @@
       width: (cols * size) + 0.5pt,
       stroke: border,
       fill: caro-pattern(size: size, fill: fill),
-      inset: (x: size/2, y: size + 0.1cm),
+      inset: (x: size/2, y: 0.16cm),
       radius: radius,
     )[#body]
   })
 }
 
+/// DEPRICATED (use @caro instead)
 /// Create a checked grid like in a checkered notebook.
 /// ! Old approach using the table feature of typst.
 ///
@@ -99,7 +99,7 @@
 /// ```
 ///
 /// -> content
-#let caro(
+#let caro-table(
   /// number of rows
   /// -> int
   rows,
@@ -169,7 +169,7 @@
 ) = box(
   width: 0.8em,
   height: 0.8em,
-  stroke: 0.7pt,
+  stroke: (top: 0.7pt, left: 0.7pt, rest: 1pt),
   radius: 1pt,
   fill: fill,
   if (tick) { align(horizon + center, sym.checkmark) }
@@ -233,6 +233,11 @@
   /// -> int
   points
 ) = {
-  assert.eq(type(points),int)
+  assert.eq(type(points),int, message: "expected points to be an integer, found" + str(type(points)))
   tag(fill: gray.lighten(35%))[#points #text(0.8em,smallcaps[#if points==1 [PT$\u{0020}$] else [PTs]])]
+}
+
+
+#let hint(body, pre:"Hint:") = {
+  strong(delta: -100)[#pre #body]
 }

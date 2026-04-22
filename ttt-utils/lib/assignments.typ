@@ -1,7 +1,7 @@
 #import "components.typ": point-tag, checkbox
 #import "helpers.typ": if-auto-then
-#import "random.typ": shuffle
-
+#import "random.typ"
+#import "layout.typ": *
 // ------------
 // Counters
 // ------------
@@ -12,8 +12,9 @@
 
 // ------------
 // Labels
-// // ------------
-#let _question_label = label("ttt-question-label")
+// ------------
+#let _question-label = label("ttt-question-label")
+#let _option-label = label("ttt-option-label")
 
 // ------------
 //  States
@@ -76,7 +77,18 @@
 /// ```
 ///
 /// -> dictionary
-#let current-question() = { query(selector(_question_label).before(here())).last().value }
+#let current-question() = { query(selector(_question-label).before(here())).last().value }
+
+/// Fetch the metadata of the options of the current question
+/// ```example
+/// #context current-options()
+/// ```
+/// -> array of dictionaries
+#let current-options() = {
+  query(selector(_option-label)).filter(meta => {
+    meta.value.question-number == _question_counter.get()
+  }).map(meta => meta.value)
+}
 
 /// Fetch the metadata of all questions  in the document.
 ///
@@ -86,7 +98,7 @@
   /// -> function
   filter: none
 ) = {
-  let all-questions = query(_question_label).map(m => m.value)
+  let all-questions = query(_question-label).map(m => m.value)
   if filter != none {
     all-questions.filter(filter)
   } else {
@@ -160,24 +172,7 @@
 ) = context numbering(style, _question_counter.get().last())
 
 
-#let point-grid(points, body) = {
-  if points != none {
-    grid(
-      columns: (1fr, auto),
-      column-gutter: 0.5em,
-      body,
-      align(top, point-tag(points))
-    )
-  } else {
-    block(body)
-  }
-}
 
-#let place-point-tag(points) = {
-  if points != none {
-    place(top + end, point-tag(points))
-  }
-}
 
 /// Add an assignment environment.
 /// By default this adds the current assignment number up front.
@@ -223,16 +218,31 @@
     context {
       set-assignment-collect-points(true)
       let points = get-questions(filter: q => q.num.first() == get-assignment-number()).map(q => q.points).sum(default: 0)
-      // point-grid(points, body)
-      block(width: 100%)[
-        #place-point-tag(points)
-        #body
-      ]
+
+      default-question-renderer(body, none, points: points)
     }
   } else {
-    body
+    default-question-renderer(body, none)
   }
 
+  end-assignment
+}
+
+/// Alias
+#let scenario = assignment
+
+#let scenario(
+  body,
+  collect-points: false,
+) = {
+  new-assignment
+  // _question_counter.step(level: 1)
+
+  body = [
+    #_get-a-nr() #body
+  ]
+
+  block-question-renderer(body, none, border:none)
   end-assignment
 }
 
@@ -259,123 +269,148 @@
   /// -> content
   body,
   /// the given points for a correct answer of this question. Will be stored as metadata.
-  /// -> int | none
-  points: none,
+  /// -> int | none | auto
+  points: auto,
   /// if none no number will be displayed otherwise the string gets passed to typst `numbering` function.
   /// -> string | none | auto
-  number: auto,
+  number-style: auto,
   /// if true the question can be broken over multiple pages
   /// -> bool
-  breakable: true
+  breakable: false,
+  render: block-question-renderer,
 ) = {
   // assertions
-  if points != none {
+  if points != none and points != auto {
     assert.eq(type(points), int, message: "expected points argument to be an integer, found " + str(type(points)))
   }
 
-  // save metadata
+
   context {
     let level = if is-assignment() { 2 } else { 1 }
     _question_counter.step(level: level)
-    // note: metadata must be a new context to fetch the updated _question_counter value correct
-    context [#metadata((type: "ttt-question", num: _question_counter.get() ,points: points, level: level)) #_question_label]
   }
 
-  // render the question
-  set block(breakable: breakable)
+
   context {
-    if is-assignment() {
-      let collect = get-assignment-collect-points()
-      if collect {
-        point-grid(none)[
-          #_get-q-nr(style: if-auto-then(number, { "a)" }))
-          #body
-        ]
-      } else {
-        point-grid(points)[
-          #_get-q-nr(style: if-auto-then(number, { "a)" }))
-          #body
-        ]
+    // reassign points as we can't change values from outside of this context.
+    let points = if-auto-then(points, current-options().filter(option => option.correct).len())
+    points = if points == 0 { none } else { points }
+
+    // note: metadata must be a new context to fetch the updated _question_counter value correct
+    [#metadata((
+      type: "ttt-question",
+      num: _question_counter.get() ,
+      points: points,
+      // szenario: none,
+    )) #_question-label]
+
+    // reassign number as we can't change values from outside of this context.
+    let number = number-style
+    if number != none {
+
+    number = if is-assignment() {
+      if get-assignment-collect-points() {
+        points = none
       }
+      _get-q-nr(style: if-auto-then(number, { "a)" }))
     } else {
-      point-grid(points)[
-        #_get-q-nr(style: if-auto-then(number, { "1." }))
-        #body
-      ]
+      _get-q-nr(style: if-auto-then(number, { "1." }))
     }
+
+    }
+
+    // render the question
+    set block(breakable: breakable)
+    render([#number #body],none, points: points)
   }
 }
 
-/// A single/multiple choice question. \
-/// The checkbox of an answer will be filled red and ticked if solution-mode is set to true.
+
+/// A wrapper for the content of a choice option which adds a checkbox in front of it. The checkbox will be filled red and ticked if solution-mode is set to true and the correct argument is set to true.
 ///
-/// ```example
-/// #choice(
-///   prompt: [What is the result of $1+1$?],
-///   distractors: (1, 3, 4),
-///   answers: 2,
-///   hint: "The result is even.",
-///   dir: ltr
-/// )
-/// ```
-#let choice(
-  /// the question prompt
+/// -> content
+#let option(
+  /// the content of the option
   /// -> content
-  prompt: none,
-  /// all wrong choices
-  /// -> array
-  distractors: (),
-  /// one or multiple correct choices.
-  /// -> array
-  answers: (),
-  /// some hint for the question
-  /// -> none | content
-  hint: none,
-  /// the amount of points for this question. \
-  /// - if auto the amount of correct answers will be used. \
-  /// - if none no points will be given.
-  /// - otherwise the given number will be used.
-  /// -> int | auto | none
-  points: auto,
-  /// direction of the options. Gets passed to typst `stack` function.
-  dir: ttb,
-  /// if true the choices will be shuffled. default: true
+  body,
+  /// if true the checkbox will be filled red and ticked if solution-mode is set to true. default: false
   /// -> bool
-  shuffled: true,
+  correct: false,
 ) = {
-  let answers = if (type(answers) == array ) { answers } else { (answers,) }
-  answers = answers.map(entry => [#entry])
-  distractors = distractors.map(entry => [#entry])
-
-  block(breakable: false,
-    question(points: if-auto-then(points, answers.len()))[
-      #prompt
-      #let choices = (..distractors, ..answers)
-
-      #context {
-        let shuffled-choices = if shuffled {
-             shuffle(choices, _question_counter.get())
-        } else {
-             choices
-        }
-
-        let is-sol-mode = is-solution-mode()
-
-        let final-choices = shuffled-choices.map(choice => {
-            let is-solution = is-sol-mode and choice in answers
-            box(inset:(x:0.5em))[
-              #checkbox(fill: if is-solution { red }, tick: is-solution )
-            ]; choice
-        })
-        stack(dir:dir, spacing: 1em, ..final-choices)
-      }
-
-      // show hint if available.
-      #if (hint != none) {
-        strong(delta: -100)[Hint: #hint]
-      }
+  context {
+    [
+      #metadata(
+        (
+          type: "ttt-answer-option",
+          question-number: _question_counter.get(),
+          correct:correct,
+          // body: body,
+        )
+      ) #_option-label
     ]
-  )
+
+    let is-sol-mode = is-solution-mode()
+
+    grid(
+      columns: (auto, 1fr),
+      gutter: 0.5em,
+      align: (center, start),
+      checkbox(fill: if correct and is-sol-mode { red }, tick: correct and is-sol-mode),
+      body
+    )
+  }
+}
+
+/// Helper functions
+#let correct(option) = { (correct: true, body: option) }
+
+/// Helper function to quickly create options with a list style.
+/// Use bullet list (`-`) for distractors and numbered list (`+`) for correct options
+///  Example:
+/// ```example
+/// #quick-options[
+///   - javascript
+///   + typst
+///   - python
+///   - rust
+/// ]
+/// ```
+#let quick-options(
+  body
+) = {
+  show list.item: it => option(it.body)
+  show enum.item: it => option(correct: true, it.body)
+
+  body
+}
+
+/// Add multiple options to a question. The options get shuffled by default, but can be turned off with the `shuffle` argument. Each option is rendered with the `option` function, so the correct answer can be marked by using the `correct` helper function.
+#let options(
+  cols: 1,
+  shuffle: true,
+  ..seq
+) = {
+  let options-ordered = seq.pos()
+
+  context {
+    let options-shuffled = if shuffle {
+      random.shuffle(options-ordered, _question_counter.get())
+    } else {
+        options-ordered
+    }
+
+    return grid(
+      columns: cols,
+      gutter: 1em,
+      ..options-shuffled.map(o => {
+        if type(o) == dictionary {
+          option(o.body, correct: o.correct)
+        } else {
+          option(o)
+        }
+      })
+    )
+  }
 }
 
 
