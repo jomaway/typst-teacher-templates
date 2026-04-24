@@ -1,8 +1,8 @@
 packages
-examples/*.pdf
+**/examples/*.pdf
 
 *.pdf
-
+**/tests/*.html
 
 # VSCode
 .vscode
