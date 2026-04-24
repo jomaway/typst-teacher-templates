@@ -1,38 +1,6 @@
-// Helper and utility functions
-
-/// Create a small line
-///
-/// ```example
-/// Fill the #gap(2cm) .
-/// ```
-/// -> content
-#let gap(
-  length,
-  stroke: (bottom: 0.5pt),
-  value: none
-) = {
-  box(width: length, outset: (y: 0.5em), stroke: stroke, value)
-}
-
-/// Create a block of lines like in a lined notebook.
-///
-/// ```example
-/// Lines: #lines(2)
-/// ```
-///
-/// -> content
-#let lines(
-  /// number of rows
-  /// -> int
-  rows,
-  /// height of the lines
-  /// -> length
-  height: 0.9cm,
-) = {
-    for _ in range(rows) {
-        block(above: height, line(length:100%, stroke: 0.3pt + black.lighten(20%)) )
-    }
-}
+// -----------
+// Pattern
+// -----------
 
 /// Creates a checked pattern like in a checkered notebook. \
 /// This can be used as background for a box.
@@ -59,6 +27,76 @@
   )
 }
 
+/// Creates a checked pattern like in a checkered notebook. \
+/// This can be used as background for a box.
+///
+/// -> tiling
+#let line-pattern(
+  /// height of the lines in the pattern
+  /// -> length
+  height: 0.9cm,
+  /// color of the lines in the pattern
+  /// -> stroke
+  stroke: (paint: black, thickness: 0.8pt, dash: "dotted"),
+) = {
+  tiling(
+    size: (84pt, height),
+    place(
+      dy: height - 1pt,
+      line(
+        length: 100%,
+        stroke: stroke
+      )
+    )
+  )
+}
+
+/// Create a block of lines like in a lined notebook.
+///
+/// ```example
+/// #lines(2)
+/// ```
+///
+/// -> content
+#let lines(
+  /// number of rows
+  /// -> int
+  rows,
+  /// height of the lines
+  /// -> length
+  height: 9mm,
+  border: none,
+  stroke: (paint: black, thickness: 0.8pt, dash: "dotted"),
+  /// -> content
+  body
+) = {
+
+
+  layout(container-size => {
+    set par(
+      leading: height - 0.7em,
+      spacing: 2 * height - 0.7em ,
+    )
+    context {
+      let body-size = measure(
+        width: container-size.width,
+        body,
+      )
+
+      block(
+        height: calc.max(body-size.height + (height - 0.9em.abs), rows * height + 6pt),
+        width: 100%,
+        stroke: border,
+        fill: line-pattern(height: height, stroke: stroke),
+        inset: (x: 1em, y: height - 0.9em),
+      )[
+
+        #body
+      ]
+    }
+  })
+}
+
 /// Create a checked grid like in a checkered notebook. \
 /// This is a new approach using the tiling feature of typst. Uses @caro-pattern.
 ///
@@ -79,7 +117,7 @@
   layout(container-size => {
     let cols = if( cols == auto ){ int(container-size.width.cm() / size.cm()) } else { cols }
 
-    box(
+    block(
       height: (rows * size) + 0.5pt,
       width: (cols * size) + 0.5pt,
       stroke: border,
@@ -87,35 +125,6 @@
       inset: (x: size/2, y: 0.16cm),
       radius: radius,
     )[#body]
-  })
-}
-
-/// DEPRICATED (use @caro instead)
-/// Create a checked grid like in a checkered notebook.
-/// ! Old approach using the table feature of typst.
-///
-/// ```example
-/// #caro(3, cols: 10)
-/// ```
-///
-/// -> content
-#let caro-table(
-  /// number of rows
-  /// -> int
-  rows,
-  /// number of columns,
-  /// if auto cols are 0.5cm wide.
-  /// -> int | auto
-  cols:auto
-) = {
-  layout(size => {
-    let cols = if( cols == auto ){ int(size.width.cm() / 0.5) } else { cols }
-    table(
-      columns: (0.5cm,) * cols,
-      rows: (0.5cm,) * rows,
-      stroke: 0.3pt + luma(180),
-      table.cell(y: rows - 1)[],
-    )
   })
 }
 
@@ -175,22 +184,6 @@
   if (tick) { align(horizon + center, sym.checkmark) }
 )
 
-/// Create a rounded box around some content.
-///
-/// ```example
-/// #frame[This is framed.]
-/// ```
-///
-/// -> content
-#let frame(
-  /// the content to show.
-  /// -> content
-  body,
-  /// - ..args (arguments): passed to typst `box` function
-  /// -> arguments
-  ..args
-) = box(radius: 3pt, stroke: 0.5pt, inset: 1em, ..args, body)
-
 /// Create a autosized small colored and rounded box around the content.
 ///
 /// ```example
@@ -240,4 +233,18 @@
 
 #let hint(body, pre:"Hint:") = {
   strong(delta: -100)[#pre #body]
+}
+
+/// Create a small line
+///
+/// ```example
+/// Fill the #gap(2cm) .
+/// ```
+/// -> content
+#let gap(
+  length,
+  stroke: (bottom: 0.5pt),
+  value: none
+) = {
+  box(width: length, outset: (y: 0.5em), stroke: stroke, value)
 }

@@ -242,13 +242,28 @@
 
     let is-sol-mode = is-solution-mode()
 
-    grid(
-      columns: (auto, 1fr),
-      gutter: 0.5em,
-      align: (center, start),
-      checkbox(fill: if correct and is-sol-mode { red }, tick: correct and is-sol-mode),
-      body
-    )
+    if target() == "html" {
+      html.div(
+          style: "display: flex; align-items: center; gap: 0.5em;",
+        {
+        html.input(
+          type: "checkbox",
+          checked: correct and is-sol-mode,
+          style: "margin-right: 0.5em;"
+        )
+        body
+        }
+      )
+    } else {
+      grid(
+        columns: (auto, 1fr),
+        gutter: 0.5em,
+        align: (center, start),
+        checkbox(fill: if correct and is-sol-mode { red }, tick: correct and is-sol-mode),
+        body
+      )
+    }
+
   }
 }
 
@@ -290,7 +305,7 @@
         options-ordered
     }
 
-    return grid(
+    grid(
       columns: cols,
       gutter: 1em,
       ..options-shuffled.map(o => {
@@ -336,10 +351,9 @@
       if is-solution-mode() {
         set text(fill: color)
         body
-      } else {
-        if hide {
-          hide(body)
+      } else if hide {
+          std.hide(body)
         }
-      }
+
     }
 }
