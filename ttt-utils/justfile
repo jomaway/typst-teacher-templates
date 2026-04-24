@@ -1,9 +1,9 @@
-set quiet
+set quiet := true
 
 # set aliases
+
 self := justfile_directory()
 export TYPST_ROOT := self
-
 
 [private]
 default:
@@ -11,12 +11,19 @@ default:
 
 # generate manual
 doc:
-  typst compile docs/docs.typ docs/docs.pdf
+    typst compile docs/docs.typ docs/docs.pdf
 
 test module:
-    @echo "Starting tests for Module: {{module}}..."
-    typst compile "tests/test-{{module}}.typ"
-    @echo "Test {{module}} passed!"
+    @echo "Starting tests for Module: {{ module }}..."
+    typst compile "tests/test-{{ module }}.typ"
+    @echo "Test {{ module }} passed!"
+
+test-all:
+    @echo "Running all tests..."
+    just test assignments
+    just test scenarios
+    just test questions
+    @echo "All tests passed!"
 
 pack:
-  chase pack . @preview --overwrite
+    chase pack . @preview --overwrite

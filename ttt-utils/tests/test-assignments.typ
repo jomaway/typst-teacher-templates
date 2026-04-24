@@ -1,146 +1,105 @@
 #import "../lib/assignments.typ": *
+#import "../lib/components.typ": *
 #set page(margin: 2cm)
+#set text(size: 12pt, font: "Rubik", weight: 300, lang: "de")
 
 = Test assignments
 
-== Separated tests
-=== Assignment without questions
-#assignment[
-  This is a first assignment.
+#scenario[
+  This is a scenario.
+
+  #question(points: 5)[
+    This is an question with points.
+
+    #caro(5)[
+      *Answer:*
+    ]
+  ]
+
+  This is some text in between.
+
+  #question(points: 3)[
+    Yeah, lets have some more questions.
+
+    #lines(3)[
+      *Answer:*
+    ]
+  ]
+
+  #question[
+    Choose the right one.
+
+    #options(
+      cols: 4,
+      "A",
+      "B",
+      correct("C"),
+      "D",
+    )
+
+    #hint[Choose wisely]
+  ]
 ]
 
-=== Question without points
-#question[
-  This is a question.
-]
+== Part 2
 
-=== Question with points
+Some more questions
+
 #question(points:3)[
-  This is a pointed question.
+  This is some question outside of an scenario.
+
+  #caro(3)[]
 ]
 
-#with-solution(true)[
-  #answer[Answer]
+#question()[
+  This is some question outside of an scenario.
+
+  #quick-options[
+    - Option 1
+    - Option 2
+    + Option 3
+    - Option 4
+  ]
 ]
 
-== Assignment with questions
-=== without points
-#assignment[
-  This is a second assignment.
 
-  #question[
-    This is a question.
+#pagebreak()
+== Part 3
+
+#scenario(collect-points: true)[
+  This is a scenario.
+
+  #question(points: 5)[
+    This is an question with points.
+
+    #caro(5)[
+      *Answer:*
+    ]
+  ]
+
+  This is some text in between.
+
+  #question(points: 3)[
+    This ...
+
+    #lines(2)[
+      #answer(hide:true)[
+        #lorem(30)
+      ]
+    ]
   ]
 
   #question[
-    This is another question.
-  ]
-]
+    Choose the right one.
 
-=== with points
-#assignment[
-  This is a second assignment.
-
-  #question(points:2)[
-    This is a question.
-  ]
-
-  #question(points:1)[
-    This is another question.
-  ]
-]
-
-
-== Collect points
-
-#assignment(collect-points: true)[
-  This is a third assignment.
-
-  #question(points:2)[
-    This is a question.
-  ]
-
-  #question(points:1)[
-    This is another question.
-  ]
-]
-
-
-== Multiple choice
-
-#assignment(collect-points: true)[
-  Tick the correct answers.
-  #choice(
-    prompt: [What is the result of $1+1$?],
-    distractors: (1, 3, 4, 0),
-    answers: 2,
-    hint: "The result is even.",
-    dir: ltr
-  )
-
-  #choice(
-    prompt: [What is the result of $1-1$?],
-    distractors: (2, 1, 3, 4),
-    answers: 0,
-    hint: "The result is even.",
-    dir: ltr
-  )
-]
-
-=== with solution-mode turned on
-#with-solution(true)[
-  #assignment(collect-points: true)[
-    Tick the correct answers.
-    #choice(
-      prompt: [What is the result of $1+1$?],
-      distractors: (1, 3, 4, 0),
-      answers: 2,
-      hint: "The result is even.",
-      dir: ltr
+    #options(
+      cols: 4,
+      "A",
+      "B",
+      correct("C"),
+      "D",
     )
 
-    #choice(
-      prompt: [What is the result of $1-1$?],
-      distractors: (2, 1, 3, 4),
-      answers: 0,
-      hint: "The result is even.",
-      dir: ltr
-    )
-  ]
-]
-
-
-== Long assignments
-
-#assignment[
-  #lorem(30)
-]
-
-#question[
-  #lorem(30)
-]
-
-#question(points: 13)[
-  #lorem(30)
-]
-
-#assignment[
-  #lorem(30)
-  #question[
-    #lorem(30)
-  ]
-  #question(points: 9)[
-    #lorem(30)
-  ]
-]
-
-
-#assignment(collect-points: true)[
-  #lorem(30)
-  #question[
-    #lorem(30)
-  ]
-  #question(points: 7)[
-    #lorem(30)
+    #hint[Choose wisely]
   ]
 ]
