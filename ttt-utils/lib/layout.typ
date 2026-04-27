@@ -1,4 +1,99 @@
-#import "components.typ": point-tag, checkbox
+#import "components.typ": tag, checkbox
+
+// ------------
+//  States
+// ------------
+#let _render_style = state("ttt-render-style", "classic")
+
+#let set-render-style(style) = {
+  assert(
+    style == "classic" or style == "block",
+    message: "invalid render style: " + style
+  )
+  _render_style.update(style)
+}
+
+#let pt(points) = [
+  #points #text(0.8em,smallcaps[#if points==1 [PT$\u{0020}$] else [PTs]])
+]
+
+
+#let render-point-tag(points) = {
+  let style = _render_style.get()
+  if style == "classic" {
+    tag(fill: gray.lighten(35%), pt(points))
+  } else if style == "block" {
+    box(fill: gray.lighten(35%), stroke: black, inset: 0.5em, pt(points))
+  } else {
+    panic("unknown tag render style: " + style)
+  }
+}
+
+
+#let block-question-renderer(
+  body,
+  points: none,
+  border: (top: 1pt, left: 1pt, rest: 3pt)
+) = {
+  block(
+    stroke: border,
+    inset: if border != none { 1em } else { 0pt },
+    clip: true
+  )[
+    #import "@preview/meander:0.4.2"
+
+    #meander.reflow({
+      import meander: *
+
+      if points != none {
+        placed(
+          top + right,
+          move(dx: 1em, dy: -1em, render-point-tag(points))
+        )
+      }
+
+      container()
+      content[
+        #body
+      ]
+    })
+  ]
+}
+
+
+#let default-question-renderer(
+  body, points: none
+) = {
+  import "@preview/meander:0.4.2"
+
+  meander.reflow({
+    import meander: *
+    if points != none {
+      placed(
+        top + right,
+        render-point-tag(points)
+      )
+    }
+
+    container()
+    content[
+      #body
+    ]
+  })
+}
+
+
+
+#let render(body, points: none) = context {
+  let style = _render_style.get()
+  if style == "classic" {
+    default-question-renderer(body, points: points)
+  } else if style == "block" {
+    block-question-renderer(body, points: points)
+  } else {
+    panic("unknown render style: " + style)
+  }
+}
 
 /// display some content side-by-side
 ///
@@ -17,76 +112,5 @@
   )
 
   grid(columns: columns, gutter: gutter, ..cols)
-
-}
-
-#let point-grid(points, body) = {
-  if points != none {
-    grid(
-      columns: (1fr, auto),
-      column-gutter: 0.5em,
-      body,
-      align(top, point-tag(points))
-    )
-  } else {
-    block(body)
-  }
-}
-
-#let place-point-tag(points) = {
-  if points != none {
-    place(top + end, point-tag(points))
-  }
-}
-
-#let pt(points) = [
-  #points #text(0.8em,smallcaps[#if points==1 [PT$\u{0020}$] else [PTs]])
-]
-
-
-
-#let block-question-renderer(
-  prompt,
-  answer,
-  points: none,
-  border: (top: 1pt, left: 1pt, rest: 3pt)
-) = {
-  // let border =  (top: 1pt, left: 1pt, rest: 3pt)
-
-  block(
-    stroke: border,
-    inset: if border != none { 1em } else { 0pt },
-    clip: true)[
-    #grid(
-      columns: if points != none {(1fr, auto)} else {1fr},
-      column-gutter: 0.5em,
-      block( prompt),
-      if points != none {
-        move(dx: 1em, dy: -1em, box(fill: gray, stroke: black, inset: 0.5em)[#pt(points)])
-      }
-    )
-    #if answer != none {
-      block(
-        width: 100%,
-        answer,
-      )
-    }
-  ]
-}
-
-
-#let default-question-renderer(
-  prompt, answer, points: none
-) = {
-  let body = [
-    #prompt
-
-    #answer
-  ]
-
-  block(width: 100%)[
-    #place-point-tag(points)
-    #body
-  ]
 
 }

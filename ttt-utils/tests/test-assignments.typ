@@ -42,7 +42,6 @@
 ]
 
 == Part 2
-
 Some more questions
 
 #question(points:3)[
@@ -102,4 +101,12 @@ Some more questions
 
     #hint[Choose wisely]
   ]
+]
+
+
+#question(points: 3)[
+  This is some question outside of an scenario. aklsjf ala alsdjd alalal dja sjs sjd jdiewp eüfg möäm pw erti üj l rip
+  #lorem(23)
+
+  #caro(7)[]
 ]

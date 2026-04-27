@@ -37,7 +37,7 @@
 // ------------
 #let _solution = state("ttt-solution", false);
 #let _scenario_env = state("ttt-scenario-env", false)
-
+#let _scenario-collect = state("ttt-scenario-collect", false)
 
 // ------------
 //  Scenario
@@ -47,26 +47,23 @@
   _scenario_env.update(true)
   _question_counter.step(level: 1)
 }
-#let end-scenario = { _scenario_env.update(false) }
+#let end-scenario = {
+  _scenario_env.update(false)
+  _scenario-collect.update(false)
+}
+
 #let is-scenario() = { _scenario_env.get() }
 #let scenario-number() = {
   if is-scenario() { _question_counter.get().first() } else {none}
 }
 #let question-number() = { _question_counter.get().last() }
 
+#let start-collecting-points = { _scenario-collect.update(true) }
+#let is-collecting-points() = { _scenario-collect.get() }
 
 // ---------
 // Queries
 // ---------
-
-/// Fetch the metadata of the last defined question
-///
-/// ```example
-/// #context current-question()
-/// ```
-///
-/// -> dictionary
-// #let current-question() = { query(selector(_question-label).before(here())).last().value }
 
 /// Fetch the metadata of the options of the current question
 /// ```example
@@ -145,7 +142,6 @@
 // -----------------
 // Scenario
 // -----------------
-
 #let scenario(
   body,
   collect-points: false,
@@ -153,12 +149,18 @@
 ) = {
   new-scenario
 
-  body = [
+  if collect-points {
+    start-collecting-points
 
-    #if not disable-numbering { current-numbering() } #body
-  ]
+    context {
+      let points = get-questions(filter: q => q.num.first() == scenario-number()).map(q => q.points).sum(default: 0)
 
-  block-question-renderer(body, none, border:none)
+      place(end, dy: -1em, context render-point-tag(points))
+    }
+  }
+
+  if not disable-numbering { current-numbering() }; body
+
   end-scenario
 }
 
@@ -184,7 +186,7 @@
   breakable: false,
   /// function which renders the question.
   /// -> function
-  render: block-question-renderer,
+  // render: block-question-renderer,
 ) = {
   // assertions
   if points != none and points != auto {
@@ -209,14 +211,20 @@
       // szenario: none,
     )) #_question-label]
 
+    if is-collecting-points() {
+      points = none
+    }
+
     let number = current-numbering()
 
     // render the question
     set block(breakable: breakable)
-    render([#number #body],none, points: points)
+    render(
+      points: points,
+      [#number #body],
+    )
   }
 }
-
 
 /// Creates an option with a checkbox
 /// -> content
@@ -242,19 +250,6 @@
 
     let is-sol-mode = is-solution-mode()
 
-    if target() == "html" {
-      html.div(
-          style: "display: flex; align-items: center; gap: 0.5em;",
-        {
-        html.input(
-          type: "checkbox",
-          checked: correct and is-sol-mode,
-          style: "margin-right: 0.5em;"
-        )
-        body
-        }
-      )
-    } else {
       grid(
         columns: (auto, 1fr),
         gutter: 0.5em,
@@ -262,8 +257,6 @@
         checkbox(fill: if correct and is-sol-mode { red }, tick: correct and is-sol-mode),
         body
       )
-    }
-
   }
 }
 
@@ -318,19 +311,6 @@
     )
   }
 }
-
-
-// /// An answer field which is only shown if solution-mode is false.
-// /// -> content
-// #let answer-field(
-//   /// the content to show if solution-mode is off
-//   /// -> content
-//   body
-// ) = {
-//   context {
-//     if not is-solution-mode() { body }
-//   }
-// }
 
 
 /// An answer to a question which is only shown if solution-mode is true.
