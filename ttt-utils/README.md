@@ -34,7 +34,7 @@ or import the wanted functions:
 #import "@preview/ttt-utils:<VERSION>": components, assignments
 
 #import assignments: scenario, question, answer
-#import components: caro as grid_pattern
+#import components: caro
 
 // Add a question.
 
@@ -42,8 +42,10 @@ or import the wanted functions:
 
     #question[
         What is the capital of France?
-
-        #answer[Paris]
+        
+        #caro(5)[
+          #answer[Paris]
+        ]
     ]
 ]
 
