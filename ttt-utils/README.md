@@ -16,30 +16,34 @@ It contains several modules:
 
 ## Usage
 
-You can import the modules you need with:
+You can import the modules you need with the following command.
+Just replace `<VERSION>` with a valid version like `0.2.0`
 
 ```typst
-#import "@preview/ttt-utils:0.2.0": components
+#import "@preview/ttt-utils:<VERSION>": components
 ```
+
 
 then you can access the modules function with:
 
-`#components.lines(4)` or `#components.caro(5)`, ...
+`#assignments.question[]` or `#components.caro(5)`, ...
 
 or import the wanted functions:
 
 ```typst
-#import "@preview/ttt-utils:0.2.0": components, assignments
+#import "@preview/ttt-utils:<VERSION>": components, assignments
 
-#import assignments: assignment, question, answer
+#import assignments: scenario, question, answer
 #import components: caro as grid_pattern
 
 // Add a question.
 
-#assignment[First assignment
+#scenario[First scenario
 
     #question[
-        #answer(field: grid_pattern(5))
+        What is the capital of France?
+
+        #answer[Paris]
     ]
 ]
 

@@ -1,5 +1,5 @@
 #import "@preview/valkyrie:0.2.2" as z
-#import "assignments.typ": question, is-assignment, _question_counter, point-tag, get-assignment-collect-points, _question-label
+#import "assignments.typ": question, is-scenario, _question_counter, point-tag, _question-label
 
 // ------------
 // Schemas
@@ -88,10 +88,10 @@
 
     if calc-points {
       context {
-        let level = if is-assignment() { 2 } else { 1 }
+        let level = if is-scenario() { 2 } else { 1 }
         // _question_counter.step(level: level)
         // note: metadata must be a new context to fetch the updated _question_counter value correct
-        context [#metadata((type: "ttt-question", num: _question_counter.get() ,points: points, level: level)) #_question-label]
+        context [#metadata((type: "ttt-question", num: _question_counter.get() ,points: points)) #_question-label]
       }
     }
 
@@ -110,7 +110,7 @@
 
     // render points if it's an assignment and collect-points is not enabled
     context{
-      if not is-assignment() or not get-assignment-collect-points() {
+      if not is-scenario() {
         align(end,[\_\_ / #point-tag(points)])
       }
     }

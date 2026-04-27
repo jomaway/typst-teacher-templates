@@ -14,8 +14,7 @@ Collection of tools, which makes the teacher life easier. This repo contains one
 ⚠️The templates are not maintained/published anymore.
 So don't expect an update on them soon.
 
-- [ttt-exam](./ttt-exam/)
-- [ttt-lists](./ttt-lists/)
+See rdf-exam as a reference for a template based on ttt-utils.
 
 # Changelog
 
