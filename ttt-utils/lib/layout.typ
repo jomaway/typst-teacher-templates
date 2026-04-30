@@ -3,14 +3,14 @@
 // ------------
 //  States
 // ------------
-#let _render_style = state("ttt-render-style", "classic")
+#let _render-style = state("ttt-render-style", "classic")
 
 #let set-render-style(style) = {
   assert(
     style == "classic" or style == "block",
     message: "invalid render style: " + style
   )
-  _render_style.update(style)
+  _render-style.update(style)
 }
 
 #let pt(points) = [
@@ -19,7 +19,7 @@
 
 
 #let render-point-tag(points) = {
-  let style = _render_style.get()
+  let style = _render-style.get()
   if style == "classic" {
     tag(fill: gray.lighten(35%), pt(points))
   } else if style == "block" {
@@ -37,55 +37,37 @@
 ) = {
   block(
     stroke: border,
-    inset: if border != none { 1em } else { 0pt },
+    inset: if border != none { 0.9em } else { 0pt },
     clip: true
   )[
-    #import "@preview/meander:0.4.2"
+    #import "@preview/wrap-it:0.1.1": wrap-content
 
-    #meander.reflow({
-      import meander: *
-
-      if points != none {
-        placed(
-          top + right,
-          move(dx: 1em, dy: -1em, render-point-tag(points))
-        )
-      }
-
-      container()
-      content[
-        #body
-      ]
-    })
+    #wrap-content(
+      move(dx: 0.9em, dy: -0.9em, render-point-tag(points)),
+      body,
+      align: top + right,
+      column-gutter: 1em,
+      columns: (1fr, auto),
+    )
   ]
 }
-
 
 #let default-question-renderer(
   body, points: none
 ) = {
-  import "@preview/meander:0.4.2"
+  import "@preview/wrap-it:0.1.1": wrap-content
 
-  meander.reflow({
-    import meander: *
-    if points != none {
-      placed(
-        top + right,
-        render-point-tag(points)
-      )
-    }
-
-    container()
-    content[
-      #body
-    ]
-  })
+  wrap-content(
+    render-point-tag(points),
+    body,
+    align: top + right,
+    column-gutter: 1em,
+    columns: (1fr, auto),
+  )
 }
 
-
-
 #let render(body, points: none) = context {
-  let style = _render_style.get()
+  let style = _render-style.get()
   if style == "classic" {
     default-question-renderer(body, points: points)
   } else if style == "block" {
