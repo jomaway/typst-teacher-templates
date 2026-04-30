@@ -30,7 +30,6 @@
 // Labels
 // ------------
 #let _question-label = label("ttt-question-label")
-#let _option-label = label("ttt-option-label")
 
 // ------------
 //  States
@@ -101,7 +100,7 @@
 /// Wrapper to set solution-mode to false
 #let hide-solutions = { _solution.update(false) }
 
-// Wrapper to get the current value of the _solution state
+// Wrapper to get the current value of the `_solution` state
 // ! needs context
 // -> bool
 #let is-solution-mode() = {
@@ -179,8 +178,8 @@
   /// -> content
   body,
   /// the given points for a correct answer of this question. Will be stored as metadata.
-  /// -> int | none | auto
-  points: auto,
+  /// -> int | none
+  points: none,
   /// if true the question can be broken over multiple pages
   /// -> bool
   breakable: false,
@@ -189,7 +188,7 @@
   // render: block-question-renderer,
 ) = {
   // assertions
-  if points != none and points != auto {
+  if points != none {
     assert.eq(type(points), int, message: "expected points argument to be an integer, found " + str(type(points)))
   }
 
@@ -199,20 +198,15 @@
   }
 
   context {
-    // reassign points as we can't change values from outside of this context.
-    let points = if-auto-then(points, current-options().filter(option => option.correct).len())
-    points = if points == 0 { none } else { points }
-
     // note: metadata must be a new context to fetch the updated _question_counter value correct
     [#metadata((
       type: "ttt-question",
       num: _question_counter.get() ,
       points: points,
-      // szenario: none,
     )) #_question-label]
 
     if is-collecting-points() {
-      points = none
+      let points = none
     }
 
     let number = current-numbering()
@@ -237,31 +231,17 @@
   correct: false,
 ) = {
   context {
-    [
-      #metadata(
-        (
-          type: "ttt-answer-option",
-          question-number: _question_counter.get(),
-          correct:correct,
-          // body: body,
-        )
-      ) #_option-label
-    ]
-
     let is-sol-mode = is-solution-mode()
 
-      grid(
-        columns: (auto, 1fr),
-        gutter: 0.5em,
-        align: (center, start),
-        checkbox(fill: if correct and is-sol-mode { red }, tick: correct and is-sol-mode),
-        body
-      )
+    grid(
+      columns: (auto, 1fr),
+      gutter: 0.5em,
+      align: (center, start),
+      checkbox(fill: if correct and is-sol-mode { red }, tick: correct and is-sol-mode),
+      body
+    )
   }
 }
-
-/// Helper functions
-#let correct(option) = { (correct: true, body: option) }
 
 /// Helper function to quickly create options with a list style.
 /// Use bullet list (`-`) for distractors and numbered list (`+`) for correct options
@@ -282,6 +262,10 @@
 
   body
 }
+
+
+/// Helper functions
+#let correct(option) = { (correct: true, body: option) }
 
 /// Add multiple options to a question. The options get shuffled by default, but can be turned off with the `shuffle` argument. Each option is rendered with the `option` function, so the correct answer can be marked by using the `correct` helper function.
 #let options(
@@ -334,6 +318,5 @@
       } else if hide {
           std.hide(body)
         }
-
     }
 }
